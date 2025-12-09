@@ -1,0 +1,33 @@
+---
+import type { MDXComponentMap } from "./mdxComponents";
+import { mergeMDXComponents } from "./mdxComponents";
+import { render as renderContent } from "astro:content";
+
+type RenderedContent = { Content: any };
+type RenderableEntry = { render: () => Promise<RenderedContent> };
+
+interface Props {
+  /**
+   * A content collection entry returned from `getEntry` or `getCollection`.
+   * Must expose a `render()` function.
+   */
+  entry: unknown;
+  /**
+   * Optional per-page overrides or additions to the shared MDX components map.
+   */
+  components?: Partial<MDXComponentMap>;
+}
+
+const { entry, components } = Astro.props as Props;
+// Prefer the entry's render method (MDX); fall back to astro:content render helper.
+const { Content } =
+  (await (entry as RenderableEntry)?.render?.()) ??
+  (await renderContent(entry as any));
+const componentMap = mergeMDXComponents(components);
+---
+
+<div
+  class="mdx-content prose prose-lg dark:prose-invert max-w-none text-color-800 dark:text-color-100 leading-7 md:leading-8"
+>
+  <Content components={componentMap} />
+</div>

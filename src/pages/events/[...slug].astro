@@ -1,5 +1,5 @@
 ---
-import { type CollectionEntry, getCollection, render } from "astro:content";
+import { type CollectionEntry, getCollection } from "astro:content";
 import BaseHead from "@/components/BaseHead.astro";
 import SiteShell from "@/layouts/SiteShell.astro";
 import {
@@ -10,6 +10,7 @@ import {
 } from "@/components/detail";
 import { RelatedItemsGrid } from "@/components/detail/RelatedItemsGrid";
 import LinkSection from "@/components/detail/LinkSection";
+import MDXContent from "@/components/mdx/MDXContent.astro";
 import { getAllEvents } from "@/data/events";
 import BasicChip from "@/components/ui/BasicChip";
 import { resolveLogoAsset } from "@/utils/images";
@@ -27,9 +28,8 @@ export async function getStaticPaths() {
   }));
 }
 
-const { entry } = Astro.props;
+const { entry } = Astro.props as { entry: CollectionEntry<"events"> };
 const { data } = entry;
-const { Content } = await render(entry);
 
 // Get related events (by type or topics)
 async function getRelatedEvents(
@@ -317,16 +317,16 @@ const featuredState = data.featured
         </Fragment>
 
         <Fragment slot="content">
-          {
-              <div class="bg-linear-to-br from-surface-lighter to-surface rounded-xl border border-accent-one/20 p-6">
-                <h2 class="text-xs font-semibold mb-3 text-accent-base uppercase tracking-wider">
-                  Event Contents
-                </h2>
-                <div class="flex flex-wrap gap-2">
-                  <Content />
-                </div>
-              </div>
-          }
+          <div
+            class="bg-linear-to-br from-surface-lighter to-surface rounded-xl border border-accent-one/20 p-6"
+          >
+            <h2
+              class="text-xs font-semibold mb-3 text-accent-base uppercase tracking-wider"
+            >
+              EVENT DETAILS
+            </h2>
+            <MDXContent entry={entry} />
+          </div>
         </Fragment>
 
         <Fragment slot="tags">
