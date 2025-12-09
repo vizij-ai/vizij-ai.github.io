@@ -1,3 +1,7 @@
+import { ControlsSection } from "@/components/demos/ControlsSection";
+import { ExpressionsSection } from "@/components/demos/ExpressionsSection";
+import { GazePlaySection } from "@/components/demos/GazePlaySection";
+import { VoiceSection } from "@/components/demos/VoiceSection";
 import React from "react";
 // import HeroSection from "@/react-pages/home/sections/HeroSection";
 // import MissionSection from "@/react-pages/home/sections/MissionSection";
@@ -18,7 +22,10 @@ export default function HomePage({
 }: HomePageProps) {
   return (
     <div className="space-y-12">
-
+      <ControlsSection/>
+      <ExpressionsSection/>
+      <GazePlaySection/>
+      <VoiceSection/>
     </div>
   );
 }
