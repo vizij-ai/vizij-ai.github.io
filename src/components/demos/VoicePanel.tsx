@@ -9,11 +9,11 @@ import {
   useState,
 } from "react";
 import { useVizijRuntime } from "@vizij/runtime-react";
-import { usePollyTTS } from "../hooks/usePollyTTS";
-import { SPEECH_STATUS_COPY, type SpeechStatus } from "../data/speech";
-import { POLLY_VOICES, type PollyVoice } from "../data/pollyVoices";
-import type { VisemeData } from "../types/polly";
-import { FACE_VISEME_SEGMENT_LIST, mapPollyViseme } from "../lib/visemeMapping";
+import { usePollyTTS } from "../../hooks/usePollyTTS";
+import { SPEECH_STATUS_COPY, type SpeechStatus } from "../../data/speech";
+import { POLLY_VOICES, type PollyVoice } from "../../data/pollyVoices";
+import type { VisemeData } from "../../types/polly";
+import { FACE_VISEME_SEGMENT_LIST, mapPollyViseme } from "../../lib/visemeMapping";
 
 export type VoicePanelProps = {
   status: SpeechStatus;

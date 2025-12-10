@@ -1,11 +1,11 @@
-import { ShowcaseRuntime } from "../components/ShowcaseRuntime";
-import { SectionIntro } from "../components/SectionIntro";
-import { RuntimeFaceFrame } from "../components/RuntimeFaceFrame";
-import { PoseButtonPanel } from "../components/PoseButtonPanel";
-import { FaceFramePlaceholder } from "../components/FaceFramePlaceholder";
-import { PoseRigMirrorBridge } from "../components/PoseRigMirrorBridge";
-import { useSectionInView } from "../hooks/useSectionInView";
-import { usePoseActivity } from "../hooks/usePoseActivity";
+import { ShowcaseRuntime } from "./ShowcaseRuntime";
+import { SectionIntro } from "./SectionIntro";
+import { RuntimeFaceFrame } from "./RuntimeFaceFrame";
+import { PoseButtonPanel } from "./PoseButtonPanel";
+import { FaceFramePlaceholder } from "./FaceFramePlaceholder";
+import { PoseRigMirrorBridge } from "./PoseRigMirrorBridge";
+import { useSectionInView } from "../../hooks/useSectionInView";
+import { usePoseActivity } from "../../hooks/usePoseActivity";
 
 export function ExpressionsSection() {
   const { ref, hasEntered, isVisible } = useSectionInView<HTMLElement>({
@@ -17,9 +17,9 @@ export function ExpressionsSection() {
   return (
     <section id="expressions" className="showcase-section" ref={ref}>
       <SectionIntro
-        eyebrow="Bundle Poses"
+        eyebrow="Facial expressions"
         title="Express emotions with Vizij."
-        description="Package expressions, visemes, and gestures so agents can shift mood easily."
+        description="Define emotional facial expressions and smoothly animate from one to the next."
       />
       <div className="expression-stack">
         <ShowcaseRuntime
@@ -49,16 +49,16 @@ export function ExpressionsSection() {
             label="Expressions · Quori"
             fallback={
               <ExpressionFaceFallback
-                label="Expression kit · Quori"
-                subtitle="Tap a preset or fire the hotkeys to see the expression"
+                label="Quori"
+                subtitle="Tap a preset or fire the hotkeys to set the expression"
               />
             }
           >
             <PoseRigMirrorBridge />
             <RuntimeFaceFrame
               variant="md"
-              label="Expression kit · Quori"
-              subtitle="Tap a preset or fire the hotkeys to see the expression"
+              label="Quori"
+              subtitle="Tap a preset or fire the hotkeys to set the expression"
             />
           </ShowcaseRuntime>
           <ShowcaseRuntime
@@ -72,16 +72,16 @@ export function ExpressionsSection() {
             label="Expressions · Hugo"
             fallback={
               <ExpressionFaceFallback
-                label="Expression kit · Hugo"
-                subtitle="Tap a preset or fire the hotkeys to see the expression"
+                label="Hugo"
+                subtitle="Tap a preset or fire the hotkeys to set the expression"
               />
             }
           >
             <PoseRigMirrorBridge />
             <RuntimeFaceFrame
               variant="md"
-              label="Expression kit · Hugo"
-              subtitle="Tap a preset or fire the hotkeys to see the expression"
+              label="Hugo"
+              subtitle="Tap a preset or fire the hotkeys to set the expression"
             />
           </ShowcaseRuntime>
         </div>

@@ -3,6 +3,7 @@ import { ExpressionsSection } from "@/components/demos/ExpressionsSection";
 import { GazePlaySection } from "@/components/demos/GazePlaySection";
 import { VoiceSection } from "@/components/demos/VoiceSection";
 import React from "react";
+import { HeroSection } from "@/components/demos/HeroSection";
 // import HeroSection from "@/react-pages/home/sections/HeroSection";
 // import MissionSection from "@/react-pages/home/sections/MissionSection";
 // import ProgramsSection from "@/react-pages/home/sections/ProgramsSection";
@@ -22,10 +23,11 @@ export default function HomePage({
 }: HomePageProps) {
   return (
     <div className="space-y-12">
-      <ControlsSection/>
+      <HeroSection />
       <ExpressionsSection/>
       <GazePlaySection/>
       <VoiceSection/>
+      <ControlsSection/>
     </div>
   );
 }

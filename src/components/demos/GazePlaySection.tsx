@@ -1,8 +1,8 @@
-import { ShowcaseRuntime } from "../components/ShowcaseRuntime";
-import { SectionIntro } from "../components/SectionIntro";
-import { GazeInteractiveFace } from "../components/GazeInteractiveFace";
-import { FaceFramePlaceholder } from "../components/FaceFramePlaceholder";
-import { useSectionInView } from "../hooks/useSectionInView";
+import { ShowcaseRuntime } from "./ShowcaseRuntime";
+import { SectionIntro } from "./SectionIntro";
+import { GazeInteractiveFace } from "./GazeInteractiveFace";
+import { FaceFramePlaceholder } from "./FaceFramePlaceholder";
+import { useSectionInView } from "../../hooks/useSectionInView";
 
 export function GazePlaySection() {
   const { ref, hasEntered, isVisible } = useSectionInView<HTMLElement>({
@@ -13,9 +13,9 @@ export function GazePlaySection() {
   return (
     <section id="gaze" className="showcase-section" ref={ref}>
       <SectionIntro
-        eyebrow="Responsive presence"
-        title="Enable your Vizij to give people attention across every surface."
-        description="Use passive gaze behaviors for continuous presense or have mouse, touch, or sensor data steer gaze to demonstrate attention in real time."
+        eyebrow="Gaze tracking"
+        title="Gaze at your cursor."
+        description="Specify direct gaze location which translates under the hood from a point in space to eye shapes' movement and locations. "
       />
       <ShowcaseRuntime
         namespace="gaze"

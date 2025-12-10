@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { ShowcaseRuntime } from "../components/ShowcaseRuntime";
-import { SectionIntro } from "../components/SectionIntro";
-import { RuntimeFaceFrame } from "../components/RuntimeFaceFrame";
-import { VoicePanel } from "../components/VoicePanel";
-import { SpeechOverlay } from "../components/SpeechOverlay";
-import { FaceFramePlaceholder } from "../components/FaceFramePlaceholder";
-import { useSectionInView } from "../hooks/useSectionInView";
-import { type SpeechStatus } from "../data/speech";
+import { ShowcaseRuntime } from "./ShowcaseRuntime";
+import { SectionIntro } from "./SectionIntro";
+import { RuntimeFaceFrame } from "./RuntimeFaceFrame";
+import { VoicePanel } from "./VoicePanel";
+import { SpeechOverlay } from "./SpeechOverlay";
+import { FaceFramePlaceholder } from "./FaceFramePlaceholder";
+import { useSectionInView } from "../../hooks/useSectionInView";
+import { type SpeechStatus } from "../../data/speech";
 
 export function VoiceSection() {
   const [speechStatus, setSpeechStatus] = useState<SpeechStatus>("idle");
@@ -42,9 +42,9 @@ export function VoiceSection() {
   return (
     <section id="voice" className="showcase-section" ref={ref}>
       <SectionIntro
-        eyebrow="Speech sync"
-        title="Stream visemes into affective rigs."
-        description="Kick off the sample Amazon Polly read to see how audio events map to facial nuance. Swap in your own SSML or live robot speech next—the scaffolding is ready."
+        eyebrow="Speech lip-sync"
+        title="Synchronize speech and lip movements."
+        description="Enter text to speak and watch as the mouth expresses timed visemes associated with your chosen text."
       />
       <ShowcaseRuntime
         namespace="voice"

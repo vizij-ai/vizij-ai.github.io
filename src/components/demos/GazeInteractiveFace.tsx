@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useVizijRuntime } from "@vizij/runtime-react";
-import { usePoseHotkeys } from "../hooks/usePoseHotkeys";
-import { useMouseGaze } from "../hooks/useMouseGaze";
-import { useIdleGazeBehavior } from "../hooks/useIdleGazeBehavior";
+import { usePoseHotkeys } from "../../hooks/usePoseHotkeys";
+import { useMouseGaze } from "../../hooks/useMouseGaze";
+import { useIdleGazeBehavior } from "../../hooks/useIdleGazeBehavior";
 import { RuntimeFaceFrame } from "./RuntimeFaceFrame";
 
 export function GazeInteractiveFace({ enabled = true }: { enabled?: boolean }) {
@@ -80,7 +80,7 @@ export function GazeInteractiveFace({ enabled = true }: { enabled?: boolean }) {
     <RuntimeFaceFrame
       variant="lg"
       label="Cursor-reactive gaze"
-      subtitle="Pointer tracking + pose triggers"
+      subtitle="Gaze tracking demo"
       pointerTargetRef={gazeRef}
       onCanvasClick={handleClick}
       overlay={
@@ -94,8 +94,7 @@ export function GazeInteractiveFace({ enabled = true }: { enabled?: boolean }) {
       }
       footer={
         <p className="face-frame__note">
-          In this demo we normalise pointer movement into Vizij eye rig paths so
-          any cursor, touch, or gaze input can puppeteer attention.
+          In this demo we use your cursor's location as the gaze target. Vizij rigs translate that to eye shape movement and locations.
         </p>
       }
     />

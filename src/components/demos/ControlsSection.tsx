@@ -1,9 +1,10 @@
-import { ShowcaseRuntime } from "../components/ShowcaseRuntime";
-import { SectionIntro } from "../components/SectionIntro";
-import { RigControlPanel } from "../components/RigControlPanel";
-import { RuntimeFaceFrame } from "../components/RuntimeFaceFrame";
-import { FaceFramePlaceholder } from "../components/FaceFramePlaceholder";
-import { useSectionInView } from "../hooks/useSectionInView";
+
+import { SectionIntro } from "./SectionIntro";
+import { RigControlPanel } from "./RigControlPanel";
+import { RuntimeFaceFrame } from "./RuntimeFaceFrame";
+import { FaceFramePlaceholder } from "./FaceFramePlaceholder";
+import { useSectionInView } from "../../hooks/useSectionInView";
+import { ShowcaseRuntime } from "./ShowcaseRuntime";
 
 export function ControlsSection() {
   const { ref, hasEntered, isVisible } = useSectionInView<HTMLElement>({
@@ -14,9 +15,9 @@ export function ControlsSection() {
   return (
     <section id="controls" className="showcase-section" ref={ref}>
       <SectionIntro
-        eyebrow="Fine-grain control"
+        eyebrow="Low-level control"
         title="Every feature is addressable."
-        description="Dial any part of the face—from color and opacity to 3D position, rotation, and scale. Search a path, add it, and drive exact values through Vizij’s orchestrator."
+        description="Dial any part of the face—from color and opacity to 3D position, rotation, and scale. Search for a feature, select it, then control it directly."
       />
       <ShowcaseRuntime
         namespace="controls"

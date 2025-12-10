@@ -4,8 +4,8 @@ import {
   POSE_HOTKEY_LAYOUT,
   usePoseHotkeys,
   type PoseHotkeyBinding,
-} from "../hooks/usePoseHotkeys";
-import { broadcastPoseTrigger } from "../lib/poseRigBroadcast";
+} from "../../hooks/usePoseHotkeys";
+import { broadcastPoseTrigger } from "../../lib/poseRigBroadcast";
 
 type PoseTimerEntry = {
   timeoutId: number;
@@ -172,10 +172,10 @@ export function PoseButtonPanel() {
 
   return (
     <div className="feature-card expression-panel">
-      <p className="feature-card__eyebrow">Pose presets</p>
-      <h3>Tap to emote.</h3>
+      <p className="feature-card__eyebrow">Emotion presets</p>
+      <h3>Tap to select emotional expression.</h3>
       <p className="feature-card__description">
-        Buttons map straight to Vizij pose weights. Hotkeys mirror each button
+        Buttons set pre-defined Vizij poses. Hotkeys mirror each button
         so you can rehearse and perform live.
       </p>
       <div className="pose-grid">

@@ -1,5 +1,5 @@
 {
-  "name": "semio-community",
+  "name": "vizij-ai.github.io",
   "version": "1.0.0",
   "scripts": {
     "dev": "node scripts/dev-all.mjs",
@@ -41,6 +41,8 @@
     "@shikijs/transformers": "^1.25.1",
     "@solar-icons/react-perf": "^1.0.0",
     "@tailwindcss/vite": "^4.1.11",
+    "@vizij/orchestrator-react": "^0.0.7",
+    "@vizij/runtime-react": "^0.0.14",
     "astro": "^5.15.5",
     "astro-icon": "^1.1.5",
     "astro-robots-txt": "^1.0.0",
