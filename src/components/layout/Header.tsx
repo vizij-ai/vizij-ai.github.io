@@ -114,7 +114,7 @@ export default function Header({
           href={homeUrl()}
         >
           <div title={siteConfig.title}>
-            <img src="brand.svg" className="size-5" />
+            <img src="/brand.svg" className="size-5" />
           </div>
           <strong className="max-[320px]:hidden lowercase text-base hidden lg:block z-10 mb-0.5 ms-2 lg:text-base xl:text-xl hover:opacity-90 whitespace-nowrap">
             {siteConfig.title}
