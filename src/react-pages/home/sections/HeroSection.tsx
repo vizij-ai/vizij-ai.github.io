@@ -60,8 +60,7 @@ export default function HeroSection({
           <span className="font-medium text-foreground">
             science and systems
           </span>{" "}
-          of
-          <br className="hidden md:flex" />
+          of <br className="hidden md:flex" />
           <span className="font-medium text-foreground">
             human-centered robotics
           </span>{" "}

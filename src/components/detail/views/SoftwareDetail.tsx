@@ -28,7 +28,7 @@ export type SoftwareOrganizationContributor = {
 
 export type SoftwarePersonContributor = {
   personId: string;
-  person: PersonListElementProps["data"];
+  person?: PersonListElementProps["data"] | null;
   role?: string;
   currentAffiliation?: {
     organizationId: string;

@@ -4,7 +4,6 @@ import BaseHead from "@/components/BaseHead.astro";
 import SiteShell from "@/layouts/SiteShell.astro";
 import { getRelatedHardware } from "@/data/hardware";
 import { getPerson } from "@/data/people";
-import { serializePersonForPopover } from "@/utils/person";
 import { HardwareDetail } from "@/components/detail/views/HardwareDetail";
 
 export async function getStaticPaths() {
@@ -57,7 +56,7 @@ const peopleContributors = await Promise.all(
           };
         }
       }
-      const person = serializePersonForPopover(personEntry);
+      const person = personEntry?.data ?? null;
       return {
         ...contributor,
         person,
