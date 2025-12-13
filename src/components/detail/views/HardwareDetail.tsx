@@ -32,7 +32,7 @@ export type HardwareOrganizationContributor = {
 
 export type HardwarePersonContributor = {
   personId: string;
-  person: PersonListElementProps["data"];
+  person?: PersonListElementProps["data"] | null;
   role?: string;
   currentAffiliation?: {
     organizationId: string;
