@@ -542,7 +542,7 @@
 
     /* Style for code block titles */
     [data-rehype-pretty-code-title] {
-      @apply break-words bg-(--code-title-bg) border-b border-surface text-foreground px-4 flex items-center text-sm h-10;
+      @apply wrap-break-word bg-(--code-title-bg) border-b border-surface text-foreground px-4 flex items-center text-sm h-10;
 
       & + pre {
         @apply m-0 rounded-t-none; /* Remove top margin if there's a title */
