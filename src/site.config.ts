@@ -2,7 +2,7 @@ import type { SiteConfig } from "@/types";
 
 export const siteConfig: SiteConfig = {
   // Used as both a meta property (src/components/BaseHead.astro L:31 + L:49) & the generated satori png (src/pages/og-image/[slug].png.ts)
-  author: "Semio Community",
+  author: "Vizij",
   // Date.prototype.toLocaleDateString() parameters, found in src/utils/date.ts.
   date: {
     locale: "en-US",
@@ -14,13 +14,13 @@ export const siteConfig: SiteConfig = {
   },
   // Used as the default description meta property and webmanifest description
   description:
-    "Semio Community is a 501(c)(3) nonprofit organization facilitating community-driven robotics hardware, software, and research to foster repeatable, reproducible, and replicable science and reusable systems within human-robot interaction (HRI).",
+    "Vizij is an Open Source Ecosystem for designing, animating and deploying rendered robot faces.",
   // HTML lang property, found in src/layouts/SiteShell.astro (html lang attr) & astro.config.ts L:48
   lang: "en-US",
   // Meta property, found in src/components/BaseHead.astro L:42
   ogLocale: "en_US",
   // Used to construct the meta title property found in src/components/BaseHead.astro L:11, and webmanifest name found in astro.config.ts L:42
-  title: "Semio Community",
+  title: "Vizij",
 };
 
 // Used to generate links in both the Header & Footer.

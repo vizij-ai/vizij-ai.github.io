@@ -15,17 +15,17 @@ export default function EventsPage({ children }: EventsPageProps) {
         fullBleed
         icon={<Calendar className="w-16 h-16 text-accent-two" />}
         title="Events"
-        description="Gather with the Semio Community at conferences, workshops, and training events focused on human-centered robotics and AI."
+        description="Learn more about Vizij at conferences, workshops, and training events."
         actions={[
-          { label: "Featured Events", href: "#featured" },
-          { label: "Upcoming Events", href: "#upcoming", variant: "secondary" },
-          { label: "Past Events", href: "#past", variant: "tertiary" },
+          // { label: "Featured Events", href: "#featured" },
+          // { label: "Upcoming Events", href: "#upcoming", variant: "secondary" },
+          // { label: "Past Events", href: "#past", variant: "tertiary" },
         ]}
       />
 
       {children}
 
-      <Section id="events-contribute" title="Partner for an Event">
+      {/* <Section id="events-contribute" title="Partner for an Event">
         <div className="max-w-4xl mx-auto text-center">
           <p className="mb-8 -mt-6 md:-mt-8">
             Planning a conference, workshop, or other community gathering?
@@ -43,7 +43,7 @@ export default function EventsPage({ children }: EventsPageProps) {
             </CallToActionButton>
           </div>
         </div>
-      </Section>
+      </Section> */}
     </>
   );
 }

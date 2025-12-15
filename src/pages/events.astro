@@ -27,7 +27,7 @@ const allEvents = await getAllEvents();
     />
   </head>
   <body class="relative min-h-screen w-full bg-surface">
-    <SiteShell noPaddingTop showBackground>
+    <SiteShell noPaddingTop>
       <EventsPage>
         {
           allEvents.length > 0 && (
@@ -37,7 +37,7 @@ const allEvents = await getAllEvents();
                 events={allEvents.map((event) => ({
                   id: event.id,
                   data: event.data,
-                }))}
+                })).filter((event) => !event.data.draft)}
                 initialFeaturedCount={6}
                 initialPastCount={6}
               />

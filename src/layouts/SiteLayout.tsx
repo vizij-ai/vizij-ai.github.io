@@ -81,7 +81,7 @@ export default function SiteLayout({
   skipLink,
   sidebar,
   noPaddingTop = false,
-  showBackground = true,
+  showBackground = false,
   containerClassName = "",
 }: SiteLayoutProps) {
   return (

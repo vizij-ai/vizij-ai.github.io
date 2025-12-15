@@ -114,9 +114,7 @@ export default function Header({
           href={homeUrl()}
         >
           <div title={siteConfig.title}>
-            <svg className="inline-block size-5 fill-current text-accent-base dark:text-accent-two drop-shadow-[0px_2.5px_2.5px_rgba(0,0,0,0.15)]">
-              <use href={url("brand.svg#brand")}></use>
-            </svg>
+            <img src="/brand.svg" className="size-5" />
           </div>
           <strong className="max-[320px]:hidden lowercase text-base hidden lg:block z-10 mb-0.5 ms-2 lg:text-base xl:text-xl hover:opacity-90 whitespace-nowrap">
             {siteConfig.title}

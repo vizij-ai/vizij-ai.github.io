@@ -10,6 +10,7 @@ import {
 } from "@/components/detail";
 import { RelatedItemsGrid } from "@/components/detail/RelatedItemsGrid";
 import LinkSection from "@/components/detail/LinkSection";
+import MDXContent from "@/components/mdx/MDXContent.astro";
 import { getAllEvents } from "@/data/events";
 import BasicChip from "@/components/ui/BasicChip";
 import { resolveLogoAsset } from "@/utils/images";
@@ -27,7 +28,7 @@ export async function getStaticPaths() {
   }));
 }
 
-const { entry } = Astro.props;
+const { entry } = Astro.props as { entry: CollectionEntry<"events"> };
 const { data } = entry;
 
 // Get related events (by type or topics)
@@ -42,6 +43,7 @@ async function getRelatedEvents(
   const isCurrentPast = parseDateLocal(event.data.endDate) < currentDate;
 
   const otherEvents = allEvents.filter((e) => {
+    if (e.data.draft) return false;
     if (e.id === event.id) return false;
     // If current event is past, include all; otherwise prefer upcoming
     if (!isCurrentPast) {
@@ -253,7 +255,7 @@ const featuredState = data.featured
     />
   </head>
   <body class="relative min-h-screen w-full bg-surface">
-    <SiteShell noPaddingTop showBackground containerClassName="max-w-5xl">
+    <SiteShell noPaddingTop containerClassName="max-w-5xl">
       <BaseDetailLayout>
         <Fragment slot="hero">
           <DetailHero
@@ -312,6 +314,19 @@ const featuredState = data.featured
               </div>
             )
           }
+        </Fragment>
+
+        <Fragment slot="content">
+          <div
+            class="bg-linear-to-br from-surface-lighter to-surface rounded-xl border border-accent-one/20 p-6"
+          >
+            <h2
+              class="text-xs font-semibold mb-3 text-accent-base uppercase tracking-wider"
+            >
+              EVENT DETAILS
+            </h2>
+            <MDXContent entry={entry} />
+          </div>
         </Fragment>
 
         <Fragment slot="tags">
