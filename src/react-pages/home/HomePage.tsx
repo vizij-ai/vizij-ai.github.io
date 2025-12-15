@@ -1,3 +1,4 @@
+import HeroHeader from "@/components/hero/HeroHeader";
 import React from "react";
 // import HeroSection from "@/react-pages/home/sections/HeroSection";
 // import MissionSection from "@/react-pages/home/sections/MissionSection";
@@ -18,6 +19,28 @@ export default function HomePage({
 }: HomePageProps) {
   return (
     <div className="space-y-12">
+
+      <HeroHeader
+            title={<><div className="inline-block">Vizij is an open source ecosystem for </div> <div><span className="text-accent-one">designing</span>, <span className="text-accent-two">animating</span>, and <span className="text-accent-three">deploying</span> rendered robot faces.</div></>}
+            description={
+              <span className="text-sm">Demos and documentation will be available soon.</span>
+            }
+            headingTag={"h2"}
+            actions={[
+              {
+                label: "Learn More on GitHub",
+                href: "https://github.com/vizij-ai",
+                variant: "tertiary",
+                indicatorText: undefined,
+              },
+              {
+                label: "HRI 2026 Tutorial Event",
+                href: "/events/hri-2026-tutorial",
+                variant: "secondary",
+                indicatorText: undefined,
+              },
+            ]}
+          />
 
     </div>
   );
