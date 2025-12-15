@@ -1,5 +1,5 @@
 {
-  "name": "Semio Community",
+  "name": "Vizij",
   "icons": [
     {
       "src": "icons/apple-touch-icon.png",
@@ -17,7 +17,7 @@
       "type": "image/png"
     }
   ],
-  "description": "Semio Community is a 501(c)(3) nonprofit organization facilitating community-driven robotics hardware, software, and research to foster repeatable, reproducible, and replicable science and reusable systems within human-robot interaction (HRI).",
+  "description": "Vizij is an Open Source Ecosystem for designing, animating and deploying rendered robot faces.",
   "lang": "en-US",
   "start_url": "/",
   "theme_color": "#2bbc8a",
