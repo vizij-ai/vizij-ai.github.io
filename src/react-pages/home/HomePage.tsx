@@ -23,10 +23,16 @@ export default function HomePage({
       <HeroHeader
             title={<><div className="inline-block">Vizij is an open source ecosystem for </div> <div><span className="text-accent-one">designing</span>, <span className="text-accent-two">animating</span>, and <span className="text-accent-three">deploying</span> rendered robot faces.</div></>}
             description={
-              <span className="text-sm">Demos and documentation will be available soon.</span>
+              <span className="text-sm">Documentation will be available soon.</span>
             }
             headingTag={"h2"}
             actions={[
+              {
+                label: "View Demos",
+                href: "https://vizij-showcase.web.app/",
+                variant: "primary",
+                indicatorText: undefined,
+              },
               {
                 label: "Learn More on GitHub",
                 href: "https://github.com/vizij-ai",
