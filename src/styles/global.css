@@ -3,6 +3,8 @@
 
 @source "./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}";
 
+@custom-variant dark (&:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *));
+
 @theme {
   /* Content paths */
   --content: "./src/**/*.{astro,html,js,jsx,md,svelte,ts,tsx,vue}";
@@ -494,22 +496,22 @@
   }
 
   h1 {
-    @apply !text-2xl md:!pt-[0.0rem];
+    @apply text-2xl! md:pt-0!;
   }
   h2 {
-    @apply !text-xl md:!pt-[0.215rem];
+    @apply text-xl! md:pt-[0.215rem]!;
   }
   h3 {
-    @apply !text-lg md:!pt-[0.250rem]; /* was 0.260 check!!! */
+    @apply text-lg! md:pt-1! /* was 0.260 check!!! */;
   }
   h4 {
-    @apply !text-base md:!pt-[0.425rem];
+    @apply text-base! md:pt-[0.425rem]!;
   }
   h5 {
-    @apply !text-base md:!pt-[0.425rem];
+    @apply text-base! md:pt-[0.425rem]!;
   }
   h6 {
-    @apply !text-base md:!pt-[0.425rem];
+    @apply text-base! md:pt-[0.425rem]!;
   }
 
   h1,
@@ -518,7 +520,7 @@
   h4,
   h5,
   h6 {
-    @apply !min-h-8 !h-auto;
+    @apply min-h-8! h-auto!;
   }
 
   /* Needed for copy code button when rehype-pretty-code is disabled */
@@ -540,7 +542,7 @@
 
     /* Style for code block titles */
     [data-rehype-pretty-code-title] {
-      @apply break-words bg-[var(--code-title-bg)] border-b border-surface text-foreground px-4 flex items-center text-sm h-10;
+      @apply break-words bg-(--code-title-bg) border-b border-surface text-foreground px-4 flex items-center text-sm h-10;
 
       & + pre {
         @apply m-0 rounded-t-none; /* Remove top margin if there's a title */
@@ -584,7 +586,7 @@
 
         /* For highlighted characters */
         [data-highlighted-chars] > span {
-          @apply py-[4px];
+          @apply py-1;
         }
 
         /* For line differences (implemented above) */
@@ -604,13 +606,13 @@
 
   /* Main style for pre block */
   pre {
-    @apply bg-[var(--code-bg)] text-[var(--theme-text)] rounded-lg leading-loose m-0;
+    @apply bg-(--code-bg) text-(--theme-text) rounded-lg leading-loose m-0;
     /* @apply bg-[var(--code-bg)] text-[var(--theme-accent)] rounded-lg leading-loose m-0; */
   }
 
   /* Style for inline code (rehype pretty code overrides styles in tailwind.config.css) */
   :not(pre) > code {
-    @apply bg-[var(--code-inline-bg)] px-2 py-1 text-sm rounded-lg;
+    @apply bg-(--code-inline-bg) px-2 py-1 text-sm rounded-lg;
   }
 
   /* Style for code copy button rehype-pretty-copy (button implemented separately) */
