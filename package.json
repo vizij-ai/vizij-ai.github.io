@@ -86,7 +86,9 @@
     "reading-time": "^1.5.0",
     "tailwindcss": "^4.1.11",
     "typescript": "^5.7.2",
-    "yaml": "^2.8.1"
+    "yaml": "^2.8.1",
+    "@types/react-dom": "^19.2.3",
+    "redux": "^3.7.2"
   },
   "overrides": {
     "@react-three/drei": "^10.7.7",
