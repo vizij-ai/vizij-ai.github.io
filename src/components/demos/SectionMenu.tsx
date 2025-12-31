@@ -1,5 +1,5 @@
 import { useEffect, useId, useMemo, useRef, useState } from "react";
-import { useActiveSectionId } from "../hooks/useActiveSectionId";
+import { useActiveSectionId } from "@/demo-lib/useActiveSectionId";
 
 export type SectionMenuItem = {
   id: string;
@@ -106,7 +106,7 @@ export function SectionMenu({ sections }: SectionMenuProps) {
         <nav
           id={panelId}
           aria-labelledby={toggleId}
-          aria-label="Showcase sections"
+          aria-label="Demo sections"
           className={`section-menu__drawer${isOpen ? " is-open" : ""}`}
           ref={panelRef}
         >

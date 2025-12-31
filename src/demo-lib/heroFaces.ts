@@ -1,4 +1,4 @@
-import type { ShowcaseFaceAssetKey } from "../lib/faceAssets";
+import type { ShowcaseFaceAssetKey } from "@/demo-lib/faceAssets";
 
 type HeroFace = {
   namespace: string;

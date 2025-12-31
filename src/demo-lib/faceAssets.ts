@@ -1,9 +1,9 @@
 import type { VizijAssetBundle } from "@vizij/runtime-react";
-import { FACE_ROOT_BOUNDS } from "../config/runtimeFace";
+import { FACE_ROOT_BOUNDS } from "@/demo-lib/runtimeFace";
 
 const FACE_ASSET_PATHS = {
-  hugoLatest: "/showcase/assets/Hugo_Latest_Rigged.glb",
-  quoriLatest: "/showcase/assets/Quori_Latest_Rigged.glb",
+  hugoLatest: "/demos/assets/Hugo_Latest_Rigged.glb",
+  quoriLatest: "/demos/assets/Quori_Latest_Rigged.glb",
 } as const;
 
 export type ShowcaseFaceAssetKey = keyof typeof FACE_ASSET_PATHS;

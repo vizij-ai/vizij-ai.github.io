@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { addPoseTriggerListener } from "../lib/poseRigBroadcast";
+import { addPoseTriggerListener } from "@/demo-lib/poseRigBroadcast";
 
 export function usePoseActivity(windowMs = 1200): boolean {
   const [active, setActive] = useState(false);

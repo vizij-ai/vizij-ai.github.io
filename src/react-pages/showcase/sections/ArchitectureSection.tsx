@@ -1,4 +1,5 @@
-import { SectionIntro } from "../components/SectionIntro";
+import { SectionIntro } from "@/components/demos/SectionIntro";
+import type { SectionCopy } from "./SectionCopy";
 
 const LAYERS = [
   {
@@ -20,13 +21,19 @@ const LAYERS = [
   },
 ];
 
-export function ArchitectureSection() {
+export function ArchitectureSection({ copy }: { copy?: SectionCopy }) {
+  const eyebrow = copy?.eyebrow ?? "Architecture";
+  const title = copy?.title ?? "A multi-layer stack for rendered robot faces.";
+  const description =
+    copy?.description ??
+    "Swap individual modules without rewriting the entire infrastructure. Vizij stays modular end to end.";
+
   return (
     <section id="architecture" className="showcase-section">
       <SectionIntro
-        eyebrow="Architecture"
-        title="A multi-layer stack for rendered robot faces."
-        description="Swap individual modules without rewriting the entire infrastructure. Vizij stays modular end to end."
+        eyebrow={eyebrow}
+        title={title}
+        description={description}
       />
       <div className="architecture-grid">
         {LAYERS.map((layer) => (

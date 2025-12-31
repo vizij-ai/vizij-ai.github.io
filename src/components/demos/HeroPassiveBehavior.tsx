@@ -3,8 +3,8 @@ import { useVizijRuntime } from "@vizij/runtime-react";
 import {
   usePoseHotkeys,
   type PoseHotkeyBinding,
-} from "../hooks/usePoseHotkeys";
-import { useIdleGazeBehavior } from "../hooks/useIdleGazeBehavior";
+} from "@/demo-lib/usePoseHotkeys";
+import { useIdleGazeBehavior } from "@/demo-lib/useIdleGazeBehavior";
 
 const EMOTION_DURATION_RANGE: readonly [number, number] = [2000, 3000];
 const EMOTION_COUNT_RANGE: readonly [number, number] = [2, 3];

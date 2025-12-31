@@ -1,11 +1,27 @@
 import { useCallback } from "react";
-import { HERO_FACES } from "../data/heroFaces";
-import { ShowcaseRuntime } from "../components/ShowcaseRuntime";
-import { RuntimeFaceFrame } from "../components/RuntimeFaceFrame";
-import { HeroPassiveBehavior } from "../components/HeroPassiveBehavior";
-import { useSectionInView } from "../hooks/useSectionInView";
+import { HeroPassiveBehavior } from "@/components/demos/HeroPassiveBehavior";
+import { RuntimeFaceFrame } from "@/components/demos/RuntimeFaceFrame";
+import { ShowcaseRuntime } from "@/components/demos/ShowcaseRuntime";
+import { HERO_FACES } from "@/demo-lib/heroFaces";
+import { useSectionInView } from "@/demo-lib/useSectionInView";
+import type { SectionCopy } from "./SectionCopy";
 
-export function HeroSection() {
+export function HeroSection({ copy }: { copy?: SectionCopy }) {
+  const eyebrow = copy?.eyebrow ?? "Vizij · Rendered robot faces";
+  const title =
+    copy?.title ?? "Design, animate, and deploy expressive rendered robot faces.";
+  const headerDescription = copy?.description
+    ? undefined
+    : "Vizij is an open-source ecosystem for building and deploying rendered robot faces. It provides a standardized, modular rig and controller pipeline—covering gaze, visemes, and emotion—so faces behave consistently across hardware.";
+  const noteDescription =
+    copy?.description ??
+    "Hugo from Peerbots, and Quori from the Quori Project are playing their idle behaviors mixing expressions and visemes while coordinating blinks and saccades to stay lifelike. Below, you’ll find focused demos that unpack the building blocks—rig controls, pose kits, gaze behaviors, and speech blending—that make this composite performance work.";
+  const ctaPrimaryLabel = copy?.ctaPrimaryLabel ?? "Launch the demos";
+  const ctaPrimaryHref = copy?.ctaPrimaryHref ?? "#controls";
+  const ctaSecondaryLabel = copy?.ctaSecondaryLabel ?? "Read the docs";
+  const ctaSecondaryHref =
+    copy?.ctaSecondaryHref ?? "https://github.com/vizij-ai";
+
   const { ref, isVisible, hasEntered } = useSectionInView<HTMLElement>({
     threshold: 0.2,
     once: false,
@@ -28,23 +44,21 @@ export function HeroSection() {
           <div className="hero-brand__identity">
             <span className="hero-brand__icon-shell">
               <img
-                src="/showcase/assets/vizij-icon.png"
+                src="/demos/assets/vizij-icon.png"
                 alt="Vizij icon"
                 className="hero-brand__icon"
                 loading="lazy"
               />
             </span>
             <img
-              src="/showcase/assets/vizij.png"
+              src="/demos/assets/vizij.png"
               alt="Vizij wordmark"
               className="hero-brand__wordmark"
               loading="lazy"
             />
           </div>
           <p className="hero-brand__tagline">
-            Design and deploy expressive, rendered robot faces that convey
-            intent and support consistent interactions across browsers, apps,
-            and hardware.
+            Design, animate, and deploy expressive rendered robot faces.
           </p>
           <div className="hero-brand__chips">
             <span className="hero-chip">Emotive facial expressions</span>
@@ -55,31 +69,30 @@ export function HeroSection() {
           </div>
         </div>
         <div className="section-header">
-          <p className="section-eyebrow">Vizij · Rendered robot faces</p>
-          <h1 className="section-title">
-            Design, animate, and deploy expressive rendered robot faces.
-          </h1>
-          <p className="section-description">
-            Vizij is an open-source ecosystem for building and deploying
-            rendered robot faces. It provides a standardized, modular rig and
-            controller pipeline—covering gaze, visemes, and emotion—so faces
-            behave consistently across hardware.
-          </p>
+          <p className="section-eyebrow">{eyebrow}</p>
+          <h1 className="section-title">{title}</h1>
+          {headerDescription && (
+            <p className="section-description">{headerDescription}</p>
+          )}
           <div className="hero-cta-row">
             <button
               type="button"
               className="cta"
-              onClick={() => scrollToSection("controls")}
+              onClick={() =>
+                ctaPrimaryHref.startsWith("#")
+                  ? scrollToSection(ctaPrimaryHref.slice(1))
+                  : (window.location.href = ctaPrimaryHref)
+              }
             >
-              Launch the showcase
+              {ctaPrimaryLabel}
             </button>
             <a
               className="ghost-button"
-              href="https://github.com/vizij-ai"
+              href={ctaSecondaryHref}
               target="_blank"
               rel="noreferrer"
             >
-              Read the docs
+              {ctaSecondaryLabel}
             </a>
             <a
               className="ghost-link"
@@ -114,14 +127,7 @@ export function HeroSection() {
         ))}
       </div>
       <div className="section-description">
-        <p>
-          Hugo (from <a href="https://peerbots.org">Peerbots</a>), and{" "}
-          <a href="https://quori.org">Quori</a> are driven by Vizij rigs and
-          controllers, combining expressions, visemes, blinks, and saccades to
-          create communicative, rendered robot faces. Below, feature-specific
-          demos unpack the building blocks—rig controls, poses, gaze behaviors,
-          and speech blending— that enable these performances.
-        </p>
+        <p>{noteDescription}</p>
       </div>
     </section>
   );

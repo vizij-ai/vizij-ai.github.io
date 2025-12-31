@@ -5,7 +5,7 @@ import {
   useVizijRuntime,
   type RootBounds,
 } from "@vizij/runtime-react";
-import { FACE_ROOT_BOUNDS } from "../config/runtimeFace";
+import { FACE_ROOT_BOUNDS } from "@/demo-lib/runtimeFace";
 
 export type RuntimeFaceFrameProps = {
   label?: string;

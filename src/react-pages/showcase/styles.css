@@ -1293,7 +1293,7 @@ textarea {
   font-size: 0.85rem;
 }
 :root {
-  /* NOTE: This stylesheet is currently loaded explicitly from `src/pages/showcase.astro`
+  /* NOTE: This stylesheet is currently loaded explicitly from `src/pages/demos.astro`
      because Astro may omit CSS imported only inside `client:only` islands in production.
      Long-term goal: migrate these styles to shared site styles and remove this file. */
 }

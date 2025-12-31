@@ -104,7 +104,7 @@ function InputStager({
         if (!warnedMissingRef.current.has(path)) {
           warnedMissingRef.current.add(path);
           console.warn(
-            "[vizij-showcase] No constraints for path; using fallback range",
+            "[vizij-demos] No constraints for path; using fallback range",
             { path, min, max, defaultValue },
           );
         }

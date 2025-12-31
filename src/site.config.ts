@@ -31,8 +31,8 @@ export const menuLinks: {
   callToAction?: boolean;
 }[] = [
   {
-    path: "/",
-    title: "Showcase",
+    path: "/demos/",
+    title: "Demos",
     inHeader: false,
   },
   // {

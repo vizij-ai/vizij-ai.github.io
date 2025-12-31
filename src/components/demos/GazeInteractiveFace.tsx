@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useVizijRuntime } from "@vizij/runtime-react";
-import { usePoseHotkeys } from "../hooks/usePoseHotkeys";
-import { useMouseGaze } from "../hooks/useMouseGaze";
-import { useIdleGazeBehavior } from "../hooks/useIdleGazeBehavior";
+import { useIdleGazeBehavior } from "@/demo-lib/useIdleGazeBehavior";
+import { useMouseGaze } from "@/demo-lib/useMouseGaze";
+import { usePoseHotkeys } from "@/demo-lib/usePoseHotkeys";
 import { RuntimeFaceFrame } from "./RuntimeFaceFrame";
 
 export function GazeInteractiveFace({ enabled = true }: { enabled?: boolean }) {

@@ -1,14 +1,21 @@
 import { useEffect, useRef, useState } from "react";
-import { ShowcaseRuntime } from "../components/ShowcaseRuntime";
-import { SectionIntro } from "../components/SectionIntro";
-import { RuntimeFaceFrame } from "../components/RuntimeFaceFrame";
-import { VoicePanel } from "../components/VoicePanel";
-import { SpeechOverlay } from "../components/SpeechOverlay";
-import { FaceFramePlaceholder } from "../components/FaceFramePlaceholder";
-import { useSectionInView } from "../hooks/useSectionInView";
-import { type SpeechStatus } from "../data/speech";
+import { FaceFramePlaceholder } from "@/components/demos/FaceFramePlaceholder";
+import { RuntimeFaceFrame } from "@/components/demos/RuntimeFaceFrame";
+import { SectionIntro } from "@/components/demos/SectionIntro";
+import { ShowcaseRuntime } from "@/components/demos/ShowcaseRuntime";
+import { SpeechOverlay } from "@/components/demos/SpeechOverlay";
+import { VoicePanel } from "@/components/demos/VoicePanel";
+import { type SpeechStatus } from "@/demo-lib/speech";
+import { useSectionInView } from "@/demo-lib/useSectionInView";
+import type { SectionCopy } from "./SectionCopy";
 
-export function VoiceSection() {
+export function VoiceSection({ copy }: { copy?: SectionCopy }) {
+  const eyebrow = copy?.eyebrow ?? "Speech sync";
+  const title = copy?.title ?? "Stream visemes into rendered faces.";
+  const description =
+    copy?.description ??
+    "Kick off the sample Amazon Polly read to see how audio events map to nuanced facial expressions. You can swap in your own viseme-generating model to compare.";
+
   const [speechStatus, setSpeechStatus] = useState<SpeechStatus>("idle");
   const [showOverlay, setShowOverlay] = useState(true);
   const facePointerRef = useRef<HTMLDivElement | null>(null);
@@ -42,9 +49,9 @@ export function VoiceSection() {
   return (
     <section id="voice" className="showcase-section" ref={ref}>
       <SectionIntro
-        eyebrow="Speech sync"
-        title="Stream visemes into rendered faces."
-        description="Kick off the sample Amazon Polly read to see how audio events map to nuanced facial expressions. You can swap in your own viseme-generating model to compare."
+        eyebrow={eyebrow}
+        title={title}
+        description={description}
       />
       <ShowcaseRuntime
         namespace="voice"

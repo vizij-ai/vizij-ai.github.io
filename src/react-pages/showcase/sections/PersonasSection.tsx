@@ -1,3 +1,5 @@
+import type { SectionCopy } from "./SectionCopy";
+
 const PERSONAS = [
   {
     title: "Developers",
@@ -21,18 +23,19 @@ const PERSONAS = [
   },
 ];
 
-export function PersonasSection() {
+export function PersonasSection({ copy }: { copy?: SectionCopy }) {
+  const eyebrow = copy?.eyebrow ?? "What you can do";
+  const title = copy?.title ?? "Vizij meets teams wherever they build.";
+  const description =
+    copy?.description ??
+    "Whether you ship to a web app, abstract robot, or humanoid head, Vizij keeps expressive faces consistent from prototype to production.";
+
   return (
     <section id="personas" className="showcase-section">
       <div className="section-header">
-        <p className="section-eyebrow">What you can do</p>
-        <h2 className="section-title">
-          Vizij meets teams wherever they build.
-        </h2>
-        <p className="section-description">
-          Whether you ship to a web app, abstract robot, or humanoid head, Vizij
-          keeps expressive faces consistent from prototype to production.
-        </p>
+        <p className="section-eyebrow">{eyebrow}</p>
+        <h2 className="section-title">{title}</h2>
+        <p className="section-description">{description}</p>
       </div>
       <div className="persona-grid">
         {PERSONAS.map((persona) => (

@@ -3,8 +3,8 @@ import { useVizijRuntime } from "@vizij/runtime-react";
 import {
   usePoseHotkeys,
   type PoseHotkeyBinding,
-} from "../hooks/usePoseHotkeys";
-import { addPoseTriggerListener } from "../lib/poseRigBroadcast";
+} from "@/demo-lib/usePoseHotkeys";
+import { addPoseTriggerListener } from "@/demo-lib/poseRigBroadcast";
 
 type PoseRigMirrorBridgeProps = {
   enabled?: boolean;

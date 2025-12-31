@@ -1,11 +1,18 @@
-import { ShowcaseRuntime } from "../components/ShowcaseRuntime";
-import { SectionIntro } from "../components/SectionIntro";
-import { RigControlPanel } from "../components/RigControlPanel";
-import { RuntimeFaceFrame } from "../components/RuntimeFaceFrame";
-import { FaceFramePlaceholder } from "../components/FaceFramePlaceholder";
-import { useSectionInView } from "../hooks/useSectionInView";
+import { FaceFramePlaceholder } from "@/components/demos/FaceFramePlaceholder";
+import { RigControlPanel } from "@/components/demos/RigControlPanel";
+import { RuntimeFaceFrame } from "@/components/demos/RuntimeFaceFrame";
+import { SectionIntro } from "@/components/demos/SectionIntro";
+import { ShowcaseRuntime } from "@/components/demos/ShowcaseRuntime";
+import { useSectionInView } from "@/demo-lib/useSectionInView";
+import type { SectionCopy } from "./SectionCopy";
 
-export function ControlsSection() {
+export function ControlsSection({ copy }: { copy?: SectionCopy }) {
+  const eyebrow = copy?.eyebrow ?? "Fine-grain control";
+  const title = copy?.title ?? "Every feature is controllable.";
+  const description =
+    copy?.description ??
+    "Dial any part of the face—from color and opacity to 3D position, rotation, and scale. Search a path, add it, and drive exact values through Vizij’s orchestrator.";
+
   const { ref, hasEntered, isVisible } = useSectionInView<HTMLElement>({
     threshold: 0.4,
     once: false,
@@ -14,9 +21,9 @@ export function ControlsSection() {
   return (
     <section id="controls" className="showcase-section" ref={ref}>
       <SectionIntro
-        eyebrow="Fine-grain control"
-        title="Every feature is controllable."
-        description="Dial any part of the face—from color and opacity to 3D position, rotation, and scale. Search a path, add it, and drive exact values through Vizij’s orchestrator."
+        eyebrow={eyebrow}
+        title={title}
+        description={description}
       />
       <ShowcaseRuntime
         namespace="controls"

@@ -29,7 +29,7 @@ export default function HomePage({
             actions={[
               {
                 label: "View Demos",
-                href: "https://vizij-showcase.web.app/",
+                href: "/demos",
                 variant: "primary",
                 indicatorText: undefined,
               },

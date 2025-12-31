@@ -1,18 +1,19 @@
-import { SectionMenu, type SectionMenuItem } from "./components/SectionMenu";
-import { HeroSection } from "./sections/HeroSection";
+import { SectionMenu, type SectionMenuItem } from "@/components/demos/SectionMenu";
 import { AboutSection } from "./sections/AboutSection";
-import { ControlsSection } from "./sections/ControlsSection";
-import { ExpressionsSection } from "./sections/ExpressionsSection";
-import { GazePlaySection } from "./sections/GazePlaySection";
-import { VoiceSection } from "./sections/VoiceSection";
-import { PersonasSection } from "./sections/PersonasSection";
-import { MissionSection } from "./sections/MissionSection";
 import { ArchitectureSection } from "./sections/ArchitectureSection";
 import { CommunitySection } from "./sections/CommunitySection";
+import { ControlsSection } from "./sections/ControlsSection";
+import { ExpressionsSection } from "./sections/ExpressionsSection";
+import { FooterSection } from "./sections/FooterSection";
+import { GazePlaySection } from "./sections/GazePlaySection";
+import { HeroSection } from "./sections/HeroSection";
+import { MissionSection } from "./sections/MissionSection";
+import { PersonasSection } from "./sections/PersonasSection";
 import { RoadmapSection } from "./sections/RoadmapSection";
 import { StandardsSection } from "./sections/StandardsSection";
-import { FooterSection } from "./sections/FooterSection";
-import { RuntimeDebugOverlay } from "./components/RuntimeDebugOverlay";
+import { VoiceSection } from "./sections/VoiceSection";
+import { useShowcaseCopy } from "./hooks/useShowcaseCopy";
+import { RuntimeDebugOverlay } from "@/components/demos/RuntimeDebugOverlay";
 import { OrchestratorProvider } from "@vizij/orchestrator-react";
 
 import "./styles.css";
@@ -33,22 +34,24 @@ const SECTION_LINKS: SectionMenuItem[] = [
 ];
 
 export default function ShowcasePage() {
+  const { sections } = useShowcaseCopy();
+
   return (
     <OrchestratorProvider autostart={false}>
       <SectionMenu sections={SECTION_LINKS} />
       <div className="showcase-shell">
-        <HeroSection />
-        <AboutSection />
-        <ExpressionsSection />
-        <GazePlaySection />
-        <VoiceSection />
-        <ControlsSection />
-        <PersonasSection />
-        <MissionSection />
-        <ArchitectureSection />
-        <CommunitySection />
-        <RoadmapSection />
-        <StandardsSection />
+        <HeroSection copy={sections.hero} />
+        <AboutSection copy={sections.about} />
+        <ExpressionsSection copy={sections.expressions} />
+        <GazePlaySection copy={sections.gaze} />
+        <VoiceSection copy={sections.voice} />
+        <ControlsSection copy={sections.controls} />
+        <PersonasSection copy={sections.personas} />
+        <MissionSection copy={sections.mission} />
+        <ArchitectureSection copy={sections.architecture} />
+        <CommunitySection copy={sections.community} />
+        <RoadmapSection copy={sections.roadmap} />
+        <StandardsSection copy={sections.standards} />
         <FooterSection />
       </div>
       <RuntimeDebugOverlay />

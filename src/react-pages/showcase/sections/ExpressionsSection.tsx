@@ -1,13 +1,20 @@
-import { ShowcaseRuntime } from "../components/ShowcaseRuntime";
-import { SectionIntro } from "../components/SectionIntro";
-import { RuntimeFaceFrame } from "../components/RuntimeFaceFrame";
-import { PoseButtonPanel } from "../components/PoseButtonPanel";
-import { FaceFramePlaceholder } from "../components/FaceFramePlaceholder";
-import { PoseRigMirrorBridge } from "../components/PoseRigMirrorBridge";
-import { useSectionInView } from "../hooks/useSectionInView";
-import { usePoseActivity } from "../hooks/usePoseActivity";
+import { FaceFramePlaceholder } from "@/components/demos/FaceFramePlaceholder";
+import { PoseButtonPanel } from "@/components/demos/PoseButtonPanel";
+import { PoseRigMirrorBridge } from "@/components/demos/PoseRigMirrorBridge";
+import { RuntimeFaceFrame } from "@/components/demos/RuntimeFaceFrame";
+import { SectionIntro } from "@/components/demos/SectionIntro";
+import { ShowcaseRuntime } from "@/components/demos/ShowcaseRuntime";
+import { usePoseActivity } from "@/demo-lib/usePoseActivity";
+import { useSectionInView } from "@/demo-lib/useSectionInView";
+import type { SectionCopy } from "./SectionCopy";
 
-export function ExpressionsSection() {
+export function ExpressionsSection({ copy }: { copy?: SectionCopy }) {
+  const eyebrow = copy?.eyebrow ?? "Bundle Poses";
+  const title = copy?.title ?? "Express emotions with Vizij.";
+  const description =
+    copy?.description ??
+    "Package expressions, visemes, and gestures so rendered faces can express mood and intent easily.";
+
   const { ref, hasEntered, isVisible } = useSectionInView<HTMLElement>({
     threshold: 0.35,
     once: false,
@@ -17,9 +24,9 @@ export function ExpressionsSection() {
   return (
     <section id="expressions" className="showcase-section" ref={ref}>
       <SectionIntro
-        eyebrow="Bundle Poses"
-        title="Express emotions with Vizij."
-        description="Package expressions, visemes, and gestures so rendered faces can express mood and intent easily."
+        eyebrow={eyebrow}
+        title={title}
+        description={description}
       />
       <div className="expression-stack">
         <ShowcaseRuntime

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import {
   addRuntimeStatusListener,
   type RuntimeDebugStatus,
-} from "../lib/runtimeDebug";
+} from "@/demo-lib/runtimeDebug";
 
 type RuntimeRow = RuntimeDebugStatus & { stale: boolean };
 

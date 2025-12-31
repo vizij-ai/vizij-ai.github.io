@@ -1512,3 +1512,20 @@ collections:
           label: Item
           name: item
           widget: string
+  - name: showcase
+    label: Showcase
+    label_singular: Showcase
+    folder: src/content/showcase
+    identifier_field: slug
+    extension: mdx
+    format: frontmatter
+    slug: "{{slug}}"
+    create: true
+    fields:
+      - label: Title
+        name: title
+        widget: string
+      - label: Description
+        name: description
+        widget: string
+        required: false

@@ -3,8 +3,8 @@ import { VizijRuntimeProvider, useVizijRuntime } from "@vizij/runtime-react";
 import {
   createShowcaseBundle,
   type ShowcaseFaceAssetKey,
-} from "../lib/faceAssets";
-import { broadcastRuntimeStatus } from "../lib/runtimeDebug";
+} from "@/demo-lib/faceAssets";
+import { broadcastRuntimeStatus } from "@/demo-lib/runtimeDebug";
 
 type ShowcaseRuntimeProps = {
   namespace: string;

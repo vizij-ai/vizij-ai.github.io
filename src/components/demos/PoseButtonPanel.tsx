@@ -4,8 +4,8 @@ import {
   POSE_HOTKEY_LAYOUT,
   usePoseHotkeys,
   type PoseHotkeyBinding,
-} from "../hooks/usePoseHotkeys";
-import { broadcastPoseTrigger } from "../lib/poseRigBroadcast";
+} from "@/demo-lib/usePoseHotkeys";
+import { broadcastPoseTrigger } from "@/demo-lib/poseRigBroadcast";
 
 type PoseTimerEntry = {
   timeoutId: number;

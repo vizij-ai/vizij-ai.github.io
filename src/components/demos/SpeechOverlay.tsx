@@ -1,4 +1,4 @@
-import { SPEECH_STATUS_COPY, type SpeechStatus } from "../data/speech";
+import { SPEECH_STATUS_COPY, type SpeechStatus } from "@/demo-lib/speech";
 
 type SpeechOverlayProps = {
   status: SpeechStatus;

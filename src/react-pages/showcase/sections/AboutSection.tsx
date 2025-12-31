@@ -1,4 +1,5 @@
-import { SectionIntro } from "../components/SectionIntro";
+import { SectionIntro } from "@/components/demos/SectionIntro";
+import type { SectionCopy } from "./SectionCopy";
 
 const FEATURES = [
   {
@@ -30,13 +31,20 @@ const FEATURES = [
   },
 ];
 
-export function AboutSection() {
+export function AboutSection({ copy }: { copy?: SectionCopy }) {
+  const eyebrow = copy?.eyebrow ?? "What is Vizij?";
+  const title =
+    copy?.title ?? "Infrastructure for expressive, rendered robot faces.";
+  const description =
+    copy?.description ??
+    "Vizij combines rendering, animation, and orchestration so rendered faces can be projected consistently across screens, apps, and robot hardware.";
+
   return (
     <section id="about" className="showcase-section">
       <SectionIntro
-        eyebrow="What is Vizij?"
-        title="Infrastructure for expressive, rendered robot faces."
-        description="Vizij combines rendering, animation, and orchestration so rendered faces can be projected consistently across screens, apps, and robot hardware."
+        eyebrow={eyebrow}
+        title={title}
+        description={description}
       />
       <div className="feature-grid">
         {FEATURES.map((feature) => (

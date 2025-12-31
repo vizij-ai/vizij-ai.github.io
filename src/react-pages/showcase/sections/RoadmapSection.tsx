@@ -1,15 +1,18 @@
-export function RoadmapSection() {
+import type { SectionCopy } from "./SectionCopy";
+
+export function RoadmapSection({ copy }: { copy?: SectionCopy }) {
+  const eyebrow = copy?.eyebrow ?? "Roadmap";
+  const title = copy?.title ?? "Shipping now, building for the long run.";
+  const description =
+    copy?.description ??
+    "Here is what the team is focused on today and where the platform is heading next.";
+
   return (
     <section id="roadmap" className="showcase-section">
       <div className="section-header">
-        <p className="section-eyebrow">Roadmap</p>
-        <h2 className="section-title">
-          Shipping now, building for the long run.
-        </h2>
-        <p className="section-description">
-          Here is what the team is focused on today and where the platform is
-          heading next.
-        </p>
+        <p className="section-eyebrow">{eyebrow}</p>
+        <h2 className="section-title">{title}</h2>
+        <p className="section-description">{description}</p>
       </div>
       <div className="roadmap-grid">
         <div className="roadmap-card">
