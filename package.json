@@ -63,7 +63,14 @@
     "satori-html": "^0.3.2",
     "sharp": "^0.33.5",
     "unified": "^11.0.5",
-    "unist-util-visit": "^5.0.0"
+    "unist-util-visit": "^5.0.0",
+    "@vizij/orchestrator-react": "^0.0.7",
+    "@vizij/runtime-react": "^0.0.14",
+    "@vizij/render": "^0.0.7",
+    "three": "^0.170.0",
+    "@react-three/fiber": "^9.5.0",
+    "@react-three/drei": "^10.7.7",
+    "zustand": "^5.0.9"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.5",
@@ -80,5 +87,11 @@
     "tailwindcss": "^4.1.11",
     "typescript": "^5.7.2",
     "yaml": "^2.8.1"
+  },
+  "overrides": {
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.5.0",
+    "zustand": "^5.0.9",
+    "use-sync-external-store": "^1.6.0"
   }
 }

@@ -1,0 +1,20 @@
+---
+// NOTE: `client:only` islands do not reliably emit CSS in Astro production builds.
+// We link the showcase stylesheet explicitly until the page adopts shared site styles.
+import showcaseStylesUrl from "@/react-pages/showcase/styles.css?url";
+import ShowcasePage from "@/react-pages/showcase/ShowcasePage";
+import SiteLayout from "@/layouts/SiteLayout";
+
+const metadata = {
+  title: "Vizij Showcase",
+  description: "Interactive Vizij showcase.",
+};
+---
+
+<head>
+  <link rel="stylesheet" href={showcaseStylesUrl} />
+</head>
+
+<SiteLayout metadata={metadata}>
+  <ShowcasePage client:only="react" />
+</SiteLayout>

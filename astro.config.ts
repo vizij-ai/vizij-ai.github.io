@@ -125,8 +125,14 @@ export default defineConfig({
     build: {
       sourcemap: true, // Source maps generation
     },
+    assetsInclude: ["**/*.wasm"],
     optimizeDeps: {
-      exclude: ["@resvg/resvg-js"],
+      exclude: [
+        "@resvg/resvg-js",
+        "@vizij/orchestrator-wasm",
+        "@vizij/node-graph-wasm",
+        "@vizij/animation-wasm",
+      ],
     },
     plugins: [
       rawFonts([".ttf", "otf", ".woff"]),

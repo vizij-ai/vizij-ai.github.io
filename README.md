@@ -127,6 +127,8 @@ Edit `src/site.config.ts` to update:
 - **Tailwind Config**: Uses Tailwind CSS v4 with `@tailwindcss/vite`
 - **Theme**: Automatic dark/light mode support
 - **Components**: Use Tailwind utility classes
+- **Showcase Styles**: `/showcase` currently links its React island stylesheet via `?url` in `src/pages/showcase.astro` because Astro production builds can omit CSS imported only inside `client:only` islands. Long-term goal: align the showcase to the shared site styles and remove the bespoke stylesheet.
+- **React 19 overrides (temporary)**: `package.json` pins `@react-three/*` and `zustand` via `overrides` so the React 19 preview works with `@vizij/render@0.0.7`. Remove these overrides after the React 19 `vizij-web` packages are published.
 
 ## 🌟 Key Features
 
