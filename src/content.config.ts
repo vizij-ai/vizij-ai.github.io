@@ -39,6 +39,8 @@ const softwareIdSchema = z
 const temporalMetadataSchema = z.object({
   startDate: z.date().optional(),
   endDate: z.date().optional(),
+  submissionDeadlineDate: z.date().optional(),
+  notificationDate: z.date().optional(),
 });
 
 const linksSchema = z.object({
@@ -353,6 +355,8 @@ const events = defineCollection({
       ]),
       startDate: z.string().or(z.date()).transform(parseDate),
       endDate: z.string().or(z.date()).transform(parseDate),
+      submissionDeadlineDate: z.string().or(z.date()).transform(parseDate).optional(),
+      notificationDate: z.string().or(z.date()).transform(parseDate).optional(),
       location: z.object({
         venue: z.string().optional(),
         city: z.string(),

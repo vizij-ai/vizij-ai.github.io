@@ -113,6 +113,8 @@ const ogImage = `/og/events/${entry.id}.png`;
 const currentDate = new Date();
 const startDate = parseDateLocal(data.startDate);
 const endDate = parseDateLocal(data.endDate);
+const submissionDeadlineDate = parseDateLocal(data.submissionDeadlineDate);
+const notificationDate = parseDateLocal(data.notificationDate);
 let eventStatus = "upcoming";
 if (currentDate > endDate) {
   eventStatus = "past";
@@ -183,6 +185,16 @@ const formatDate = (date: Date) => {
 
 // Prepare event details
 const eventDetailsItems = [];
+eventDetailsItems.push({
+  label: "Submission Deadline",
+  value: formatDate(submissionDeadlineDate),
+  icon: "solar:calendar-mark-line-duotone",
+});
+eventDetailsItems.push({
+  label: "Review Notification Date",
+  value: formatDate(notificationDate),
+  icon: "solar:calendar-mark-line-duotone",
+});
 eventDetailsItems.push({
   label: "Start Date",
   value: formatDate(startDate),
@@ -376,6 +388,8 @@ const featuredState = data.featured
                       links: event.data.links,
                       startDate: event.data.startDate,
                       endDate: event.data.endDate,
+                      submissionDeadlineDate: event.data.submissionDeadlineDate,
+                      notificationDate: event.data.notificationDate,
                       shortDescription: `${
                         typeLabels[event.data.type] || event.data.type
                       } • ${event.data.location.city}`,
