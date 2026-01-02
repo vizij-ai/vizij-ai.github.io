@@ -395,6 +395,22 @@ const events = defineCollection({
       links: linksSchema.optional(),
       featured: z.boolean().default(false),
       draft: z.boolean().optional(),
+      actions: z
+        .array(
+          z.object({
+            label: z.string(),
+            url: z.string(),
+            variant: z
+              .enum(["default", "primary", "secondary", "tertiary"])
+              .optional(),
+            size: z.enum(["small", "medium", "large"]).optional(),
+            target: z.string().optional(),
+            rel: z.string().optional(),
+            indicatorText: z.string().optional(),
+          }),
+        )
+        .optional(),
+
       topics: z.array(z.string()),
     }),
 });

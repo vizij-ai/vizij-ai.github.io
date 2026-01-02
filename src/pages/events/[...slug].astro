@@ -16,6 +16,7 @@ import BasicChip from "@/components/ui/BasicChip";
 import { resolveLogoAsset } from "@/utils/images";
 import { getEventPreviewDescriptionText } from "@/utils/events";
 import { parseDateLocal } from "@/utils/date";
+import ActionsSection from "@/components/detail/ActionsSection";
 
 export async function getStaticPaths() {
   const events = await getCollection("events", ({ data }) => {
@@ -309,6 +310,12 @@ const featuredState = data.featured
             items={locationItems}
             defaultItemIcon="solar:map-point-line-duotone"
           />
+        </Fragment>
+
+        <Fragment slot="actions">
+          {data.actions && data.actions.length > 0 && (
+            <ActionsSection title="ACTIONS" actions={data.actions} />
+          )}
         </Fragment>
 
         <Fragment slot="contributors">
