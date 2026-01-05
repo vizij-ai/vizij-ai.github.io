@@ -353,9 +353,15 @@ const events = defineCollection({
         "webinar",
         "competition",
       ]),
+      // In the future, we should create an datesSchema that contains
+      // startDate, endDate, submissionDeadlineDate, notificationDate (etc).
       startDate: z.string().or(z.date()).transform(parseDate),
       endDate: z.string().or(z.date()).transform(parseDate),
-      submissionDeadlineDate: z.string().or(z.date()).transform(parseDate).optional(),
+      submissionDeadlineDate: z
+        .string()
+        .or(z.date())
+        .transform(parseDate)
+        .optional(),
       notificationDate: z.string().or(z.date()).transform(parseDate).optional(),
       location: z.object({
         venue: z.string().optional(),
