@@ -87,6 +87,14 @@ collections:
             name: endDate
             widget: datetime
             required: false
+          - label: Submission Deadline Date
+            name: submissionDeadlineDate
+            widget: datetime
+            required: false
+          - label: Notification Date
+            name: notificationDate
+            widget: datetime
+            required: false
       - label: Links
         name: links
         widget: object
@@ -1039,6 +1047,14 @@ collections:
             name: endDate
             widget: datetime
             required: false
+          - label: Submission Deadline Date
+            name: submissionDeadlineDate
+            widget: datetime
+            required: false
+          - label: Notification Date
+            name: notificationDate
+            widget: datetime
+            required: false
       - label: Type
         name: type
         widget: select
@@ -1087,6 +1103,14 @@ collections:
             required: false
           - label: End Date
             name: endDate
+            widget: datetime
+            required: false
+          - label: Submission Deadline Date
+            name: submissionDeadlineDate
+            widget: datetime
+            required: false
+          - label: Notification Date
+            name: notificationDate
             widget: datetime
             required: false
       - label: Related Hardware
@@ -1312,6 +1336,14 @@ collections:
       - label: End Date
         name: endDate
         widget: datetime
+      - label: Submission Deadline Date
+        name: submissionDeadlineDate
+        widget: datetime
+        required: false
+      - label: Notification Date
+        name: notificationDate
+        widget: datetime
+        required: false
       - label: Location
         name: location
         widget: object
@@ -1505,6 +1537,46 @@ collections:
         name: draft
         widget: boolean
         required: false
+      - label: Actions
+        name: actions
+        widget: list
+        required: false
+        fields:
+          - label: Label
+            name: label
+            widget: string
+          - label: Url
+            name: url
+            widget: string
+          - label: Variant
+            name: variant
+            widget: select
+            options:
+              - default
+              - primary
+              - secondary
+              - tertiary
+            required: false
+          - label: Size
+            name: size
+            widget: select
+            options:
+              - small
+              - medium
+              - large
+            required: false
+          - label: Target
+            name: target
+            widget: string
+            required: false
+          - label: Rel
+            name: rel
+            widget: string
+            required: false
+          - label: Indicator Text
+            name: indicatorText
+            widget: string
+            required: false
       - label: Topics
         name: topics
         widget: list
