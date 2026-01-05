@@ -23,42 +23,71 @@ export const siteConfig: SiteConfig = {
   title: "Vizij",
 };
 
+export interface LinkSection {
+  kind: "link";
+  title: string;
+  href: string;
+}
+
+export interface FeaturedSection {
+  kind: "featured";
+  title: string;
+  collection:
+    | "organizations"
+    | "events"
+    | "software"
+    | "research"
+    | "hardware"
+    | "people";
+  items: string[];
+  fields: {
+    title: string;
+    subtitle?: string;
+  };
+}
+
+export type Section = LinkSection | FeaturedSection;
+export type NavCollectionKey = FeaturedSection["collection"];
+export type NavCollections = Partial<
+  Record<
+    NavCollectionKey,
+    Record<
+      string,
+      {
+        id: string;
+        fields: Record<string, string | number | undefined>;
+      }
+    >
+  >
+>;
+
 // Used to generate links in both the Header & Footer.
 export const menuLinks: {
   path: string;
   title: string;
   inHeader: boolean;
   callToAction?: boolean;
+  dropdownSubtitle?: string;
+  sections?: Section[];
 }[] = [
   {
     path: "/demos/",
     title: "Demos",
     inHeader: false,
   },
-  // {
-  //   path: "/projects/",
-  //   title: "Projects",
-  //   inHeader: true,
-  // },
-  // {
-  //   path: "/services/",
-  //   title: "Services",
-  //   inHeader: true,
-  // },
   {
     path: "/events/",
     title: "Events",
     inHeader: true,
+    sections: [
+      { kind: "link", title: "Featured Events", href: "/events/#featured" },
+      { kind: "link", title: "Upcoming Events", href: "/events/#upcoming" },
+      { kind: "link", title: "Past Events", href: "/events/#past" },
+      {
+        kind: "link",
+        title: "Partner for an Event",
+        href: "/events/#events-contribute",
+      },
+    ],
   },
-  // {
-  //   path: "/contributors/",
-  //   title: "Contributors",
-  //   inHeader: true,
-  // },
-  // {
-  //   path: "/get-involved/",
-  //   title: "Get Involved",
-  //   inHeader: true,
-  //   callToAction: true,
-  // },
 ];

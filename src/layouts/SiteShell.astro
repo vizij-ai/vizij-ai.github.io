@@ -4,9 +4,13 @@ import Header from "@/components/layout/Header";
 import SkipLink from "@/components/layout/SkipLink";
 import ParallaxHexBackground from "@/components/background/ParallaxHexBackground";
 import ThemeProvider from "@/components/theme/ThemeProvider";
-import { getAllHardware } from "@/data/hardware";
-import { getFeaturedResearch } from "@/data/research";
-import { getAllSoftware } from "@/data/software";
+import { getCollection } from "astro:content";
+import {
+  menuLinks,
+  type FeaturedSection,
+  type NavCollections,
+} from "@/site.config";
+import { isDraftVisible } from "@/utils/drafts";
 
 export interface Props {
   noPaddingTop?: boolean;
@@ -23,7 +27,7 @@ export interface Props {
 
 const {
   noPaddingTop = false,
-  showBackground = false,
+  showBackground = true,
   containerClassName,
   backgroundCount,
   backgroundSeed,
@@ -34,52 +38,64 @@ const {
   backgroundClassName,
 } = Astro.props;
 
-const [allHardware, allSoftware, featuredResearch] = await Promise.all([
-  getAllHardware(),
-  getAllSoftware(),
-  getFeaturedResearch(),
-]);
+const coerceFieldValue = (value: unknown): string | number | undefined => {
+  if (typeof value === "string" || typeof value === "number") return value;
+  if (value instanceof Date && !Number.isNaN(value.getTime())) {
+    return value.getFullYear();
+  }
+  return undefined;
+};
 
-const hardwareItems = allHardware.map((item) => ({
-  id: item.id,
-  name: item.data.name ?? item.id,
-  shortDescription: item.data.shortDescription ?? "",
-  status: (item.data.status ?? "in-progress") as
-    | "available"
-    | "in-progress"
-    | "coming-soon"
-    | "deprecated",
-}));
+const featuredSections = menuLinks
+  .flatMap((link) => link.sections ?? [])
+  .filter((section): section is FeaturedSection => section.kind === "featured");
 
-const softwareItems = allSoftware.map((item) => ({
-  id: item.id,
-  name: item.data.name ?? item.id,
-  shortDescription: item.data.shortDescription ?? "",
-  status: (item.data.status ?? "in-progress") as
-    | "stable"
-    | "beta"
-    | "alpha"
-    | "in-progress"
-    | "deprecated",
-}));
+const idsByCollection = new Map<FeaturedSection["collection"], Set<string>>();
+const fieldsByCollection = new Map<
+  FeaturedSection["collection"],
+  Set<string>
+>();
 
-const researchItems = featuredResearch.map((entry) => {
-  const publishDate = entry.data.publishDate
-    ? new Date(entry.data.publishDate)
-    : null;
-  const rawYear =
-    publishDate && !Number.isNaN(publishDate.getTime())
-      ? publishDate.getFullYear()
-      : (entry.data as { year?: number }).year;
-  const year =
-    typeof rawYear === "number" && !Number.isNaN(rawYear) ? rawYear : undefined;
-  return {
-    id: entry.id,
-    title: entry.data.title ?? entry.id,
-    type: entry.data.type ?? "Research",
-    year,
-  };
-});
+for (const section of featuredSections) {
+  if (!idsByCollection.has(section.collection)) {
+    idsByCollection.set(section.collection, new Set());
+  }
+  if (!fieldsByCollection.has(section.collection)) {
+    fieldsByCollection.set(section.collection, new Set());
+  }
+
+  const ids = idsByCollection.get(section.collection)!;
+  const fields = fieldsByCollection.get(section.collection)!;
+  for (const itemId of section.items) ids.add(itemId);
+  fields.add(section.fields.title);
+  if (section.fields.subtitle) fields.add(section.fields.subtitle);
+}
+
+const navCollections: NavCollections = {};
+for (const [collection, ids] of idsByCollection) {
+  if (ids.size === 0) continue;
+  const entries = await getCollection(collection, ({ data }) =>
+    isDraftVisible((data as { draft?: boolean }).draft),
+  );
+  const fields = fieldsByCollection.get(collection) ?? new Set();
+  const collectionMap: Record<
+    string,
+    { id: string; fields: Record<string, string | number | undefined> }
+  > = {};
+
+  for (const entry of entries) {
+    if (!ids.has(entry.id)) continue;
+    const fieldValues: Record<string, string | number | undefined> = {};
+    for (const fieldName of fields) {
+      const rawValue = (entry.data as Record<string, unknown>)[fieldName];
+      const value = coerceFieldValue(rawValue);
+      if (value !== undefined) fieldValues[fieldName] = value;
+    }
+    collectionMap[entry.id] = { id: entry.id, fields: fieldValues };
+  }
+
+  navCollections[collection] = collectionMap;
+}
 ---
 
 <ThemeProvider />
@@ -87,9 +103,7 @@ const researchItems = featuredResearch.map((entry) => {
 <Header
   client:load
   currentPath={Astro.url.pathname}
-  hardwareItems={hardwareItems}
-  softwareItems={softwareItems}
-  researchItems={researchItems}
+  navCollections={navCollections}
 />
 
 {

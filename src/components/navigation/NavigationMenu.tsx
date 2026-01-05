@@ -2,31 +2,14 @@ import React from "react";
 import * as NavigationMenu from "@radix-ui/react-navigation-menu";
 import { clsx } from "clsx";
 import { CallToActionButton } from "../ui/CallToActionButton";
-import { getStatusColor } from "@/config/statusConfig";
 import { navIconMap } from "@/components/navigation/navIcons";
 import { url as buildUrl } from "@/utils/url";
-
-// Simplified type for serialized data
-type HardwareItem = {
-  id: string;
-  name: string;
-  shortDescription: string;
-  status: "available" | "in-progress" | "coming-soon" | "deprecated";
-};
-
-type SoftwareItem = {
-  id: string;
-  name: string;
-  shortDescription: string;
-  status: "stable" | "beta" | "alpha" | "in-progress" | "deprecated";
-};
-
-type ResearchItem = {
-  id: string;
-  title: string;
-  type: string;
-  year?: number;
-};
+import type {
+  FeaturedSection,
+  LinkSection,
+  NavCollections,
+  Section,
+} from "@/site.config";
 
 interface NavigationMenuProps {
   currentPath: string;
@@ -35,18 +18,10 @@ interface NavigationMenuProps {
     title: string;
     inHeader: boolean;
     callToAction?: boolean;
+    dropdownSubtitle?: string;
+    sections?: Section[];
   }>;
-  hardwareItems: HardwareItem[];
-  softwareItems: SoftwareItem[];
-  researchItems?: ResearchItem[];
-  menuSections: Record<
-    string,
-    Array<{
-      title: string;
-      href: string;
-      icon?: string;
-    }>
-  >;
+  navCollections: NavCollections;
   urlPrefix: string;
 }
 
@@ -59,17 +34,20 @@ const dropdownIconMap = navIconMap;
 export const NavigationMenuComponent: React.FC<NavigationMenuProps> = ({
   currentPath,
   menuLinks,
-  hardwareItems,
-  softwareItems,
-  researchItems = [],
-  menuSections,
+  navCollections,
   urlPrefix,
 }) => {
   const url = (path: string) => makeUrl(path, urlPrefix);
-  const maxItemsInDropdown = 4;
-  const hardwareForDropdown = hardwareItems.slice(0, maxItemsInDropdown);
-  const softwareForDropdown = softwareItems.slice(0, maxItemsInDropdown);
-  const researchForDropdown = researchItems.slice(0, 3);
+  const getLinkSections = (sections?: Section[]) =>
+    (sections ?? []).filter(
+      (section): section is LinkSection => section.kind === "link",
+    );
+  const getFeaturedSections = (sections?: Section[]) =>
+    (sections ?? []).filter(
+      (section): section is FeaturedSection => section.kind === "featured",
+    );
+  const getFieldValue = (value: string | number | undefined) =>
+    value === undefined ? "" : String(value);
 
   // Robust path normalization and active detection
   const normalize = (p: string | undefined) => {
@@ -101,7 +79,7 @@ export const NavigationMenuComponent: React.FC<NavigationMenuProps> = ({
 
   // Fallback if no menu links
   if (!menuLinks || menuLinks.length === 0) {
-    return <div className="text-accent-two">Loading navigation...</div>;
+    return <div className="text-accent-three">Loading navigation...</div>;
   }
 
   return (
@@ -110,8 +88,10 @@ export const NavigationMenuComponent: React.FC<NavigationMenuProps> = ({
         {menuLinks
           .filter((link) => link.inHeader)
           .map((link) => {
+            const linkSections = getLinkSections(link.sections);
+            const featuredSections = getFeaturedSections(link.sections);
             const hasDropdown =
-              (menuSections[link.path] || link.path === "/projects/") &&
+              (linkSections.length > 0 || featuredSections.length > 0) &&
               !link.callToAction;
 
             if (!hasDropdown || link.callToAction) {
@@ -121,6 +101,7 @@ export const NavigationMenuComponent: React.FC<NavigationMenuProps> = ({
                   <NavigationMenu.Item key={link.path}>
                     <CallToActionButton
                       href={url(link.path)}
+                      variant="tertiary"
                       size="small"
                       className="text-xs sm:text-sm px-2 md:px-3 py-1.5 md:py-2"
                     >
@@ -135,7 +116,7 @@ export const NavigationMenuComponent: React.FC<NavigationMenuProps> = ({
                   <NavigationMenu.Link
                     className={clsx(
                       "block select-none rounded-lg px-2 md:px-3 py-1.5 md:py-2 text-xs sm:text-sm font-medium leading-none no-underline transition-all duration-200 whitespace-nowrap",
-                      "text-accent-two hover:text-accent-base focus:text-accent-base",
+                      "text-accent-three hover:text-accent-base focus:text-accent-base",
                       link.path === activeHeaderPath &&
                         "font-semibold text-foreground",
                     )}
@@ -154,7 +135,7 @@ export const NavigationMenuComponent: React.FC<NavigationMenuProps> = ({
                   className={clsx(
                     "group inline-flex select-none items-center gap-0.5 md:gap-1 rounded-lg px-2 md:px-3 py-1.5 md:py-2 text-xs sm:text-sm font-medium leading-none outline-none transition-colors whitespace-nowrap",
                     link.path === activeHeaderPath
-                      ? "font-semibold text-accent-two"
+                      ? "font-semibold text-accent-three"
                       : "text-foreground hover:text-accent-base focus:text-accent-base data-[state=open]:text-accent-base",
                   )}
                   onPointerDown={(e) => {
@@ -215,21 +196,25 @@ export const NavigationMenuComponent: React.FC<NavigationMenuProps> = ({
                           {link.title} Home
                         </div>
                         <div className="text-xs text-color-500">
-                          Browse all {link.title.toLowerCase()}
+                          {link.dropdownSubtitle ??
+                            `Browse all ${link.title.toLowerCase()}`}
                         </div>
                       </div>
                     </a>
 
                     {/* Divider */}
-                    <div className="h-px bg-color-200 dark:bg-color-700 my-3"></div>
+                    {(linkSections.length > 0 ||
+                      featuredSections.length > 0) && (
+                      <div className="h-px bg-color-200 dark:bg-color-700 my-3"></div>
+                    )}
 
                     {/* Sections */}
-                    {menuSections[link.path] && (
+                    {linkSections.length > 0 && (
                       <div className="space-y-2 mb-3">
                         <div className="text-xs font-semibold text-color-500 uppercase tracking-wider px-3">
                           Sections
                         </div>
-                        {menuSections[link.path]?.map((section) => (
+                        {linkSections.map((section) => (
                           <a
                             key={section.href}
                             href={url(section.href)}
@@ -243,113 +228,68 @@ export const NavigationMenuComponent: React.FC<NavigationMenuProps> = ({
                       </div>
                     )}
 
-                    {/* Projects Page - Combined Hardware, Software, Research */}
-                    {link.path === "/projects/" && (
-                      <>
-                        {/* Hardware Items */}
-                        {hardwareForDropdown.length > 0 && (
-                          <>
+                    {featuredSections.map((section, index) => {
+                      const collectionItems =
+                        navCollections[section.collection] ?? {};
+                      const items = section.items
+                        .map((itemId) => collectionItems[itemId])
+                        .filter(
+                          (
+                            item,
+                          ): item is {
+                            id: string;
+                            fields: Record<string, string | number | undefined>;
+                          } => Boolean(item),
+                        );
+
+                      if (items.length === 0) return null;
+
+                      const titleField = section.fields.title;
+                      const subtitleField = section.fields.subtitle;
+
+                      return (
+                        <React.Fragment
+                          key={`${section.collection}-${section.title}`}
+                        >
+                          {(linkSections.length > 0 || index > 0) && (
                             <div className="h-px bg-color-200 dark:bg-color-700 my-3"></div>
-                            <div className="space-y-2">
-                              <div className="text-xs font-semibold text-color-500 uppercase tracking-wider px-3">
-                                Featured Hardware
-                              </div>
-                              {hardwareForDropdown.slice(0, 2).map((item) => (
+                          )}
+                          <div className="space-y-2">
+                            <div className="text-xs font-semibold text-color-500 uppercase tracking-wider px-3">
+                              {section.title}
+                            </div>
+                            {items.map((item) => {
+                              const title =
+                                getFieldValue(item.fields[titleField]) ||
+                                item.id;
+                              const subtitle = subtitleField
+                                ? getFieldValue(item.fields[subtitleField])
+                                : "";
+                              return (
                                 <a
                                   key={item.id}
-                                  href={url(`/hardware/${item.id}`)}
+                                  href={url(
+                                    `/${section.collection}/${item.id}`,
+                                  )}
                                   className="flex items-start gap-3 p-2 rounded-lg hover:bg-accent-base/10 transition-colors group/link"
                                 >
-                                  <div
-                                    className={clsx(
-                                      "w-2 h-2 rounded-full mt-1.5 shrink-0",
-                                      getStatusColor(item.status, "bullet"),
-                                    )}
-                                  ></div>
                                   <div className="min-w-0 flex-1">
-                                    <div className="font-medium text-sm text-foreground group-hover/link:text-accent-base transition-colors truncate">
-                                      {item.name}
+                                    <div className="font-medium text-sm text-foreground group-hover/link:text-accent-base transition-colors line-clamp-2">
+                                      {title}
                                     </div>
-                                    <div className="text-xs text-color-500 line-clamp-1">
-                                      {item.shortDescription}
-                                    </div>
-                                  </div>
-                                </a>
-                              ))}
-                            </div>
-                          </>
-                        )}
-
-                        {/* Software Items */}
-                        {softwareForDropdown.length > 0 && (
-                          <>
-                            <div className="h-px bg-color-200 dark:bg-color-700 my-3"></div>
-                            <div className="space-y-2">
-                              <div className="text-xs font-semibold text-color-500 uppercase tracking-wider px-3">
-                                Featured Software
-                              </div>
-                              {softwareForDropdown.slice(0, 2).map((item) => (
-                                <a
-                                  key={item.id}
-                                  href={url(`/software/${item.id}`)}
-                                  className="flex items-start gap-3 p-2 rounded-lg hover:bg-accent-base/10 transition-colors group/link"
-                                >
-                                  <div
-                                    className={clsx(
-                                      "w-2 h-2 rounded-full mt-1.5 shrink-0",
-                                      getStatusColor(item.status, "bullet"),
-                                    )}
-                                  ></div>
-                                  <div className="min-w-0 flex-1">
-                                    <div className="font-medium text-sm text-foreground group-hover/link:text-accent-base transition-colors truncate">
-                                      {item.name}
-                                    </div>
-                                    <div className="text-xs text-color-500 line-clamp-1">
-                                      {item.shortDescription}
-                                    </div>
-                                  </div>
-                                </a>
-                              ))}
-                            </div>
-                          </>
-                        )}
-
-                        {/* Research Items */}
-                        {researchForDropdown.length > 0 && (
-                          <>
-                            <div className="h-px bg-color-200 dark:bg-color-700 my-3"></div>
-                            <div className="space-y-2">
-                              <div className="text-xs font-semibold text-color-500 uppercase tracking-wider px-3">
-                                Featured Research
-                              </div>
-                              {researchForDropdown.map((item) => {
-                                const details = [item.type, item.year]
-                                  .filter(Boolean)
-                                  .join(" • ");
-                                return (
-                                  <a
-                                    key={item.id}
-                                    href={url(`/research/${item.id}`)}
-                                    className="flex items-start gap-3 p-2 rounded-lg hover:bg-accent-base/10 transition-colors group/link"
-                                  >
-                                    <div className="min-w-0 flex-1">
-                                      <div className="font-medium text-sm text-foreground group-hover/link:text-accent-base transition-colors line-clamp-2">
-                                        {item.title}
+                                    {subtitle && (
+                                      <div className="text-xs text-color-500 line-clamp-1">
+                                        {subtitle}
                                       </div>
-                                      {details && (
-                                        <div className="text-xs text-color-500">
-                                          {details}
-                                        </div>
-                                      )}
-                                    </div>
-                                  </a>
-                                );
-                              })}
-                            </div>
-                          </>
-                        )}
-                      </>
-                    )}
+                                    )}
+                                  </div>
+                                </a>
+                              );
+                            })}
+                          </div>
+                        </React.Fragment>
+                      );
+                    })}
                   </div>
                 </NavigationMenu.Content>
               </NavigationMenu.Item>
