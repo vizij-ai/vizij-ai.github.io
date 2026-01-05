@@ -16,6 +16,7 @@ import BasicChip from "@/components/ui/BasicChip";
 import { resolveLogoAsset } from "@/utils/images";
 import { getEventPreviewDescriptionText } from "@/utils/events";
 import { parseDateLocal } from "@/utils/date";
+import ActionsSection from "@/components/detail/ActionsSection";
 
 export async function getStaticPaths() {
   const events = await getCollection("events", ({ data }) => {
@@ -113,6 +114,8 @@ const ogImage = `/og/events/${entry.id}.png`;
 const currentDate = new Date();
 const startDate = parseDateLocal(data.startDate);
 const endDate = parseDateLocal(data.endDate);
+const submissionDeadlineDate = parseDateLocal(data.submissionDeadlineDate);
+const notificationDate = parseDateLocal(data.notificationDate);
 let eventStatus = "upcoming";
 if (currentDate > endDate) {
   eventStatus = "past";
@@ -183,6 +186,16 @@ const formatDate = (date: Date) => {
 
 // Prepare event details
 const eventDetailsItems = [];
+eventDetailsItems.push({
+  label: "Submission Deadline",
+  value: formatDate(submissionDeadlineDate),
+  icon: "solar:calendar-mark-line-duotone",
+});
+eventDetailsItems.push({
+  label: "Review Notification Date",
+  value: formatDate(notificationDate),
+  icon: "solar:calendar-mark-line-duotone",
+});
 eventDetailsItems.push({
   label: "Start Date",
   value: formatDate(startDate),
@@ -299,6 +312,12 @@ const featuredState = data.featured
           />
         </Fragment>
 
+        <Fragment slot="actions">
+          {data.actions && data.actions.length > 0 && (
+            <ActionsSection title="ACTIONS" actions={data.actions} />
+          )}
+        </Fragment>
+
         <Fragment slot="contributors">
           {
             roleEntries.length > 0 && (
@@ -376,6 +395,8 @@ const featuredState = data.featured
                       links: event.data.links,
                       startDate: event.data.startDate,
                       endDate: event.data.endDate,
+                      submissionDeadlineDate: event.data.submissionDeadlineDate,
+                      notificationDate: event.data.notificationDate,
                       shortDescription: `${
                         typeLabels[event.data.type] || event.data.type
                       } • ${event.data.location.city}`,

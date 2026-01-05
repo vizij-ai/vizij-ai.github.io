@@ -39,6 +39,8 @@ const softwareIdSchema = z
 const temporalMetadataSchema = z.object({
   startDate: z.date().optional(),
   endDate: z.date().optional(),
+  submissionDeadlineDate: z.date().optional(),
+  notificationDate: z.date().optional(),
 });
 
 const linksSchema = z.object({
@@ -351,8 +353,16 @@ const events = defineCollection({
         "webinar",
         "competition",
       ]),
+      // In the future, we should create an datesSchema that contains
+      // startDate, endDate, submissionDeadlineDate, notificationDate (etc).
       startDate: z.string().or(z.date()).transform(parseDate),
       endDate: z.string().or(z.date()).transform(parseDate),
+      submissionDeadlineDate: z
+        .string()
+        .or(z.date())
+        .transform(parseDate)
+        .optional(),
+      notificationDate: z.string().or(z.date()).transform(parseDate).optional(),
       location: z.object({
         venue: z.string().optional(),
         city: z.string(),
@@ -391,6 +401,22 @@ const events = defineCollection({
       links: linksSchema.optional(),
       featured: z.boolean().default(false),
       draft: z.boolean().optional(),
+      actions: z
+        .array(
+          z.object({
+            label: z.string(),
+            url: z.string(),
+            variant: z
+              .enum(["default", "primary", "secondary", "tertiary"])
+              .optional(),
+            size: z.enum(["small", "medium", "large"]).optional(),
+            target: z.string().optional(),
+            rel: z.string().optional(),
+            indicatorText: z.string().optional(),
+          }),
+        )
+        .optional(),
+
       topics: z.array(z.string()),
     }),
 });

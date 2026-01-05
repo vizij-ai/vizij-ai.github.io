@@ -63,9 +63,7 @@ export default function BaseDetailLayout({
         {renderSection(hero)}
 
         {renderSection(actions) && (
-          <div className="mb-8 px-4 md:px-8 lg:px-12">
-            {renderSection(actions)}
-          </div>
+          <section className="mb-8">{renderSection(actions)}</section>
         )}
 
         {renderSection(links) && (
