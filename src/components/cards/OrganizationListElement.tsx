@@ -1,7 +1,7 @@
 import type { FC } from "react";
 import type { CollectionEntry } from "astro:content";
 import { ItemListElement } from "@/components/cards/ItemListElement";
-import { resolveLogoAsset } from "@/utils/images";
+import { resolveImagePolicy, resolveLogoAsset } from "@/utils/images";
 
 export interface OrganizationListElementProps {
   organizationId: string;
@@ -30,6 +30,7 @@ export const OrganizationListElement: FC<OrganizationListElementProps> = ({
     if (data?.description) return data.description;
     return undefined;
   })();
+  const imagePolicy = resolveImagePolicy(data?.imagePolicy);
 
   return (
     <ItemListElement
@@ -39,6 +40,7 @@ export const OrganizationListElement: FC<OrganizationListElementProps> = ({
       type="organizations"
       logo={resolveLogoAsset(data?.images)}
       imageAlt={title}
+      logoBackdrop={imagePolicy.logoOrAvatarBackdropInList}
       featuredState={data?.featured ? "featured" : "not-featured"}
       className={className}
     />

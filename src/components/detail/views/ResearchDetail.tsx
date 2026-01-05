@@ -13,7 +13,7 @@ import {
 import { OrganizationListElement } from "@/components/cards/OrganizationListElement";
 import { HardwareCard } from "@/components/cards/HardwareCard";
 import { SoftwareCard } from "@/components/cards/SoftwareCard";
-import { resolveLogoAsset } from "@/utils/images";
+import { resolveDetailImagePolicy, resolveLogoAsset } from "@/utils/images";
 
 type ResearchData = CollectionEntry<"research">["data"];
 
@@ -87,6 +87,11 @@ export function ResearchDetail({
   relatedSoftware = [],
   relatedResearch = [],
 }: ResearchDetailProps) {
+  const detailImages = resolveDetailImagePolicy({
+    hero: data.images?.hero,
+    logoOrAvatar: resolveLogoAsset(data.images),
+    policy: data.imagePolicy,
+  });
   const publishDate = data.publishDate ? new Date(data.publishDate) : undefined;
   const displayYear = getPublishYearFromData(
     data as ResearchData & { year?: number },
@@ -207,6 +212,7 @@ export function ResearchDetail({
         shortDescription: [typeLabel, yearLabel]
           .filter(Boolean)
           .join(" \u2022 "),
+        imagePolicy: relatedEntry.data.imagePolicy,
       },
     };
   });
@@ -215,13 +221,15 @@ export function ResearchDetail({
     <BaseDetailLayout
       hero={
         <DetailHero
-          image={data.images?.hero}
+          image={detailImages.image}
           title={data.title}
           subtitle={authorsSubtitle}
           badges={badges}
           featuredState={data.featured ? "featured" : undefined}
-          thumbnail={resolveLogoAsset(data.images)}
+          thumbnail={detailImages.profile}
           entityType="research"
+          showFallbackAvatar={detailImages.showFallbackIcon}
+          logoBackdrop={detailImages.logoBackdrop}
         />
       }
       links={

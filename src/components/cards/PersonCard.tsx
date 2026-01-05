@@ -1,6 +1,7 @@
 import type { FC } from "react";
 import type { CollectionEntry } from "astro:content";
 import { ItemCard } from "@/components/cards/ItemCard";
+import { resolveCardImagePolicy } from "@/utils/images";
 
 export interface PersonCardProps {
   personId: string;
@@ -25,6 +26,11 @@ export const PersonCard: FC<PersonCardProps> = ({
   const githubLink = data.links?.github
     ? `https://github.com/${data.links.github}`
     : undefined;
+  const cardImages = resolveCardImagePolicy({
+    hero: data.images?.hero,
+    logoOrAvatar: data.images?.avatar,
+    policy: data.imagePolicy,
+  });
 
   return (
     <ItemCard
@@ -32,8 +38,10 @@ export const PersonCard: FC<PersonCardProps> = ({
       description={description}
       href={`/people/${personId}`}
       type="people"
-      logo={data.images?.avatar}
-      image={data.images?.hero}
+      logo={cardImages.logo}
+      image={cardImages.image}
+      showFallbackAvatar={cardImages.showFallbackIcon}
+      logoBackdrop={cardImages.logoBackdrop}
       category={data.title}
       featuredState={data.featured ? "featured" : "not-featured"}
       links={{

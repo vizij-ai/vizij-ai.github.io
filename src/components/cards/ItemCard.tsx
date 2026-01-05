@@ -7,6 +7,7 @@ import { IconButton, type LinkType } from "@/components/ui/IconButton";
 import { linkPriority } from "@/data/links";
 import type { ImageLike } from "@/utils/images";
 import { isExternalUrl, url as buildUrl } from "@/utils/url";
+import clsx from "clsx";
 
 export interface ItemCardProps {
   title: string;
@@ -16,6 +17,8 @@ export interface ItemCardProps {
   imageAlt?: string;
   image?: ImageLike;
   logo?: ImageLike;
+  showFallbackAvatar?: boolean;
+  logoBackdrop?: boolean;
   status?: string;
   statusLabel?: string;
   category?: string;
@@ -39,6 +42,8 @@ export const ItemCard: FC<ItemCardProps> = ({
   imageAlt,
   image,
   logo,
+  showFallbackAvatar = true,
+  logoBackdrop = false,
   status,
   statusLabel,
   category,
@@ -107,6 +112,11 @@ export const ItemCard: FC<ItemCardProps> = ({
   const showDescription = listItems.length === 0 && description;
   const showListItems = listItems.length > 0;
 
+  const showAvatarFallback = Boolean(logo) || showFallbackAvatar;
+  const avatarWrapperClassName = logoBackdrop
+    ? "rounded-full bg-white/70 dark:bg-black/60 backdrop-blur-md"
+    : "";
+
   return (
     <a
       href={resolvedHref}
@@ -129,7 +139,10 @@ export const ItemCard: FC<ItemCardProps> = ({
                   name={type === "people" ? title : undefined}
                   type={typeToAvatarType[type] || "organization"}
                   size="xl"
-                  className="group-hover:scale-110 transition-transform duration-300 drop-shadow-lg"
+                  className={clsx(
+                    "group-hover:scale-110 transition-transform duration-300 drop-shadow-lg",
+                    avatarWrapperClassName,
+                  )}
                 />
               </div>
             )}
@@ -144,7 +157,10 @@ export const ItemCard: FC<ItemCardProps> = ({
               name={type === "people" ? title : undefined}
               type={typeToAvatarType[type] || "organization"}
               size="xl"
-              className="group-hover:scale-110 transition-transform duration-300"
+              className={clsx(
+                "group-hover:scale-110 transition-transform duration-300",
+                avatarWrapperClassName,
+              )}
             />
           </div>
         </div>

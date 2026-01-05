@@ -14,6 +14,7 @@ import { SoftwareCard } from "@/components/cards/SoftwareCard";
 import { EventCard } from "@/components/cards/EventCard";
 import { RelatedItemsGrid } from "@/components/detail/RelatedItemsGrid";
 import { OrganizationListElement } from "@/components/cards/OrganizationListElement";
+import { resolveDetailImagePolicy } from "@/utils/images";
 
 type PersonData = CollectionEntry<"people">["data"];
 
@@ -56,6 +57,11 @@ export function PersonDetail({
   relatedContent,
   relatedPeople = [],
 }: PersonDetailProps) {
+  const detailImages = resolveDetailImagePolicy({
+    hero: data.images?.hero,
+    logoOrAvatar: data.images?.avatar,
+    policy: data.imagePolicy,
+  });
   const hasRelated =
     (relatedContent?.research?.length || 0) > 0 ||
     (relatedContent?.hardware?.length || 0) > 0 ||
@@ -67,14 +73,16 @@ export function PersonDetail({
     <BaseDetailLayout
       hero={
         <DetailHero
-          image={data.images?.hero}
+          image={detailImages.image}
           title={fullName}
           subtitle={data.title}
           badges={badges}
           featuredState={data.featured ? "featured" : undefined}
-          avatar={data.images?.avatar}
+          avatar={detailImages.profile}
           entityType="person"
           logoText={data.name}
+          showFallbackAvatar={detailImages.showFallbackIcon}
+          logoBackdrop={detailImages.logoBackdrop}
         />
       }
       links={
@@ -257,6 +265,7 @@ export function PersonDetail({
                       description: person.data.bio || person.data.title || "",
                       shortDescription: person.data.title || "",
                       images: person.data.images,
+                      imagePolicy: person.data.imagePolicy,
                       featured: person.data.featured,
                     },
                   }))}

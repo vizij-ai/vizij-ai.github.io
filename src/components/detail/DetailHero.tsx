@@ -2,6 +2,7 @@ import type React from "react";
 import { FeaturedStar, type FeaturedState } from "@/components/ui/FeaturedStar";
 import { Avatar, type AvatarType } from "@/components/ui/Avatar";
 import type { ImageLike } from "@/utils/images";
+import clsx from "clsx";
 
 export interface DetailHeroBadge {
   text: string;
@@ -33,6 +34,8 @@ export interface DetailHeroProps {
   avatar?: ImageLike;
   thumbnail?: ImageLike;
   logoText?: string;
+  showFallbackAvatar?: boolean;
+  logoBackdrop?: boolean;
   entityType?:
     | "person"
     | "organization"
@@ -56,6 +59,8 @@ export const DetailHero: React.FC<DetailHeroProps> = ({
   avatar,
   thumbnail,
   logoText,
+  showFallbackAvatar = true,
+  logoBackdrop = false,
   entityType = "organization",
 }) => {
   const getBadgeClasses = (badge: DetailHeroBadge) => {
@@ -118,6 +123,8 @@ export const DetailHero: React.FC<DetailHeroProps> = ({
 
   // Determine which avatar/logo to use
   const profileImage = avatar || logo || thumbnail;
+  const showProfileImage =
+    Boolean(profileImage) || (!image && showFallbackAvatar);
 
   // Map entity type to avatar type
   const avatarTypeMap: Record<string, AvatarType> = {
@@ -129,6 +136,10 @@ export const DetailHero: React.FC<DetailHeroProps> = ({
     event: "event",
   };
   const avatarType = avatarTypeMap[entityType] || "organization";
+
+  const avatarWrapperClassName = logoBackdrop
+    ? "rounded-full bg-white/70 dark:bg-black/60 backdrop-blur-md"
+    : "";
 
   return (
     <div
@@ -163,7 +174,7 @@ export const DetailHero: React.FC<DetailHeroProps> = ({
         <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-6 md:p-8 lg:p-10">
           <div className="max-w-7xl mx-auto flex items-end gap-2 sm:gap-4 md:gap-6">
             {/* Avatar/Logo - responsive sizing */}
-            {(profileImage || !image) && (
+            {showProfileImage && (
               <div className="shrink-0">
                 <Avatar
                   src={profileImage}
@@ -172,7 +183,10 @@ export const DetailHero: React.FC<DetailHeroProps> = ({
                   type={avatarType}
                   size="2xl"
                   rounded="full"
-                  className="w-14! h-14! sm:w-20! sm:h-20! md:w-24! md:h-24! lg:w-32! lg:h-32!"
+                  className={clsx(
+                    "w-14! h-14! sm:w-20! sm:h-20! md:w-24! md:h-24! lg:w-32! lg:h-32!",
+                    avatarWrapperClassName,
+                  )}
                 />
               </div>
             )}
