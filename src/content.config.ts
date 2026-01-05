@@ -395,6 +395,15 @@ const events = defineCollection({
     }),
 });
 
+const showcase = defineCollection({
+  loader: glob({ base: "./src/content/showcase", pattern: "**/*.{md,mdx}" }),
+  schema: () =>
+    z.object({
+      title: z.string(),
+      description: z.string().optional(),
+    }),
+});
+
 export const collections = {
   people,
   organizations,
@@ -402,4 +411,5 @@ export const collections = {
   software,
   research,
   events,
+  showcase,
 };
