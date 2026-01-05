@@ -51,6 +51,14 @@ const normalizeImagePath = (value: string) => {
   if (next.startsWith("/assets/")) {
     next = `/src${next}`;
   }
+  const assetsIndex = next.indexOf("/src/assets/");
+  if (assetsIndex >= 0) {
+    next = next.slice(assetsIndex);
+  }
+  const windowsAssetsIndex = next.indexOf("\\src\\assets\\");
+  if (windowsAssetsIndex >= 0) {
+    next = next.slice(windowsAssetsIndex).replace(/\\/g, "/");
+  }
   return next;
 };
 
