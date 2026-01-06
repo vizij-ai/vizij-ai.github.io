@@ -96,6 +96,16 @@ const contributorSchema = z.discriminatedUnion("type", [
     .merge(baseContributorSchema),
 ]);
 
+const actionSchema = z.object({
+  label: z.string(),
+  url: z.string(),
+  variant: z.enum(["default", "primary", "secondary", "tertiary"]).optional(),
+  size: z.enum(["small", "medium", "large"]).optional(),
+  target: z.string().optional(),
+  rel: z.string().optional(),
+  indicatorText: z.string().optional(),
+});
+
 const imagePolicySchema = z.object({
   heroInCard: z.boolean().default(true),
   heroInDetail: z.boolean().default(true),
@@ -379,6 +389,16 @@ const events = defineCollection({
       ]),
       startDate: z.string().or(z.date()).transform(parseDate),
       endDate: z.string().or(z.date()).transform(parseDate),
+      submissionDeadlineDate: z
+        .string()
+        .or(z.date())
+        .transform(parseDate)
+        .optional(),
+      notificationDate: z
+        .string()
+        .or(z.date())
+        .transform(parseDate)
+        .optional(),
       location: z.object({
         venue: z.string().optional(),
         city: z.string(),
@@ -415,6 +435,7 @@ const events = defineCollection({
         })
         .optional(),
       imagePolicy: imagePolicySchema.optional().default({}),
+      actions: z.array(actionSchema).optional(),
       links: linksSchema.optional(),
       featured: z.boolean().default(false),
       draft: z.boolean().optional(),
