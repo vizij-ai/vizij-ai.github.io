@@ -7,12 +7,12 @@ import { getRelatedResearch as fetchRelatedResearch } from "@/data/research";
 import { getPerson, getFormattedAuthors } from "@/data/people";
 import { serializePersonForPopover } from "@/utils/person";
 import {
-import { isDraftVisible } from "@/utils/drafts";
   ResearchDetail,
   type OrganizationRole,
   type ResearchAuthor,
   type ResearchOrganizationLink,
 } from "@/components/detail/views/ResearchDetail";
+import { isDraftVisible } from "@/utils/drafts";
 
 export async function getStaticPaths() {
   const researchEntries = await getCollection("research", ({ data }) => {
