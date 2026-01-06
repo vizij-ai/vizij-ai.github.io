@@ -1,5 +1,6 @@
 import { getCollection, getEntry } from "astro:content";
 import type { CollectionEntry } from "astro:content";
+import { isDraftVisible } from "@/utils/drafts";
 
 function formatPersonName(
   data: CollectionEntry<"people">["data"],
@@ -11,7 +12,7 @@ function formatPersonName(
 export async function getAllPeople(): Promise<CollectionEntry<"people">[]> {
   return await getCollection("people", ({ data }) => {
     // In production, exclude drafts. In development, show all.
-    return import.meta.env.PROD ? data.draft !== true : true;
+    return isDraftVisible(data.draft);
   });
 }
 

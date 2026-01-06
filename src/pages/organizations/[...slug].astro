@@ -8,12 +8,13 @@ import { getAllHardware } from "@/data/hardware";
 import { getAllSoftware } from "@/data/software";
 import { serializePersonForPopover } from "@/utils/person";
 import { OrganizationDetail } from "@/components/detail/views/OrganizationDetail";
+import { isDraftVisible } from "@/utils/drafts";
 
 type PartnerEntry = CollectionEntry<"organizations">;
 
 export async function getStaticPaths() {
   const organizations = await getCollection("organizations", ({ data }) => {
-    return import.meta.env.PROD ? data.draft !== true : true;
+    return isDraftVisible(data.draft);
   });
   const partners = organizations.filter((org) => org.data.isPartner);
   return partners.map((entry) => ({
@@ -102,8 +103,7 @@ const keyContacts = affiliatedPeople.slice(0, 6).map((personEntry) => {
         }
       : undefined,
   };
-});
----
+});---
 
 <html
   class="overflow-x-hidden grid scroll-pt-[72px] scroll-smooth font-sans text-text text-xl md:text-base antialiased"

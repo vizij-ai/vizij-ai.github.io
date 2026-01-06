@@ -1,10 +1,11 @@
 import { type CollectionEntry, getCollection } from "astro:content";
+import { isDraftVisible } from "@/utils/drafts";
 
 /** Get all events, sorted by start date (upcoming first) */
 export async function getAllEvents(): Promise<CollectionEntry<"events">[]> {
   const events = await getCollection("events", ({ data }) => {
     // In production, exclude drafts. In development, show all.
-    return import.meta.env.PROD ? data.draft !== true : true;
+    return isDraftVisible(data.draft);
   });
   const now = new Date();
 

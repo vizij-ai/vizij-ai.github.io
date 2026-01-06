@@ -17,11 +17,12 @@ import { resolveLogoAsset } from "@/utils/images";
 import { getEventPreviewDescriptionText } from "@/utils/events";
 import { parseDateLocal } from "@/utils/date";
 import ActionsSection from "@/components/detail/ActionsSection";
+import { isDraftVisible } from "@/utils/drafts";
 
 export async function getStaticPaths() {
   const events = await getCollection("events", ({ data }) => {
     // In production, exclude drafts. In development, show all.
-    return import.meta.env.PROD ? data.draft !== true : true;
+    return isDraftVisible(data.draft);
   });
   return events.map((entry) => ({
     params: { slug: entry.id },
@@ -253,8 +254,7 @@ const featuredState = data.featured
   ? eventStatus === "past"
     ? "previously-featured"
     : "featured"
-  : undefined;
----
+  : undefined;---
 
 <html
   class="overflow-x-hidden grid scroll-pt-[72px] scroll-smooth font-sans text-text text-xl md:text-base antialiased"

@@ -1,10 +1,11 @@
 import { type CollectionEntry, getCollection } from "astro:content";
+import { isDraftVisible } from "@/utils/drafts";
 
 type OrganizationEntry = CollectionEntry<"organizations">;
 
 async function loadOrganizationEntries(): Promise<OrganizationEntry[]> {
   const organizations = await getCollection("organizations", ({ data }) =>
-    import.meta.env.PROD ? data.draft !== true : true,
+    isDraftVisible(data.draft),
   );
 
   const partners = organizations.filter((org) => org.data.isPartner);

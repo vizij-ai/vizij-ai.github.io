@@ -1,4 +1,5 @@
 import { type CollectionEntry, getCollection } from "astro:content";
+import { isDraftVisible } from "@/utils/drafts";
 
 type ResearchEntry = CollectionEntry<"research">;
 
@@ -55,7 +56,7 @@ function sortResearchEntries(entries: ResearchEntry[]): ResearchEntry[] {
 
 async function loadResearchEntries(): Promise<ResearchEntry[]> {
   const entries = await getCollection("research", ({ data }) =>
-    import.meta.env.PROD ? data.draft !== true : true,
+    isDraftVisible(data.draft),
   );
   return sortResearchEntries(entries);
 }
