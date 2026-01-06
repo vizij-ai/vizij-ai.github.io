@@ -2,7 +2,6 @@
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
 import SkipLink from "@/components/layout/SkipLink";
-import ParallaxHexBackground from "@/components/background/ParallaxHexBackground";
 import ThemeProvider from "@/components/theme/ThemeProvider";
 import { getCollection } from "astro:content";
 import {
@@ -14,28 +13,12 @@ import { isDraftVisible } from "@/utils/drafts";
 
 export interface Props {
   noPaddingTop?: boolean;
-  showBackground?: boolean;
   containerClassName?: string;
-  backgroundCount?: number;
-  backgroundSeed?: string | number;
-  backgroundVerticalSpanVh?: number;
-  backgroundHorizontalRangeVw?: { min: number; max: number };
-  backgroundPalette?: string[];
-  backgroundOpacity?: { stroke: [number, number]; fill: [number, number] };
-  backgroundClassName?: string;
 }
 
 const {
   noPaddingTop = false,
-  showBackground = true,
   containerClassName,
-  backgroundCount,
-  backgroundSeed,
-  backgroundVerticalSpanVh,
-  backgroundHorizontalRangeVw,
-  backgroundPalette,
-  backgroundOpacity,
-  backgroundClassName,
 } = Astro.props;
 
 const coerceFieldValue = (value: unknown): string | number | undefined => {
@@ -106,20 +89,6 @@ for (const [collection, ids] of idsByCollection) {
   navCollections={navCollections}
 />
 
-{
-  showBackground && (
-    <ParallaxHexBackground
-      client:only="react"
-      count={backgroundCount}
-      seed={backgroundSeed}
-      verticalSpanVh={backgroundVerticalSpanVh}
-      horizontalRangeVw={backgroundHorizontalRangeVw}
-      palette={backgroundPalette}
-      opacity={backgroundOpacity}
-      className={backgroundClassName}
-    />
-  )
-}
 
 <div class="relative flex min-h-screen w-full flex-col">
   <div class="relative flex min-h-screen w-full flex-1 m-auto max-w-6xl">
