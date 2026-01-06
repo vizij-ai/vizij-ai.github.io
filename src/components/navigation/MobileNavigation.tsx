@@ -6,6 +6,10 @@ import { CallToActionButton } from "../ui/CallToActionButton";
 import { NavIconButton } from "./NavIconButton";
 import { useSearch } from "@/components/search";
 import { navIconMap } from "@/components/navigation/navIcons";
+import {
+  getNavCtaVariant,
+  getNavHighlightClasses,
+} from "@/components/navigation/navVariant";
 import { url as buildUrl } from "@/utils/url";
 import type { LinkSection, Section } from "@/site.config";
 
@@ -112,6 +116,8 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
   }, [open, searchOpen]);
 
   const url = (path: string) => makeUrl(path, urlPrefix);
+  const navHighlight = getNavHighlightClasses();
+  const ctaVariant = getNavCtaVariant();
   const getLinkSections = (sections?: Section[]) =>
     (sections ?? []).filter(
       (section): section is LinkSection => section.kind === "link",
@@ -486,7 +492,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                                   <CallToActionButton
                                     href={url(link.path)}
                                     size="medium"
-                                    variant="tertiary"
+                                    variant={ctaVariant}
                                     fullWidth
                                     className="text-center"
                                   >
@@ -500,7 +506,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                                         className={clsx(
                                           "flex-1 block px-4 py-3 rounded-lg transition-all duration-200",
                                           currentPath === link.path
-                                            ? "bg-accent-base/10 text-accent-three font-semibold"
+                                            ? clsx("bg-accent-base/10 font-semibold", navHighlight.text)
                                             : "text-foreground hover:bg-accent-base/5 hover:text-accent-base",
                                         )}
                                       >
@@ -523,7 +529,8 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                                             toggleSection(link.path)
                                           }
                                           className={clsx(
-                                            "inline-flex items-center justify-center h-8 w-8 rounded-lg bg-color-100 text-accent-base hover:bg-accent-base/10 transition-colors focus:outline-2 focus:outline-accent-three outline-offset-2",
+                                            "inline-flex items-center justify-center h-8 w-8 rounded-lg bg-color-100 text-accent-base hover:bg-accent-base/10 transition-colors focus:outline-2 outline-offset-2",
+                                            navHighlight.focusOutline,
                                             openSection === link.path &&
                                               "bg-accent-base/10",
                                           )}

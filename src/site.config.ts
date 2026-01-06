@@ -21,6 +21,10 @@ export const siteConfig: SiteConfig = {
   ogLocale: "en_US",
   // Used to construct the meta title property found in src/components/BaseHead.astro L:11, and webmanifest name found in astro.config.ts L:42
   title: "Vizij",
+  navigation: {
+    highlightVariant: "secondary",
+    ctaVariant: "secondary",
+  },
 };
 
 export interface LinkSection {

@@ -3,6 +3,10 @@ import * as NavigationMenu from "@radix-ui/react-navigation-menu";
 import { clsx } from "clsx";
 import { CallToActionButton } from "../ui/CallToActionButton";
 import { navIconMap } from "@/components/navigation/navIcons";
+import {
+  getNavCtaVariant,
+  getNavHighlightClasses,
+} from "@/components/navigation/navVariant";
 import { url as buildUrl } from "@/utils/url";
 import type {
   FeaturedSection,
@@ -38,6 +42,8 @@ export const NavigationMenuComponent: React.FC<NavigationMenuProps> = ({
   urlPrefix,
 }) => {
   const url = (path: string) => makeUrl(path, urlPrefix);
+  const navHighlight = getNavHighlightClasses();
+  const ctaVariant = getNavCtaVariant();
   const getLinkSections = (sections?: Section[]) =>
     (sections ?? []).filter(
       (section): section is LinkSection => section.kind === "link",
@@ -79,7 +85,9 @@ export const NavigationMenuComponent: React.FC<NavigationMenuProps> = ({
 
   // Fallback if no menu links
   if (!menuLinks || menuLinks.length === 0) {
-    return <div className="text-accent-three">Loading navigation...</div>;
+    return (
+      <div className={navHighlight.text}>Loading navigation...</div>
+    );
   }
 
   return (
@@ -101,7 +109,7 @@ export const NavigationMenuComponent: React.FC<NavigationMenuProps> = ({
                   <NavigationMenu.Item key={link.path}>
                     <CallToActionButton
                       href={url(link.path)}
-                      variant="tertiary"
+                      variant={ctaVariant}
                       size="small"
                       className="text-xs sm:text-sm px-2 md:px-3 py-1.5 md:py-2"
                     >
@@ -116,7 +124,8 @@ export const NavigationMenuComponent: React.FC<NavigationMenuProps> = ({
                   <NavigationMenu.Link
                     className={clsx(
                       "block select-none rounded-lg px-2 md:px-3 py-1.5 md:py-2 text-xs sm:text-sm font-medium leading-none no-underline transition-all duration-200 whitespace-nowrap",
-                      "text-accent-three hover:text-accent-base focus:text-accent-base",
+                      navHighlight.text,
+                      "hover:text-accent-base focus:text-accent-base",
                       link.path === activeHeaderPath &&
                         "font-semibold text-foreground",
                     )}
@@ -135,7 +144,7 @@ export const NavigationMenuComponent: React.FC<NavigationMenuProps> = ({
                   className={clsx(
                     "group inline-flex select-none items-center gap-0.5 md:gap-1 rounded-lg px-2 md:px-3 py-1.5 md:py-2 text-xs sm:text-sm font-medium leading-none outline-none transition-colors whitespace-nowrap",
                     link.path === activeHeaderPath
-                      ? "font-semibold text-accent-three"
+                      ? clsx("font-semibold", navHighlight.text)
                       : "text-foreground hover:text-accent-base focus:text-accent-base data-[state=open]:text-accent-base",
                   )}
                   onPointerDown={(e) => {
