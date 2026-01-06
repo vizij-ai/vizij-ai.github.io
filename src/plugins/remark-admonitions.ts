@@ -1,5 +1,6 @@
 import type { AdmonitionType } from "@/types";
-import { type Properties, h as _h } from "hastscript";
+import type { Properties } from "hastscript";
+import { h as _h } from "hastscript";
 import type { Node, Paragraph as P, Parent, PhrasingContent, Root } from "mdast";
 import type { Directives, LeafDirective, TextDirective } from "mdast-util-directive";
 import { directiveToMarkdown } from "mdast-util-directive";

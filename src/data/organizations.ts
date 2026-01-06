@@ -1,4 +1,5 @@
-import { type CollectionEntry, getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import { getCollection } from "astro:content";
 import { isDraftVisible } from "@/utils/drafts";
 
 type OrganizationEntry = CollectionEntry<"organizations">;
