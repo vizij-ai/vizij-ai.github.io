@@ -87,14 +87,6 @@ collections:
             name: endDate
             widget: datetime
             required: false
-          - label: Submission Deadline Date
-            name: submissionDeadlineDate
-            widget: datetime
-            required: false
-          - label: Notification Date
-            name: notificationDate
-            widget: datetime
-            required: false
       - label: Links
         name: links
         widget: object
@@ -229,6 +221,41 @@ collections:
             required: false
             media_folder: /src/assets/images/heroes
             public_folder: "@/assets/images/heroes"
+      - label: Image Policy
+        name: imagePolicy
+        widget: object
+        required: false
+        fields:
+          - label: Hero In Card
+            name: heroInCard
+            widget: boolean
+          - label: Hero In Detail
+            name: heroInDetail
+            widget: boolean
+          - label: Logo Or Avatar In Card
+            name: logoOrAvatarInCard
+            widget: boolean
+          - label: Logo Or Avatar In Detail
+            name: logoOrAvatarInDetail
+            widget: boolean
+          - label: Logo Or Avatar On Hero In Card
+            name: logoOrAvatarOnHeroInCard
+            widget: boolean
+          - label: Logo Or Avatar On Hero In Detail
+            name: logoOrAvatarOnHeroInDetail
+            widget: boolean
+          - label: Logo Or Avatar Backdrop In Card
+            name: logoOrAvatarBackdropInCard
+            widget: boolean
+          - label: Logo Or Avatar Backdrop In Detail
+            name: logoOrAvatarBackdropInDetail
+            widget: boolean
+          - label: Logo Or Avatar Backdrop In List
+            name: logoOrAvatarBackdropInList
+            widget: boolean
+          - label: Show Fallback Icon
+            name: showFallbackIcon
+            widget: boolean
       - label: Board Member
         name: boardMember
         widget: boolean
@@ -330,6 +357,41 @@ collections:
               widget: image
               media_folder: /src/assets/images/galleries
               public_folder: "@/assets/images/galleries"
+      - label: Image Policy
+        name: imagePolicy
+        widget: object
+        required: false
+        fields:
+          - label: Hero In Card
+            name: heroInCard
+            widget: boolean
+          - label: Hero In Detail
+            name: heroInDetail
+            widget: boolean
+          - label: Logo Or Avatar In Card
+            name: logoOrAvatarInCard
+            widget: boolean
+          - label: Logo Or Avatar In Detail
+            name: logoOrAvatarInDetail
+            widget: boolean
+          - label: Logo Or Avatar On Hero In Card
+            name: logoOrAvatarOnHeroInCard
+            widget: boolean
+          - label: Logo Or Avatar On Hero In Detail
+            name: logoOrAvatarOnHeroInDetail
+            widget: boolean
+          - label: Logo Or Avatar Backdrop In Card
+            name: logoOrAvatarBackdropInCard
+            widget: boolean
+          - label: Logo Or Avatar Backdrop In Detail
+            name: logoOrAvatarBackdropInDetail
+            widget: boolean
+          - label: Logo Or Avatar Backdrop In List
+            name: logoOrAvatarBackdropInList
+            widget: boolean
+          - label: Show Fallback Icon
+            name: showFallbackIcon
+            widget: boolean
       - label: Links
         name: links
         widget: object
@@ -706,6 +768,41 @@ collections:
               widget: image
               media_folder: /src/assets/images/galleries
               public_folder: "@/assets/images/galleries"
+      - label: Image Policy
+        name: imagePolicy
+        widget: object
+        required: false
+        fields:
+          - label: Hero In Card
+            name: heroInCard
+            widget: boolean
+          - label: Hero In Detail
+            name: heroInDetail
+            widget: boolean
+          - label: Logo Or Avatar In Card
+            name: logoOrAvatarInCard
+            widget: boolean
+          - label: Logo Or Avatar In Detail
+            name: logoOrAvatarInDetail
+            widget: boolean
+          - label: Logo Or Avatar On Hero In Card
+            name: logoOrAvatarOnHeroInCard
+            widget: boolean
+          - label: Logo Or Avatar On Hero In Detail
+            name: logoOrAvatarOnHeroInDetail
+            widget: boolean
+          - label: Logo Or Avatar Backdrop In Card
+            name: logoOrAvatarBackdropInCard
+            widget: boolean
+          - label: Logo Or Avatar Backdrop In Detail
+            name: logoOrAvatarBackdropInDetail
+            widget: boolean
+          - label: Logo Or Avatar Backdrop In List
+            name: logoOrAvatarBackdropInList
+            widget: boolean
+          - label: Show Fallback Icon
+            name: showFallbackIcon
+            widget: boolean
       - label: Contributors
         name: contributors
         widget: list
@@ -972,6 +1069,41 @@ collections:
               widget: image
               media_folder: /src/assets/images/galleries
               public_folder: "@/assets/images/galleries"
+      - label: Image Policy
+        name: imagePolicy
+        widget: object
+        required: false
+        fields:
+          - label: Hero In Card
+            name: heroInCard
+            widget: boolean
+          - label: Hero In Detail
+            name: heroInDetail
+            widget: boolean
+          - label: Logo Or Avatar In Card
+            name: logoOrAvatarInCard
+            widget: boolean
+          - label: Logo Or Avatar In Detail
+            name: logoOrAvatarInDetail
+            widget: boolean
+          - label: Logo Or Avatar On Hero In Card
+            name: logoOrAvatarOnHeroInCard
+            widget: boolean
+          - label: Logo Or Avatar On Hero In Detail
+            name: logoOrAvatarOnHeroInDetail
+            widget: boolean
+          - label: Logo Or Avatar Backdrop In Card
+            name: logoOrAvatarBackdropInCard
+            widget: boolean
+          - label: Logo Or Avatar Backdrop In Detail
+            name: logoOrAvatarBackdropInDetail
+            widget: boolean
+          - label: Logo Or Avatar Backdrop In List
+            name: logoOrAvatarBackdropInList
+            widget: boolean
+          - label: Show Fallback Icon
+            name: showFallbackIcon
+            widget: boolean
       - label: Contributors
         name: contributors
         widget: list
@@ -1047,14 +1179,6 @@ collections:
             name: endDate
             widget: datetime
             required: false
-          - label: Submission Deadline Date
-            name: submissionDeadlineDate
-            widget: datetime
-            required: false
-          - label: Notification Date
-            name: notificationDate
-            widget: datetime
-            required: false
       - label: Type
         name: type
         widget: select
@@ -1103,14 +1227,6 @@ collections:
             required: false
           - label: End Date
             name: endDate
-            widget: datetime
-            required: false
-          - label: Submission Deadline Date
-            name: submissionDeadlineDate
-            widget: datetime
-            required: false
-          - label: Notification Date
-            name: notificationDate
             widget: datetime
             required: false
       - label: Related Hardware
@@ -1289,6 +1405,41 @@ collections:
               widget: image
               media_folder: /src/assets/images/galleries
               public_folder: "@/assets/images/galleries"
+      - label: Image Policy
+        name: imagePolicy
+        widget: object
+        required: false
+        fields:
+          - label: Hero In Card
+            name: heroInCard
+            widget: boolean
+          - label: Hero In Detail
+            name: heroInDetail
+            widget: boolean
+          - label: Logo Or Avatar In Card
+            name: logoOrAvatarInCard
+            widget: boolean
+          - label: Logo Or Avatar In Detail
+            name: logoOrAvatarInDetail
+            widget: boolean
+          - label: Logo Or Avatar On Hero In Card
+            name: logoOrAvatarOnHeroInCard
+            widget: boolean
+          - label: Logo Or Avatar On Hero In Detail
+            name: logoOrAvatarOnHeroInDetail
+            widget: boolean
+          - label: Logo Or Avatar Backdrop In Card
+            name: logoOrAvatarBackdropInCard
+            widget: boolean
+          - label: Logo Or Avatar Backdrop In Detail
+            name: logoOrAvatarBackdropInDetail
+            widget: boolean
+          - label: Logo Or Avatar Backdrop In List
+            name: logoOrAvatarBackdropInList
+            widget: boolean
+          - label: Show Fallback Icon
+            name: showFallbackIcon
+            widget: boolean
       - label: Featured
         name: featured
         widget: boolean
@@ -1413,6 +1564,81 @@ collections:
               widget: image
               media_folder: /src/assets/images/galleries
               public_folder: "@/assets/images/galleries"
+      - label: Image Policy
+        name: imagePolicy
+        widget: object
+        required: false
+        fields:
+          - label: Hero In Card
+            name: heroInCard
+            widget: boolean
+          - label: Hero In Detail
+            name: heroInDetail
+            widget: boolean
+          - label: Logo Or Avatar In Card
+            name: logoOrAvatarInCard
+            widget: boolean
+          - label: Logo Or Avatar In Detail
+            name: logoOrAvatarInDetail
+            widget: boolean
+          - label: Logo Or Avatar On Hero In Card
+            name: logoOrAvatarOnHeroInCard
+            widget: boolean
+          - label: Logo Or Avatar On Hero In Detail
+            name: logoOrAvatarOnHeroInDetail
+            widget: boolean
+          - label: Logo Or Avatar Backdrop In Card
+            name: logoOrAvatarBackdropInCard
+            widget: boolean
+          - label: Logo Or Avatar Backdrop In Detail
+            name: logoOrAvatarBackdropInDetail
+            widget: boolean
+          - label: Logo Or Avatar Backdrop In List
+            name: logoOrAvatarBackdropInList
+            widget: boolean
+          - label: Show Fallback Icon
+            name: showFallbackIcon
+            widget: boolean
+      - label: Actions
+        name: actions
+        widget: list
+        required: false
+        fields:
+          - label: Label
+            name: label
+            widget: string
+          - label: Url
+            name: url
+            widget: string
+          - label: Variant
+            name: variant
+            widget: select
+            options:
+              - default
+              - primary
+              - secondary
+              - tertiary
+            required: false
+          - label: Size
+            name: size
+            widget: select
+            options:
+              - small
+              - medium
+              - large
+            required: false
+          - label: Target
+            name: target
+            widget: string
+            required: false
+          - label: Rel
+            name: rel
+            widget: string
+            required: false
+          - label: Indicator Text
+            name: indicatorText
+            widget: string
+            required: false
       - label: Links
         name: links
         widget: object
@@ -1537,46 +1763,6 @@ collections:
         name: draft
         widget: boolean
         required: false
-      - label: Actions
-        name: actions
-        widget: list
-        required: false
-        fields:
-          - label: Label
-            name: label
-            widget: string
-          - label: Url
-            name: url
-            widget: string
-          - label: Variant
-            name: variant
-            widget: select
-            options:
-              - default
-              - primary
-              - secondary
-              - tertiary
-            required: false
-          - label: Size
-            name: size
-            widget: select
-            options:
-              - small
-              - medium
-              - large
-            required: false
-          - label: Target
-            name: target
-            widget: string
-            required: false
-          - label: Rel
-            name: rel
-            widget: string
-            required: false
-          - label: Indicator Text
-            name: indicatorText
-            widget: string
-            required: false
       - label: Topics
         name: topics
         widget: list
@@ -1584,20 +1770,35 @@ collections:
           label: Item
           name: item
           widget: string
-  - name: showcase
-    label: Showcase
-    label_singular: Showcase
-    folder: src/content/showcase
-    identifier_field: slug
-    extension: mdx
-    format: frontmatter
-    slug: "{{slug}}"
-    create: true
-    fields:
-      - label: Title
-        name: title
-        widget: string
-      - label: Description
-        name: description
-        widget: string
+      - label: Organizations
+        name: organizations
+        widget: list
         required: false
+        fields:
+          - label: Organization Id
+            name: organizationId
+            widget: relation
+            collection: organizations
+            value_field: id
+            display_fields:
+              - name
+              - id
+            search_fields:
+              - name
+              - id
+          - label: Role
+            name: role
+            widget: string
+            required: false
+          - label: Note
+            name: note
+            widget: string
+            required: false
+          - label: Start Date
+            name: startDate
+            widget: datetime
+            required: false
+          - label: End Date
+            name: endDate
+            widget: datetime
+            required: false
