@@ -1,6 +1,6 @@
 import type React from "react";
 import CMS from "decap-cms-app";
-import { type DetailHeroBadge } from "@/components/detail/DetailHero";
+import type { DetailHeroBadge } from "@/components/detail/DetailHero";
 import {
   PersonDetail,
   type AffiliationDisplay,

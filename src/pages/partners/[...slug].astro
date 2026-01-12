@@ -1,10 +1,11 @@
 ---
 import { getCollection } from "astro:content";
 import RedirectPage from "@/components/util/RedirectPage.astro";
+import { isDraftVisible } from "@/utils/drafts";
 
 export async function getStaticPaths() {
   const organizations = await getCollection("organizations", ({ data }) => {
-    return import.meta.env.PROD ? data.draft !== true : true;
+    return isDraftVisible(data.draft);
   });
 
   const partners = organizations.filter((entry) => entry.data.isPartner);
@@ -23,8 +24,7 @@ interface Props {
   name: string;
 }
 
-const { target, name } = Astro.props as Props;
----
+const { target, name } = Astro.props as Props;---
 
 <RedirectPage
   to={target}

@@ -4,6 +4,7 @@ import SiteShell from "@/layouts/SiteShell.astro";
 import EventsPage from "@/react-pages/events/EventsPage";
 import EventsSections from "@/components/events/EventsSections";
 import { getAllEvents } from "@/data/events";
+import { resolveImageLike } from "@/utils/images";
 
 const meta = {
   title: "Events",
@@ -13,6 +14,34 @@ const meta = {
 const ogImage = "/og/events.png";
 
 const allEvents = await getAllEvents();
+
+const serializeEvents = allEvents.map((event) => ({
+  id: event.id,
+  data: {
+    name: event.data.name,
+    displayName: event.data.displayName,
+    description: event.data.description,
+    type: event.data.type,
+    startDate:
+      event.data.startDate instanceof Date
+        ? event.data.startDate.toISOString()
+        : event.data.startDate,
+    endDate:
+      event.data.endDate instanceof Date
+        ? event.data.endDate.toISOString()
+        : event.data.endDate,
+    featured: event.data.featured,
+    links: event.data.links,
+    location: event.data.location,
+    imagePolicy: event.data.imagePolicy,
+    images: {
+      hero: resolveImageLike(event.data.images?.hero),
+      logo: resolveImageLike(event.data.images?.logo),
+    },
+  },
+}));
+
+const eventsPayload = JSON.stringify(serializeEvents);
 ---
 
 <html
@@ -30,14 +59,11 @@ const allEvents = await getAllEvents();
     <SiteShell noPaddingTop>
       <EventsPage>
         {
-          allEvents.length > 0 && (
+          serializeEvents.length > 0 && (
             <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-0">
               <EventsSections
                 client:load
-                events={allEvents.map((event) => ({
-                  id: event.id,
-                  data: event.data,
-                })).filter((event) => !event.data.draft)}
+                eventsPayload={eventsPayload}
                 initialFeaturedCount={6}
                 initialPastCount={6}
               />

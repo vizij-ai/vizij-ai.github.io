@@ -10,7 +10,7 @@ import SpecificationsList from "@/components/detail/SpecificationsList";
 import LinkSection from "@/components/detail/LinkSection";
 import BasicChip from "@/components/ui/BasicChip";
 import { RelatedItemsGrid } from "@/components/detail/RelatedItemsGrid";
-import { resolveLogoAsset } from "@/utils/images";
+import { resolveDetailImagePolicy, resolveLogoAsset } from "@/utils/images";
 import { getEventPreviewDescriptionText } from "@/utils/events";
 import { parseDateLocal } from "@/utils/date";
 
@@ -52,6 +52,11 @@ export function EventDetail({
   badges: providedBadges,
   relatedEvents = [],
 }: EventDetailProps) {
+  const detailImages = resolveDetailImagePolicy({
+    hero: data.images?.hero,
+    logoOrAvatar: resolveLogoAsset(data.images),
+    policy: data.imagePolicy,
+  });
   const startDate = parseDateLocal(data.startDate);
   const endDate = parseDateLocal(data.endDate ?? data.startDate);
   const currentDate = new Date();
@@ -183,13 +188,15 @@ export function EventDetail({
     <BaseDetailLayout
       hero={
         <DetailHero
-          image={data.images?.hero}
+          image={detailImages.image}
           title={data.name}
           subtitle={descriptionText}
           badges={badges}
           featuredState={featuredState}
-          logo={resolveLogoAsset(data.images)}
+          logo={detailImages.profile}
           entityType="event"
+          showFallbackAvatar={detailImages.showFallbackIcon}
+          logoBackdrop={detailImages.logoBackdrop}
         />
       }
       links={
@@ -278,6 +285,7 @@ export function EventDetail({
                 links: event.data.links,
                 startDate: event.data.startDate,
                 endDate: event.data.endDate,
+                imagePolicy: event.data.imagePolicy,
                 shortDescription: `${
                   TYPE_LABELS[event.data.type] || event.data.type
                 }${event.data.location?.city ? ` • ${event.data.location.city}` : ""}`,

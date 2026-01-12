@@ -19,7 +19,7 @@ import {
   getStatusColor,
   getStatusLabel,
 } from "@/config/statusConfig";
-import { resolveLogoAsset } from "@/utils/images";
+import { resolveDetailImagePolicy, resolveLogoAsset } from "@/utils/images";
 
 type HardwareData = CollectionEntry<"hardware">["data"];
 
@@ -54,6 +54,11 @@ export function HardwareDetail({
   peopleContributors = [],
   relatedHardware = [],
 }: HardwareDetailProps) {
+  const detailImages = resolveDetailImagePolicy({
+    hero: data.images?.hero,
+    logoOrAvatar: resolveLogoAsset(data.images),
+    policy: data.imagePolicy,
+  });
   const badges =
     data.status && data.status.length > 0
       ? [
@@ -83,13 +88,15 @@ export function HardwareDetail({
     <BaseDetailLayout
       hero={
         <DetailHero
-          image={data.images?.hero}
+          image={detailImages.image}
           title={data.name}
           subtitle={data.shortDescription}
           badges={badges}
           featuredState={data.featured ? "featured" : undefined}
           entityType="hardware"
-          logo={resolveLogoAsset(data.images)}
+          logo={detailImages.profile}
+          showFallbackAvatar={detailImages.showFallbackIcon}
+          logoBackdrop={detailImages.logoBackdrop}
         />
       }
       links={

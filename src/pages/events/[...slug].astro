@@ -1,5 +1,6 @@
 ---
-import { type CollectionEntry, getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import { getCollection } from "astro:content";
 import BaseHead from "@/components/BaseHead.astro";
 import SiteShell from "@/layouts/SiteShell.astro";
 import {
@@ -17,11 +18,12 @@ import { resolveLogoAsset } from "@/utils/images";
 import { getEventPreviewDescriptionText } from "@/utils/events";
 import { parseDateLocal } from "@/utils/date";
 import ActionsSection from "@/components/detail/ActionsSection";
+import { isDraftVisible } from "@/utils/drafts";
 
 export async function getStaticPaths() {
   const events = await getCollection("events", ({ data }) => {
     // In production, exclude drafts. In development, show all.
-    return import.meta.env.PROD ? data.draft !== true : true;
+    return isDraftVisible(data.draft);
   });
   return events.map((entry) => ({
     params: { slug: entry.id },
@@ -44,7 +46,7 @@ async function getRelatedEvents(
   const isCurrentPast = parseDateLocal(event.data.endDate) < currentDate;
 
   const otherEvents = allEvents.filter((e) => {
-    if (e.data.draft) return false;
+    if (!isDraftVisible(e.data.draft)) return false;
     if (e.id === event.id) return false;
     // If current event is past, include all; otherwise prefer upcoming
     if (!isCurrentPast) {
@@ -114,8 +116,12 @@ const ogImage = `/og/events/${entry.id}.png`;
 const currentDate = new Date();
 const startDate = parseDateLocal(data.startDate);
 const endDate = parseDateLocal(data.endDate);
-const submissionDeadlineDate = parseDateLocal(data.submissionDeadlineDate);
-const notificationDate = parseDateLocal(data.notificationDate);
+const submissionDeadlineDate = data.submissionDeadlineDate
+  ? parseDateLocal(data.submissionDeadlineDate)
+  : undefined;
+const notificationDate = data.notificationDate
+  ? parseDateLocal(data.notificationDate)
+  : undefined;
 let eventStatus = "upcoming";
 if (currentDate > endDate) {
   eventStatus = "past";
@@ -175,6 +181,9 @@ if (eventStatus === "past") {
 }
 
 // Format dates for display
+const isValidDate = (date?: Date) =>
+  Boolean(date && !Number.isNaN(date.getTime()));
+
 const formatDate = (date: Date) => {
   return date.toLocaleDateString("en-US", {
     weekday: "long",
@@ -186,16 +195,20 @@ const formatDate = (date: Date) => {
 
 // Prepare event details
 const eventDetailsItems = [];
-eventDetailsItems.push({
-  label: "Submission Deadline",
-  value: formatDate(submissionDeadlineDate),
-  icon: "solar:calendar-mark-line-duotone",
-});
-eventDetailsItems.push({
-  label: "Review Notification Date",
-  value: formatDate(notificationDate),
-  icon: "solar:calendar-mark-line-duotone",
-});
+if (isValidDate(submissionDeadlineDate)) {
+  eventDetailsItems.push({
+    label: "Submission Deadline",
+    value: formatDate(submissionDeadlineDate),
+    icon: "solar:calendar-mark-line-duotone",
+  });
+}
+if (isValidDate(notificationDate)) {
+  eventDetailsItems.push({
+    label: "Review Notification Date",
+    value: formatDate(notificationDate),
+    icon: "solar:calendar-mark-line-duotone",
+  });
+}
 eventDetailsItems.push({
   label: "Start Date",
   value: formatDate(startDate),
@@ -253,8 +266,7 @@ const featuredState = data.featured
   ? eventStatus === "past"
     ? "previously-featured"
     : "featured"
-  : undefined;
----
+  : undefined;---
 
 <html
   class="overflow-x-hidden grid scroll-pt-[72px] scroll-smooth font-sans text-text text-xl md:text-base antialiased"

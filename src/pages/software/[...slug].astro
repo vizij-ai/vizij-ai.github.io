@@ -5,10 +5,11 @@ import SiteShell from "@/layouts/SiteShell.astro";
 import { getRelatedSoftware } from "@/data/software";
 import { getPerson } from "@/data/people";
 import { SoftwareDetail } from "@/components/detail/views/SoftwareDetail";
+import { isDraftVisible } from "@/utils/drafts";
 
 export async function getStaticPaths() {
   const software = await getCollection("software", ({ data }) => {
-    return import.meta.env.PROD ? data.draft !== true : true;
+    return isDraftVisible(data.draft);
   });
   return software.map((entry) => ({
     params: { slug: entry.id },
@@ -78,8 +79,7 @@ const orgContributors = await Promise.all(
         data: org?.data,
       };
     }),
-);
----
+);---
 
 <html
   class="overflow-x-hidden grid scroll-pt-[72px] scroll-smooth font-sans text-text text-xl md:text-base antialiased"

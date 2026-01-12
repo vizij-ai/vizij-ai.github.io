@@ -1,5 +1,6 @@
 import React from "react";
 import { clsx } from "clsx";
+import { getNavHighlightClasses } from "@/components/navigation/navVariant";
 
 /**
  * NavIconButton
@@ -73,6 +74,7 @@ export const NavIconButton = React.forwardRef<
 ) {
   const sizeClasses =
     size === "sm" ? "h-7 w-7" : size === "lg" ? "h-9 w-9" : "h-8 w-8";
+  const navHighlight = getNavHighlightClasses();
 
   const variantClasses =
     variant === "ghost"
@@ -82,11 +84,12 @@ export const NavIconButton = React.forwardRef<
   const baseClasses = clsx(
     "relative inline-flex items-center justify-center select-none",
     "rounded-lg transition-colors",
-    "focus:outline-2 focus:outline-accent-two outline-offset-2",
+    "focus:outline-2 outline-offset-2",
+    navHighlight.focusOutline,
     "disabled:opacity-50 disabled:cursor-not-allowed",
     sizeClasses,
     variantClasses,
-    active && "bg-accent-base/10 text-accent-two",
+    active && clsx("bg-accent-base/10", navHighlight.text),
     className,
   );
 

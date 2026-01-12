@@ -1,5 +1,6 @@
 ---
-import { type CollectionEntry, getCollection, getEntry } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import { getCollection, getEntry } from "astro:content";
 import BaseHead from "@/components/BaseHead.astro";
 import SiteShell from "@/layouts/SiteShell.astro";
 import { getRelatedResearch as fetchRelatedResearch } from "@/data/research";
@@ -11,11 +12,12 @@ import {
   type ResearchAuthor,
   type ResearchOrganizationLink,
 } from "@/components/detail/views/ResearchDetail";
+import { isDraftVisible } from "@/utils/drafts";
 
 export async function getStaticPaths() {
   const researchEntries = await getCollection("research", ({ data }) => {
     // In production, exclude drafts. In development, show all.
-    return import.meta.env.PROD ? data.draft !== true : true;
+    return isDraftVisible(data.draft);
   });
   return researchEntries.map((entry) => ({
     params: { slug: entry.id },
@@ -87,8 +89,7 @@ const validRelatedHardware = relatedHardwareItems.filter(
 
 const validRelatedSoftware = relatedSoftwareItems.filter(
   (item): item is CollectionEntry<"software"> => Boolean(item),
-);
----
+);---
 
 <html
   class="overflow-x-hidden grid scroll-pt-[72px] scroll-smooth font-sans text-text text-xl md:text-base antialiased"

@@ -15,7 +15,7 @@ import {
   type PersonListElementProps,
 } from "@/components/cards/PersonListElement";
 import { getStatusColor, getStatusLabel } from "@/config/statusConfig";
-import { resolveLogoAsset } from "@/utils/images";
+import { resolveDetailImagePolicy, resolveLogoAsset } from "@/utils/images";
 
 type SoftwareData = CollectionEntry<"software">["data"];
 
@@ -59,6 +59,11 @@ export function SoftwareDetail({
   peopleContributors = [],
   relatedSoftware = [],
 }: SoftwareDetailProps) {
+  const detailImages = resolveDetailImagePolicy({
+    hero: data.images?.hero,
+    logoOrAvatar: resolveLogoAsset(data.images),
+    policy: data.imagePolicy,
+  });
   const badges = [
     data.status && {
       text: getStatusLabel(data.status),
@@ -137,13 +142,15 @@ export function SoftwareDetail({
     <BaseDetailLayout
       hero={
         <DetailHero
-          image={data.images?.hero}
+          image={detailImages.image}
           title={data.name}
           subtitle={data.shortDescription}
           badges={badges}
           featuredState={data.featured ? "featured" : undefined}
           entityType="software"
-          logo={resolveLogoAsset(data.images)}
+          logo={detailImages.profile}
+          showFallbackAvatar={detailImages.showFallbackIcon}
+          logoBackdrop={detailImages.logoBackdrop}
         />
       }
       links={

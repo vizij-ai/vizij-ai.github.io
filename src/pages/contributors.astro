@@ -5,6 +5,7 @@ import ContributorsPage from "@/react-pages/contributors/ContributorsPage";
 import { getAllOrganizations } from "@/data/organizations";
 import { getAllPeople } from "@/data/people";
 import { getCollection } from "astro:content";
+import { isDraftVisible } from "@/utils/drafts";
 
 const meta = {
   title: "Contributors",
@@ -16,7 +17,7 @@ const ogImage = "/og/contributors.png";
 const allOrganizations = await getAllOrganizations();
 const allPeople = await getAllPeople();
 const organizations = await getCollection("organizations", ({ data }) =>
-  import.meta.env.PROD ? data.draft !== true : true,
+  isDraftVisible(data.draft),
 );
 
 const orgNameById = Object.fromEntries(
@@ -89,8 +90,7 @@ const sponsorsUniqueCount = (() => {
   donorOrganizations.forEach((o) => ids.add(`o:${o.id}`));
   grantMakers.forEach((o) => ids.add(`o:${o.id}`));
   return ids.size;
-})();
----
+})();---
 
 <html
   class="overflow-x-hidden grid scroll-pt-[72px] scroll-smooth font-sans text-text text-xl md:text-base antialiased"

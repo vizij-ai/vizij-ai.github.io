@@ -1,10 +1,12 @@
-import { type CollectionEntry, getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import { getCollection } from "astro:content";
+import { isDraftVisible } from "@/utils/drafts";
 
 /** Get all software entries, sorted by featured status and name */
 export async function getAllSoftware(): Promise<CollectionEntry<"software">[]> {
   const software = await getCollection("software", ({ data }) => {
     // In production, exclude drafts. In development, show all.
-    return import.meta.env.PROD ? data.draft !== true : true;
+    return isDraftVisible(data.draft);
   });
   return software.sort((a, b) => {
     // Sort by featured first, then by status priority, then by name

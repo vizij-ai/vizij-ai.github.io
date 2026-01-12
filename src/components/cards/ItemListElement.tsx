@@ -11,6 +11,7 @@ export interface ItemListElementProps {
   // Use the same shape as ItemCard's logo/image props
   logo?: ImageLike;
   imageAlt?: string;
+  logoBackdrop?: boolean;
   featuredState?: FeaturedState;
   type?:
     | "hardware"
@@ -43,6 +44,7 @@ export const ItemListElement: FC<ItemListElementProps> = ({
   href,
   logo,
   imageAlt,
+  logoBackdrop = false,
   featuredState = "not-featured",
   type = "hardware",
   meta,
@@ -61,6 +63,9 @@ export const ItemListElement: FC<ItemListElementProps> = ({
   };
   const avatarType = typeToAvatarType[type] || "organization";
   const resolvedHref = isExternalUrl(href) ? href : buildUrl(href);
+  const avatarBackdropClassName = logoBackdrop
+    ? "rounded-full bg-white/70 dark:bg-black/60 backdrop-blur-md"
+    : "";
 
   return (
     <a
@@ -75,7 +80,7 @@ export const ItemListElement: FC<ItemListElementProps> = ({
           name={type === "people" ? title : undefined}
           type={avatarType}
           size="md"
-          className=""
+          className={avatarBackdropClassName}
         />
       </div>
 

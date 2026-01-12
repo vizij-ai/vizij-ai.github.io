@@ -1,7 +1,7 @@
 import type { FC } from "react";
 import type { CollectionEntry } from "astro:content";
 import { ItemCard } from "@/components/cards/ItemCard";
-import { resolveLogoAsset } from "@/utils/images";
+import { resolveCardImagePolicy, resolveLogoAsset } from "@/utils/images";
 
 export interface OrganizationCardProps {
   organizationId: string;
@@ -18,8 +18,11 @@ export const OrganizationCard: FC<OrganizationCardProps> = ({
     ? data.type.charAt(0).toUpperCase() + data.type.slice(1)
     : "";
 
-  const showLogo = !data.images?.hero;
-  const logoSource = resolveLogoAsset(data.images);
+  const cardImages = resolveCardImagePolicy({
+    hero: data.images?.hero,
+    logoOrAvatar: resolveLogoAsset(data.images),
+    policy: data.imagePolicy,
+  });
 
   return (
     <ItemCard
@@ -27,9 +30,11 @@ export const OrganizationCard: FC<OrganizationCardProps> = ({
       description={data.description}
       href={`/organizations/${organizationId}`}
       type="organizations"
-      image={data.images?.hero}
+      image={cardImages.image}
       imageAlt={data.name}
-      logo={showLogo ? logoSource : undefined}
+      logo={cardImages.logo}
+      showFallbackAvatar={cardImages.showFallbackIcon}
+      logoBackdrop={cardImages.logoBackdrop}
       category={typeLabel}
       featuredState={data.featured ? "featured" : "not-featured"}
       links={{

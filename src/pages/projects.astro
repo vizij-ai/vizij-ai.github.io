@@ -5,10 +5,69 @@ import { getAllHardware } from "@/data/hardware";
 import { getAllSoftware } from "@/data/software";
 import { getAllResearch } from "@/data/research";
 import ProjectsPage from "@/react-pages/projects/ProjectsPage";
+import { resolveImageLike } from "@/utils/images";
 
 const hardware = await getAllHardware();
 const software = await getAllSoftware();
 const research = await getAllResearch();
+
+const serializeImages = (images?: {
+  hero?: unknown;
+  logo?: unknown;
+  logoUrl?: string;
+}) => {
+  const hero = resolveImageLike(images?.hero as any);
+  const logo = resolveImageLike((images?.logo as any) ?? images?.logoUrl);
+  if (!hero && !logo) return undefined;
+  return { hero: hero || undefined, logo: logo || undefined };
+};
+
+const serializeHardware = (item: (typeof hardware)[number]) => ({
+  id: item.id,
+  data: {
+    name: item.data.name,
+    description: item.data.description,
+    shortDescription: item.data.shortDescription,
+    category: item.data.category,
+    status: item.data.status,
+    featured: item.data.featured,
+    links: item.data.links,
+    images: serializeImages(item.data.images),
+    imagePolicy: item.data.imagePolicy,
+  },
+});
+
+const serializeSoftware = (item: (typeof software)[number]) => ({
+  id: item.id,
+  data: {
+    name: item.data.name,
+    description: item.data.description,
+    shortDescription: item.data.shortDescription,
+    category: item.data.category,
+    status: item.data.status,
+    featured: item.data.featured,
+    links: item.data.links,
+    images: serializeImages(item.data.images),
+    imagePolicy: item.data.imagePolicy,
+  },
+});
+
+const serializeResearch = (item: (typeof research)[number]) => ({
+  id: item.id,
+  data: {
+    title: item.data.title,
+    description: item.data.description,
+    type: item.data.type,
+    featured: item.data.featured,
+    publishDate:
+      item.data.publishDate instanceof Date
+        ? item.data.publishDate.toISOString()
+        : item.data.publishDate,
+    links: item.data.links,
+    images: serializeImages(item.data.images),
+    imagePolicy: item.data.imagePolicy,
+  },
+});
 
 const meta = {
   title: "Projects",
@@ -16,6 +75,13 @@ const meta = {
     "Explore community-driven robotics hardware platforms, open-source software tools, and reproducible research contributions advancing human-robot interaction",
 };
 const ogImage = "/og/projects.png";
+
+const projectsPayload = JSON.stringify({
+  meta,
+  hardware: hardware.map(serializeHardware),
+  software: software.map(serializeSoftware),
+  research: research.map(serializeResearch),
+});
 ---
 
 <html
@@ -31,12 +97,7 @@ const ogImage = "/og/projects.png";
   </head>
   <body class="relative min-h-screen w-full bg-surface">
     <SiteShell noPaddingTop>
-      <ProjectsPage
-        meta={meta}
-        hardware={hardware}
-        software={software}
-        research={research}
-      />
+      <ProjectsPage client:load projectsPayload={projectsPayload} />
     </SiteShell>
   </body>
 </html>

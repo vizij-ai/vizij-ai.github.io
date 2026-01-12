@@ -5,7 +5,7 @@ import { HardwareCard } from "../cards/HardwareCard";
 import { SoftwareCard } from "../cards/SoftwareCard";
 import { ResearchCard } from "../cards/ResearchCard";
 import { PersonCard } from "../cards/PersonCard";
-import { resolveLogoAsset } from "@/utils/images";
+import { resolveLogoAsset, type ImagePolicy } from "@/utils/images";
 
 export interface RelatedItem {
   id: string;
@@ -25,6 +25,7 @@ export interface RelatedItem {
       logo?: { src: string } | string;
       logoUrl?: string;
     };
+    imagePolicy?: ImagePolicy;
     avatar?: { src: string } | string;
     logo?: { src: string } | string;
     thumbnail?: { src: string } | string;

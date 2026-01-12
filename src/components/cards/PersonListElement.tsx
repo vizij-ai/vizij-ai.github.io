@@ -1,6 +1,7 @@
 import type { FC } from "react";
 import type { CollectionEntry } from "astro:content";
 import { ItemListElement } from "@/components/cards/ItemListElement";
+import { resolveImagePolicy, type ImagePolicy } from "@/utils/images";
 
 export interface PersonListElementProps {
   personId: string;
@@ -20,6 +21,7 @@ export interface PersonListElementProps {
           isPrimary?: boolean;
         }>;
         images?: CollectionEntry<"people">["data"]["images"];
+        imagePolicy?: ImagePolicy;
       };
   affiliationLabel?: string;
   className?: string;
@@ -47,6 +49,7 @@ export const PersonListElement: FC<PersonListElementProps> = ({
     const parts = [affiliation, data.title].filter(Boolean) as string[];
     return parts.length ? parts.join(" · ") : undefined;
   })();
+  const imagePolicy = resolveImagePolicy(data.imagePolicy);
 
   return (
     <ItemListElement
@@ -56,6 +59,7 @@ export const PersonListElement: FC<PersonListElementProps> = ({
       type="people"
       logo={data.images?.avatar}
       imageAlt={fullName}
+      logoBackdrop={imagePolicy.logoOrAvatarBackdropInList}
       featuredState={data.featured ? "featured" : "not-featured"}
       className={className}
     />

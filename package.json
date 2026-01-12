@@ -2,9 +2,10 @@
   "name": "semio-community",
   "version": "1.0.0",
   "scripts": {
-    "dev": "node scripts/dev-all.mjs",
+    "dev": "astro dev",
     "dev:site": "astro dev",
     "dev:cms": "vite dev --config vite.cms.config.mjs",
+    "dev:no-drafts": "SHOW_DRAFTS=false astro dev",
     "dev:cms:proxy": "npx decap-server --port 8081 --allowed-hosts=\"http://localhost:4321,http://127.0.0.1:4321\"",
     "start": "npm run dev",
     "build": "npm run build:cms && npm run build:site && npm run build:search",
@@ -18,6 +19,7 @@
     "format:imports": "biome check --formatter-enabled=false --write",
     "check": "astro check",
     "verify:drafts": "node test/verify-drafts.mjs",
+    "render:modules": "node scripts/render-configurator-modules.mjs",
     "cms:preview": "vite build --config vite.cms.config.mjs",
     "cms:copy-assets": "node scripts/copy-admin-assets.mjs",
     "cms:config": "node scripts/generate-decap-config.mjs"

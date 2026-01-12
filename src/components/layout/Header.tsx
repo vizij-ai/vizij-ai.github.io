@@ -1,84 +1,17 @@
 import { useCallback } from "react";
 import { NavigationMenuComponent } from "@/components/navigation/NavigationMenu";
 import { SearchApp } from "@/components/search/SearchApp";
-import { menuLinks, siteConfig } from "@/site.config";
-import { homeUrl, url } from "@/utils/url";
+import { menuLinks, siteConfig, type NavCollections } from "@/site.config";
+import { homeUrl } from "@/utils/url";
 
 import "@/components/navigation/navigation-menu.css";
 
-type HardwareStatus =
-  | "available"
-  | "in-progress"
-  | "coming-soon"
-  | "deprecated";
-type SoftwareStatus =
-  | "stable"
-  | "beta"
-  | "alpha"
-  | "in-progress"
-  | "deprecated";
-
-type HardwareItem = {
-  id: string;
-  name: string;
-  shortDescription: string;
-  status: HardwareStatus;
-};
-
-type SoftwareItem = {
-  id: string;
-  name: string;
-  shortDescription: string;
-  status: SoftwareStatus;
-};
-
-type ResearchItem = {
-  id: string;
-  title: string;
-  type: string;
-  year?: number;
-};
-
 export type HeaderProps = {
   currentPath: string;
-  hardwareItems: HardwareItem[];
-  softwareItems: SoftwareItem[];
-  researchItems: ResearchItem[];
+  navCollections: NavCollections;
 };
 
-const menuSections = {
-  "/projects/": [
-    { title: "Hardware Projects", href: "/projects/#hardware" },
-    { title: "Software Projects", href: "/projects/#software" },
-    { title: "Research Projects", href: "/projects/#research" },
-  ],
-  "/services/": [
-    { title: "Hardware Services", href: "/services/#hardware" },
-    { title: "Software Services", href: "/services/#software" },
-    { title: "Research Services", href: "/services/#research" },
-    { title: "Benefits", href: "/services/#benefits" },
-    { title: "Process", href: "/services/#process" },
-    { title: "Get Started", href: "/services/#get-started" },
-  ],
-  "/events/": [
-    { title: "Featured Events", href: "/events/#featured" },
-    { title: "Upcoming Events", href: "/events/#upcoming" },
-    { title: "Past Events", href: "/events/#past" },
-    { title: "Partner for an Event", href: "/events/#events-contribute" },
-  ],
-  "/contributors/": [
-    { title: "People", href: "/contributors/#people" },
-    { title: "Partners", href: "/contributors/#partners" },
-    { title: "Sponsors", href: "/contributors/#sponsors" },
-  ],
-};
-
-export default function Header({
-  currentPath,
-  hardwareItems,
-  softwareItems,
-  researchItems,
-}: HeaderProps) {
+export default function Header({ currentPath, navCollections }: HeaderProps) {
   const urlPrefix = (import.meta.env.BASE_URL || "/").replace(/\/$/, "");
   const handleThemeToggle = useCallback(() => {
     if (typeof document === "undefined") return;
@@ -125,10 +58,7 @@ export default function Header({
           <NavigationMenuComponent
             currentPath={currentPath}
             menuLinks={menuLinks}
-            hardwareItems={hardwareItems}
-            softwareItems={softwareItems}
-            researchItems={researchItems}
-            menuSections={menuSections}
+            navCollections={navCollections}
             urlPrefix={urlPrefix}
           />
         </nav>
@@ -252,7 +182,6 @@ export default function Header({
             menuLinks={menuLinks}
             currentPath={currentPath}
             urlPrefix={urlPrefix}
-            menuSections={menuSections}
           />
         </div>
       </div>

@@ -1,3 +1,6 @@
+export type NavHighlightVariant = "primary" | "secondary" | "tertiary";
+export type NavCtaVariant = "default" | "primary" | "secondary" | "tertiary";
+
 export interface SiteConfig {
 	author: string;
 	date: {
@@ -8,6 +11,10 @@ export interface SiteConfig {
 	lang: string;
 	ogLocale: string;
 	title: string;
+	navigation?: {
+		highlightVariant?: NavHighlightVariant;
+		ctaVariant?: NavCtaVariant;
+	};
 }
 
 export interface PaginationLink {
@@ -21,6 +28,10 @@ export interface SiteMeta {
 	description?: string;
 	ogImage?: string | undefined;
 	title: string;
+	navigation?: {
+		highlightVariant?: NavHighlightVariant;
+		ctaVariant?: NavCtaVariant;
+	};
 }
 
 /** Webmentions */

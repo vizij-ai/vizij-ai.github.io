@@ -1,11 +1,39 @@
 import type { FC } from "react";
-import type { CollectionEntry } from "astro:content";
 import { ItemCard } from "@/components/cards/ItemCard";
-import { resolveLogoAsset } from "@/utils/images";
+import {
+  resolveCardImagePolicy,
+  resolveLogoAsset,
+  type ImageLike,
+  type ImagePolicy,
+} from "@/utils/images";
+
+type SoftwareCardData = {
+  name?: string;
+  description?: string;
+  shortDescription?: string;
+  category?: string;
+  status?: string;
+  featured?: boolean;
+  links?: {
+    website?: string;
+    github?: string;
+    code?: string;
+    documentation?: string;
+    demo?: string;
+    pypi?: string;
+    npm?: string;
+  };
+  images?: {
+    logo?: ImageLike;
+    hero?: ImageLike;
+    logoUrl?: string;
+  };
+  imagePolicy?: ImagePolicy;
+};
 
 export interface SoftwareCardProps {
   softwareId: string;
-  data: CollectionEntry<"software">["data"];
+  data: SoftwareCardData;
   className?: string;
 }
 
@@ -17,7 +45,11 @@ export const SoftwareCard: FC<SoftwareCardProps> = ({
   const categoryLabel = data.category
     ? data.category.charAt(0).toUpperCase() + data.category.slice(1)
     : "";
-  const logoSource = resolveLogoAsset(data.images);
+  const cardImages = resolveCardImagePolicy({
+    hero: data.images?.hero,
+    logoOrAvatar: resolveLogoAsset(data.images),
+    policy: data.imagePolicy,
+  });
 
   return (
     <ItemCard
@@ -25,9 +57,11 @@ export const SoftwareCard: FC<SoftwareCardProps> = ({
       description={data.shortDescription || data.description}
       href={`/software/${softwareId}`}
       type="software"
-      image={data.images?.hero}
+      image={cardImages.image}
       imageAlt={data.name}
-      logo={logoSource}
+      logo={cardImages.logo}
+      showFallbackAvatar={cardImages.showFallbackIcon}
+      logoBackdrop={cardImages.logoBackdrop}
       status={data.status}
       category={categoryLabel}
       featuredState={data.featured ? "featured" : "not-featured"}
