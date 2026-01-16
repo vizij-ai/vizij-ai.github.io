@@ -29,10 +29,32 @@ const now = new Date();
 const currentEvents = await getCurrentEvents();
 const upcomingEvents = await getUpcomingEvents();
 const featuredOnly = await getFeaturedEvents();
+
+// Helper to extract start date from dates array
+function getStartDate(dates: Array<{ name: string; date: Date; order?: number }>): Date | undefined {
+  const startDateEntry = dates.find(d => d.name.toLowerCase() === 'start date');
+  if (startDateEntry) return startDateEntry.date;
+  
+  // Fall back to "Event Date" if it exists
+  const eventDateEntry = dates.find(d => d.name.toLowerCase() === 'event date');
+  if (eventDateEntry) return eventDateEntry.date;
+  
+  if (dates.length > 0) {
+    return dates.reduce((min, current) => 
+      current.date < min.date ? current : min
+    ).date;
+  }
+  
+  return undefined;
+}
+
 const featuredEventCount = [
   ...currentEvents.filter((c) => !featuredOnly.some((f) => f.id === c.id)),
   ...upcomingEvents.filter((u) => !featuredOnly.some((f) => f.id === u.id)),
-  ...featuredOnly.filter((f) => f.data.startDate > now),
+  ...featuredOnly.filter((f) => {
+    const startDate = getStartDate(f.data.dates);
+    return startDate && startDate > now;
+  }),
 ].length;
 
 const pageTitle = "Home";

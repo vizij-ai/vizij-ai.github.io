@@ -44,6 +44,8 @@ export interface EventCardProps {
 
 export const EventCard: FC<EventCardProps> = ({ eventId, data }) => {
   // Determine status based on dates
+  // Note: startDate and endDate are already processed to handle "Event Date" entries
+  // from the dates array via getStartDate/getEndDate helpers in events.astro
   const now = new Date();
   const startDate = parseDateLocal(data.startDate);
   const endDate = data.endDate ? parseDateLocal(data.endDate) : startDate;
@@ -60,7 +62,16 @@ export const EventCard: FC<EventCardProps> = ({ eventId, data }) => {
 
   const locationString = getLocationString(data.location);
 
-  const dateString = getFormattedDateRanges(startDate, endDate);
+  // Only format dates if we have a valid start date
+  const dateString = startDate && !Number.isNaN(startDate.getTime())
+    ? getFormattedDateRanges(
+        startDate,
+        // Only pass endDate if it's valid and different from startDate
+        endDate && !Number.isNaN(endDate.getTime()) && startDate.getTime() !== endDate.getTime()
+          ? endDate
+          : undefined
+      )
+    : "Date TBA";
 
   const featuredState: FeaturedState = useMemo(() => {
     if (status === "past" && data.featured) return "previously-featured";

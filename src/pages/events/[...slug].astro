@@ -34,6 +34,46 @@ export async function getStaticPaths() {
 const { entry } = Astro.props as { entry: CollectionEntry<"events"> };
 const { data } = entry;
 
+// Helper function to get the end date from dates array
+function getEndDate(dates: Array<{ name: string; date: Date; order?: number }>): Date | undefined {
+  // Look for "End Date" first
+  const endDateEntry = dates.find(d => d.name.toLowerCase() === 'end date');
+  if (endDateEntry) return endDateEntry.date;
+  
+  // Fall back to "Event Date" if it exists
+  const eventDateEntry = dates.find(d => d.name.toLowerCase() === 'event date');
+  if (eventDateEntry) return eventDateEntry.date;
+  
+  // If no explicit "End Date", find the maximum date
+  if (dates.length > 0) {
+    return dates.reduce((max, current) => 
+      current.date > max.date ? current : max
+    ).date;
+  }
+  
+  return undefined;
+}
+
+// Helper function to get the start date from dates array
+function getStartDate(dates: Array<{ name: string; date: Date; order?: number }>): Date | undefined {
+  // Look for "Start Date" first
+  const startDateEntry = dates.find(d => d.name.toLowerCase() === 'start date');
+  if (startDateEntry) return startDateEntry.date;
+  
+  // Fall back to "Event Date" if it exists
+  const eventDateEntry = dates.find(d => d.name.toLowerCase() === 'event date');
+  if (eventDateEntry) return eventDateEntry.date;
+  
+  // If no explicit "Start Date", find the minimum date
+  if (dates.length > 0) {
+    return dates.reduce((min, current) => 
+      current.date < min.date ? current : min
+    ).date;
+  }
+  
+  return undefined;
+}
+
 // Get related events (by type or topics)
 async function getRelatedEvents(
   event: CollectionEntry<"events">,
@@ -43,15 +83,16 @@ async function getRelatedEvents(
 
   // Filter out the current event and past events (unless current is also past)
   const currentDate = new Date();
-  const isCurrentPast = parseDateLocal(event.data.endDate) < currentDate;
+  const eventEndDate = getEndDate(event.data.dates);
+  const isCurrentPast = eventEndDate ? eventEndDate < currentDate : false;
 
   const otherEvents = allEvents.filter((e) => {
     if (!isDraftVisible(e.data.draft)) return false;
     if (e.id === event.id) return false;
     // If current event is past, include all; otherwise prefer upcoming
     if (!isCurrentPast) {
-      const eventDate = parseDateLocal(e.data.startDate);
-      if (eventDate < currentDate) return false;
+      const eventStartDate = getStartDate(e.data.dates);
+      if (eventStartDate && eventStartDate < currentDate) return false;
     }
     return true;
   });
@@ -85,12 +126,15 @@ async function getRelatedEvents(
     score += topicOverlap * 2;
 
     // Temporal proximity (within 3 months) gets points
-    const timeDiff = Math.abs(
-      parseDateLocal(e.data.startDate).getTime() -
-        parseDateLocal(event.data.startDate).getTime(),
-    );
-    const monthsDiff = timeDiff / (1000 * 60 * 60 * 24 * 30);
-    if (monthsDiff <= 3) score += 3 - Math.floor(monthsDiff);
+    const eventStartDate = getStartDate(event.data.dates);
+    const otherStartDate = getStartDate(e.data.dates);
+    if (eventStartDate && otherStartDate) {
+      const timeDiff = Math.abs(
+        otherStartDate.getTime() - eventStartDate.getTime(),
+      );
+      const monthsDiff = timeDiff / (1000 * 60 * 60 * 24 * 30);
+      if (monthsDiff <= 3) score += 3 - Math.floor(monthsDiff);
+    }
 
     return { event: e, score };
   });
@@ -114,18 +158,12 @@ const ogImage = `/og/events/${entry.id}.png`;
 
 // Determine event status
 const currentDate = new Date();
-const startDate = parseDateLocal(data.startDate);
-const endDate = parseDateLocal(data.endDate);
-const submissionDeadlineDate = data.submissionDeadlineDate
-  ? parseDateLocal(data.submissionDeadlineDate)
-  : undefined;
-const notificationDate = data.notificationDate
-  ? parseDateLocal(data.notificationDate)
-  : undefined;
+const startDate = getStartDate(data.dates);
+const endDate = getEndDate(data.dates);
 let eventStatus = "upcoming";
-if (currentDate > endDate) {
+if (endDate && currentDate > endDate) {
   eventStatus = "past";
-} else if (currentDate >= startDate && currentDate <= endDate) {
+} else if (startDate && endDate && currentDate >= startDate && currentDate <= endDate) {
   eventStatus = "ongoing";
 }
 
@@ -193,32 +231,20 @@ const formatDate = (date: Date) => {
   });
 };
 
-// Prepare event details
-const eventDetailsItems = [];
-if (isValidDate(submissionDeadlineDate)) {
-  eventDetailsItems.push({
-    label: "Submission Deadline",
-    value: formatDate(submissionDeadlineDate),
-    icon: "solar:calendar-mark-line-duotone",
-  });
-}
-if (isValidDate(notificationDate)) {
-  eventDetailsItems.push({
-    label: "Review Notification Date",
-    value: formatDate(notificationDate),
-    icon: "solar:calendar-mark-line-duotone",
-  });
-}
-eventDetailsItems.push({
-  label: "Start Date",
-  value: formatDate(startDate),
-  icon: "solar:calendar-date-line-duotone",
+// Prepare event details - sort by order field, then by array position
+const sortedDates = [...(data.dates || [])].sort((a, b) => {
+  const orderA = a.order ?? data.dates.indexOf(a);
+  const orderB = b.order ?? data.dates.indexOf(b);
+  return orderA - orderB;
 });
-eventDetailsItems.push({
-  label: "End Date",
-  value: formatDate(endDate),
-  icon: "solar:calendar-mark-line-duotone",
-});
+
+const eventDetailsItems = sortedDates
+  .filter(dateEntry => isValidDate(dateEntry.date))
+  .map(dateEntry => ({
+    label: dateEntry.name,
+    value: formatDate(dateEntry.date),
+    icon: "solar:calendar-mark-line-duotone",
+  }));
 // Prepare location details
 const locationItems = [];
 if (data.location.venue) {
@@ -405,10 +431,7 @@ const featuredState = data.featured
                       thumbnail: undefined,
                       banner: event.data.images?.hero,
                       links: event.data.links,
-                      startDate: event.data.startDate,
-                      endDate: event.data.endDate,
-                      submissionDeadlineDate: event.data.submissionDeadlineDate,
-                      notificationDate: event.data.notificationDate,
+                      dates: event.data.dates,
                       shortDescription: `${
                         typeLabels[event.data.type] || event.data.type
                       } • ${event.data.location.city}`,

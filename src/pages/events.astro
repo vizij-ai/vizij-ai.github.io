@@ -15,6 +15,42 @@ const ogImage = "/og/events.png";
 
 const allEvents = await getAllEvents();
 
+// Helper to extract start date from dates array
+function getStartDate(dates: Array<{ name: string; date: Date; order?: number }>): Date | undefined {
+  const startDateEntry = dates.find(d => d.name.toLowerCase() === 'start date');
+  if (startDateEntry) return startDateEntry.date;
+  
+  // Fall back to "Event Date" if it exists
+  const eventDateEntry = dates.find(d => d.name.toLowerCase() === 'event date');
+  if (eventDateEntry) return eventDateEntry.date;
+  
+  if (dates.length > 0) {
+    return dates.reduce((min, current) => 
+      current.date < min.date ? current : min
+    ).date;
+  }
+  
+  return undefined;
+}
+
+// Helper to extract end date from dates array
+function getEndDate(dates: Array<{ name: string; date: Date; order?: number }>): Date | undefined {
+  const endDateEntry = dates.find(d => d.name.toLowerCase() === 'end date');
+  if (endDateEntry) return endDateEntry.date;
+  
+  // Fall back to "Event Date" if it exists
+  const eventDateEntry = dates.find(d => d.name.toLowerCase() === 'event date');
+  if (eventDateEntry) return eventDateEntry.date;
+  
+  if (dates.length > 0) {
+    return dates.reduce((max, current) => 
+      current.date > max.date ? current : max
+    ).date;
+  }
+  
+  return undefined;
+}
+
 const serializeEvents = allEvents.map((event) => ({
   id: event.id,
   data: {
@@ -23,13 +59,9 @@ const serializeEvents = allEvents.map((event) => ({
     description: event.data.description,
     type: event.data.type,
     startDate:
-      event.data.startDate instanceof Date
-        ? event.data.startDate.toISOString()
-        : event.data.startDate,
+      getStartDate(event.data.dates)?.toISOString(),
     endDate:
-      event.data.endDate instanceof Date
-        ? event.data.endDate.toISOString()
-        : event.data.endDate,
+      getEndDate(event.data.dates)?.toISOString(),
     featured: event.data.featured,
     links: event.data.links,
     location: event.data.location,

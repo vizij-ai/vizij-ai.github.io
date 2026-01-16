@@ -371,7 +371,7 @@ const research = defineCollection({
     }),
 });
 
-// Proposed Events Collection (unchanged for now)
+// Proposed Events Collection
 const events = defineCollection({
   loader: glob({ base: "./src/content/events", pattern: "**/*.{md,mdx}" }),
   schema: ({ image }) =>
@@ -387,18 +387,15 @@ const events = defineCollection({
         "webinar",
         "competition",
       ]),
-      startDate: z.string().or(z.date()).transform(parseDate),
-      endDate: z.string().or(z.date()).transform(parseDate),
-      submissionDeadlineDate: z
-        .string()
-        .or(z.date())
-        .transform(parseDate)
-        .optional(),
-      notificationDate: z
-        .string()
-        .or(z.date())
-        .transform(parseDate)
-        .optional(),
+      dates: z
+        .array(
+          z.object({
+            name: z.string().describe("Custom name for the date (e.g., 'Start Date', 'Submission Deadline')"),
+            date: z.string().or(z.date()).transform(parseDate),
+            order: z.number().optional().describe("Order to display this date (lower numbers first, defaults to array order)"),
+          }),
+        )
+        .describe("List of important dates for the event with custom names and optional ordering"),
       location: z.object({
         venue: z.string().optional(),
         city: z.string(),

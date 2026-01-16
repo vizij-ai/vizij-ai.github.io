@@ -2,6 +2,46 @@ import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
 import { isDraftVisible } from "@/utils/drafts";
 
+/** Helper function to get the start date from dates array */
+function getStartDate(dates: Array<{ name: string; date: Date; order?: number }>): Date | undefined {
+  // Look for "Start Date" first
+  const startDateEntry = dates.find(d => d.name.toLowerCase() === 'start date');
+  if (startDateEntry) return startDateEntry.date;
+  
+  // Fall back to "Event Date" if it exists
+  const eventDateEntry = dates.find(d => d.name.toLowerCase() === 'event date');
+  if (eventDateEntry) return eventDateEntry.date;
+  
+  // Otherwise use the earliest date in the array
+  if (dates.length > 0) {
+    return dates.reduce((min, current) => 
+      current.date < min.date ? current : min
+    ).date;
+  }
+  
+  return undefined;
+}
+
+/** Helper function to get the end date from dates array */
+function getEndDate(dates: Array<{ name: string; date: Date; order?: number }>): Date | undefined {
+  // Look for "End Date" first
+  const endDateEntry = dates.find(d => d.name.toLowerCase() === 'end date');
+  if (endDateEntry) return endDateEntry.date;
+  
+  // Fall back to "Event Date" if it exists
+  const eventDateEntry = dates.find(d => d.name.toLowerCase() === 'event date');
+  if (eventDateEntry) return eventDateEntry.date;
+  
+  // Otherwise use the latest date in the array
+  if (dates.length > 0) {
+    return dates.reduce((max, current) => 
+      current.date > max.date ? current : max
+    ).date;
+  }
+  
+  return undefined;
+}
+
 /** Get all events, sorted by start date (upcoming first) */
 export async function getAllEvents(): Promise<CollectionEntry<"events">[]> {
   const events = await getCollection("events", ({ data }) => {
@@ -17,19 +57,24 @@ export async function getAllEvents(): Promise<CollectionEntry<"events">[]> {
     }
 
     // Then upcoming events before past events
-    const aUpcoming = a.data.startDate >= now;
-    const bUpcoming = b.data.startDate >= now;
+    const aStartDate = getStartDate(a.data.dates);
+    const bStartDate = getStartDate(b.data.dates);
+    
+    const aUpcoming = aStartDate && aStartDate >= now;
+    const bUpcoming = bStartDate && bStartDate >= now;
 
     if (aUpcoming !== bUpcoming) {
       return aUpcoming ? -1 : 1;
     }
 
     // Sort by date (upcoming: ascending, past: descending)
-    if (aUpcoming) {
-      return a.data.startDate.getTime() - b.data.startDate.getTime();
-    } else {
-      return b.data.startDate.getTime() - a.data.startDate.getTime();
+    if (aUpcoming && aStartDate && bStartDate) {
+      return aStartDate.getTime() - bStartDate.getTime();
+    } else if (aStartDate && bStartDate) {
+      return bStartDate.getTime() - aStartDate.getTime();
     }
+    
+    return 0;
   });
 }
 
@@ -39,7 +84,10 @@ export async function getUpcomingEvents(): Promise<
 > {
   const events = await getAllEvents();
   const now = new Date();
-  return events.filter((event) => event.data.endDate >= now);
+  return events.filter((event) => {
+    const endDate = getEndDate(event.data.dates);
+    return endDate && endDate >= now;
+  });
 }
 
 /** Get past events */
@@ -47,17 +95,26 @@ export async function getPastEvents(): Promise<CollectionEntry<"events">[]> {
   const events = await getAllEvents();
   const now = new Date();
   return events
-    .filter((event) => event.data.endDate < now)
-    .sort((a, b) => b.data.startDate.getTime() - a.data.startDate.getTime());
+    .filter((event) => {
+      const endDate = getEndDate(event.data.dates);
+      return endDate && endDate < now;
+    })
+    .sort((a, b) => {
+      const aStartDate = getStartDate(a.data.dates);
+      const bStartDate = getStartDate(b.data.dates);
+      return (bStartDate?.getTime() ?? 0) - (aStartDate?.getTime() ?? 0);
+    });
 }
 
 /** Get events happening now */
 export async function getCurrentEvents(): Promise<CollectionEntry<"events">[]> {
   const events = await getAllEvents();
   const now = new Date();
-  return events.filter(
-    (event) => event.data.startDate <= now && event.data.endDate >= now,
-  );
+  return events.filter((event) => {
+    const startDate = getStartDate(event.data.dates);
+    const endDate = getEndDate(event.data.dates);
+    return startDate && endDate && startDate <= now && endDate >= now;
+  });
 }
 
 /** Get events filtered by type */
@@ -119,14 +176,14 @@ export async function getOnlineEvents(): Promise<CollectionEntry<"events">[]> {
 
 /** Get events within a date range */
 export async function getEventsByDateRange(
-  startDate: Date,
-  endDate: Date,
+  rangeStart: Date,
+  rangeEnd: Date,
 ): Promise<CollectionEntry<"events">[]> {
   const events = await getAllEvents();
-  return events.filter(
-    (event) =>
-      event.data.startDate >= startDate && event.data.startDate <= endDate,
-  );
+  return events.filter((event) => {
+    const eventStart = getStartDate(event.data.dates);
+    return eventStart && eventStart >= rangeStart && eventStart <= rangeEnd;
+  });
 }
 
 /** Get events by year */
@@ -134,7 +191,10 @@ export async function getEventsByYear(
   year: number,
 ): Promise<CollectionEntry<"events">[]> {
   const events = await getAllEvents();
-  return events.filter((event) => event.data.startDate.getFullYear() === year);
+  return events.filter((event) => {
+    const startDate = getStartDate(event.data.dates);
+    return startDate && startDate.getFullYear() === year;
+  });
 }
 
 /** Get events by month and year */
@@ -144,9 +204,11 @@ export async function getEventsByMonth(
 ): Promise<CollectionEntry<"events">[]> {
   const events = await getAllEvents();
   return events.filter((event) => {
-    const eventDate = event.data.startDate;
+    const startDate = getStartDate(event.data.dates);
     return (
-      eventDate.getFullYear() === year && eventDate.getMonth() === month - 1
+      startDate &&
+      startDate.getFullYear() === year && 
+      startDate.getMonth() === month - 1
     );
   });
 }
@@ -266,8 +328,11 @@ export async function groupEventsByMonth(
   const grouped: Record<string, CollectionEntry<"events">[]> = {};
 
   events.forEach((event) => {
-    const monthKey = `${event.data.startDate.getFullYear()}-${String(
-      event.data.startDate.getMonth() + 1,
+    const startDate = getStartDate(event.data.dates);
+    if (!startDate) return;
+    
+    const monthKey = `${startDate.getFullYear()}-${String(
+      startDate.getMonth() + 1,
     ).padStart(2, "0")}`;
 
     if (!grouped[monthKey]) {
@@ -280,9 +345,11 @@ export async function groupEventsByMonth(
   Object.keys(grouped).forEach((key) => {
     const events = grouped[key];
     if (events) {
-      events.sort(
-        (a, b) => a.data.startDate.getTime() - b.data.startDate.getTime(),
-      );
+      events.sort((a, b) => {
+        const aDate = getStartDate(a.data.dates);
+        const bDate = getStartDate(b.data.dates);
+        return (aDate?.getTime() ?? 0) - (bDate?.getTime() ?? 0);
+      });
     }
   });
 
@@ -333,13 +400,17 @@ export async function filterEvents(criteria: {
   }
 
   if (criteria.dateFrom) {
-    events = events.filter(
-      (event) => event.data.startDate >= criteria.dateFrom!,
-    );
+    events = events.filter((event) => {
+      const startDate = getStartDate(event.data.dates);
+      return startDate && startDate >= criteria.dateFrom!;
+    });
   }
 
   if (criteria.dateTo) {
-    events = events.filter((event) => event.data.startDate <= criteria.dateTo!);
+    events = events.filter((event) => {
+      const startDate = getStartDate(event.data.dates);
+      return startDate && startDate <= criteria.dateTo!;
+    });
   }
 
   if (criteria.includeOnline === false) {

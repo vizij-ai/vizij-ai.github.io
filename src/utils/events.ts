@@ -2,8 +2,9 @@ import { getFormattedDateRanges, parseDateLocal } from "./date";
 
 interface PartialEvent {
   description?: string;
-  startDate: Date | string;
+  startDate?: Date | string;
   endDate?: Date | string;
+  dates?: Array<{ name: string; date: Date; order?: number }>;
   location?: {
     city?: string;
     country?: string;
@@ -11,11 +12,50 @@ interface PartialEvent {
   };
 }
 
+function getStartDate(dates?: Array<{ name: string; date: Date; order?: number }>): Date | undefined {
+  if (!dates || dates.length === 0) return undefined;
+  
+  const startDateEntry = dates.find(d => d.name.toLowerCase() === 'start date');
+  if (startDateEntry) return startDateEntry.date;
+  
+  // Fall back to "Event Date" if it exists
+  const eventDateEntry = dates.find(d => d.name.toLowerCase() === 'event date');
+  if (eventDateEntry) return eventDateEntry.date;
+  
+  return dates.reduce((min, current) => 
+    current.date < min.date ? current : min
+  ).date;
+}
+
+function getEndDate(dates?: Array<{ name: string; date: Date; order?: number }>): Date | undefined {
+  if (!dates || dates.length === 0) return undefined;
+  
+  const endDateEntry = dates.find(d => d.name.toLowerCase() === 'end date');
+  if (endDateEntry) return endDateEntry.date;
+  
+  // Fall back to "Event Date" if it exists
+  const eventDateEntry = dates.find(d => d.name.toLowerCase() === 'event date');
+  if (eventDateEntry) return eventDateEntry.date;
+  
+  return dates.reduce((max, current) => 
+    current.date > max.date ? current : max
+  ).date;
+}
+
 export function getEventPreviewDescriptionText(event: PartialEvent): string {
   const locationString = getLocationString(event.location);
 
-  const start = parseDateLocal(event.startDate);
-  const end = parseDateLocal(event.endDate ?? event.startDate);
+  // Support both old and new formats
+  let startDateVal = event.startDate;
+  let endDateVal = event.endDate;
+  
+  if (event.dates && event.dates.length > 0) {
+    startDateVal = getStartDate(event.dates);
+    endDateVal = getEndDate(event.dates);
+  }
+
+  const start = parseDateLocal(startDateVal ?? new Date());
+  const end = parseDateLocal(endDateVal ?? startDateVal ?? new Date());
 
   const dateString = getFormattedDateRanges(start, end);
 
