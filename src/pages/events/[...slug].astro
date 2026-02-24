@@ -23,7 +23,7 @@ import { isDraftVisible } from "@/utils/drafts";
 export async function getStaticPaths() {
   const events = await getCollection("events", ({ data }) => {
     // In production, exclude drafts. In development, show all.
-    return isDraftVisible(data.draft);
+    return isDraftVisible(data.draft, data.sites);
   });
   return events.map((entry) => ({
     params: { slug: entry.id },
@@ -46,7 +46,7 @@ async function getRelatedEvents(
   const isCurrentPast = parseDateLocal(event.data.endDate) < currentDate;
 
   const otherEvents = allEvents.filter((e) => {
-    if (!isDraftVisible(e.data.draft)) return false;
+    if (!isDraftVisible(e.data.draft, e.data.sites)) return false;
     if (e.id === event.id) return false;
     // If current event is past, include all; otherwise prefer upcoming
     if (!isCurrentPast) {

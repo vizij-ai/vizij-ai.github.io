@@ -58,7 +58,7 @@ const navCollections: NavCollections = {};
 for (const [collection, ids] of idsByCollection) {
   if (ids.size === 0) continue;
   const entries = await getCollection(collection, ({ data }) =>
-    isDraftVisible((data as { draft?: boolean }).draft),
+    isDraftVisible((data as { draft?: boolean; sites?: readonly ("semio" | "quori" | "vizij")[] }).draft, (data as { draft?: boolean; sites?: readonly ("semio" | "quori" | "vizij")[] }).sites),
   );
   const fields = fieldsByCollection.get(collection) ?? new Set();
   const collectionMap: Record<

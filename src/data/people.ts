@@ -12,7 +12,7 @@ function formatPersonName(
 export async function getAllPeople(): Promise<CollectionEntry<"people">[]> {
   return await getCollection("people", ({ data }) => {
     // In production, exclude drafts. In development, show all.
-    return isDraftVisible(data.draft);
+    return isDraftVisible(data.draft, data.sites);
   });
 }
 

@@ -15,7 +15,7 @@ type PartnerEntry = CollectionEntry<"organizations">;
 
 export async function getStaticPaths() {
   const organizations = await getCollection("organizations", ({ data }) => {
-    return isDraftVisible(data.draft);
+    return isDraftVisible(data.draft, data.sites);
   });
   const partners = organizations.filter((org) => org.data.isPartner);
   return partners.map((entry) => ({

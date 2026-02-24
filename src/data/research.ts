@@ -57,7 +57,7 @@ function sortResearchEntries(entries: ResearchEntry[]): ResearchEntry[] {
 
 async function loadResearchEntries(): Promise<ResearchEntry[]> {
   const entries = await getCollection("research", ({ data }) =>
-    isDraftVisible(data.draft),
+    isDraftVisible(data.draft, data.sites),
   );
   return sortResearchEntries(entries);
 }

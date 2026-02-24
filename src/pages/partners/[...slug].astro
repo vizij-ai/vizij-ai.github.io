@@ -5,7 +5,7 @@ import { isDraftVisible } from "@/utils/drafts";
 
 export async function getStaticPaths() {
   const organizations = await getCollection("organizations", ({ data }) => {
-    return isDraftVisible(data.draft);
+    return isDraftVisible(data.draft, data.sites);
   });
 
   const partners = organizations.filter((entry) => entry.data.isPartner);

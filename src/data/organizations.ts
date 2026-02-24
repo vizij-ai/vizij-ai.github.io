@@ -6,7 +6,7 @@ type OrganizationEntry = CollectionEntry<"organizations">;
 
 async function loadOrganizationEntries(): Promise<OrganizationEntry[]> {
   const organizations = await getCollection("organizations", ({ data }) =>
-    isDraftVisible(data.draft),
+    isDraftVisible(data.draft, data.sites),
   );
 
   const partners = organizations.filter((org) => org.data.isPartner);

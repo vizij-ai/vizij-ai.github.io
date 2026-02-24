@@ -74,6 +74,9 @@ const linksSchema = z.object({
 
 const contributorRoleSchema = z.string().min(1);
 
+const SITE_KEYS = ["semio", "quori", "vizij"] as const;
+const siteKeySchema = z.enum(SITE_KEYS);
+
 const baseContributorSchema = z
   .object({
     role: contributorRoleSchema,
@@ -164,6 +167,7 @@ const people = defineCollection({
       isDonor: z.boolean().default(false),
       featured: z.boolean().default(false),
       draft: z.boolean().optional(),
+      sites: z.array(siteKeySchema).min(1).optional(),
     }),
 });
 
@@ -213,6 +217,7 @@ const organizations = defineCollection({
       }),
       featured: z.boolean().default(false),
       draft: z.boolean().optional(),
+      sites: z.array(siteKeySchema).min(1).optional(),
       order: z.number().default(999),
     }),
 });
@@ -260,6 +265,7 @@ const hardware = defineCollection({
       contributors: z.array(contributorSchema).optional(),
       featured: z.boolean().default(false),
       draft: z.boolean().optional(),
+      sites: z.array(siteKeySchema).min(1).optional(),
     }),
 });
 
@@ -306,6 +312,7 @@ const software = defineCollection({
       contributors: z.array(contributorSchema).optional(),
       featured: z.boolean().default(false),
       draft: z.boolean().optional(),
+      sites: z.array(siteKeySchema).min(1).optional(),
       publishDate: z
         .string()
         .or(z.date())
@@ -367,6 +374,7 @@ const research = defineCollection({
       imagePolicy: imagePolicySchema.optional().default({}),
       featured: z.boolean().default(false),
       draft: z.boolean().optional(),
+      sites: z.array(siteKeySchema).min(1).optional(),
       publishDate: z.string().or(z.date()).transform(parseDate).optional(),
     }),
 });
@@ -439,6 +447,7 @@ const events = defineCollection({
       links: linksSchema.optional(),
       featured: z.boolean().default(false),
       draft: z.boolean().optional(),
+      sites: z.array(siteKeySchema).min(1).optional(),
       topics: z.array(z.string()),
       organizations: z.array(eventOrganizationSchema).optional(),
     }),

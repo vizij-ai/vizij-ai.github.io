@@ -1,3 +1,7 @@
+type SiteKey = "semio" | "quori" | "vizij";
+
+const SITE_KEY: SiteKey = "vizij";
+
 export function shouldShowDrafts(): boolean {
   if (import.meta.env.PROD) {
     return false;
@@ -16,6 +20,13 @@ export function shouldShowDrafts(): boolean {
   return String(raw).toLowerCase() === "true";
 }
 
-export function isDraftVisible(draft?: boolean): boolean {
+export function isDraftVisible(
+  draft?: boolean,
+  sites?: readonly SiteKey[],
+): boolean {
+  if (sites && sites.length > 0 && !sites.includes(SITE_KEY)) {
+    return false;
+  }
+
   return draft !== true || shouldShowDrafts();
 }

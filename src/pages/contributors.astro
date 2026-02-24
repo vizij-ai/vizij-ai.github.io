@@ -17,7 +17,7 @@ const ogImage = "/og/contributors.png";
 const allOrganizations = await getAllOrganizations();
 const allPeople = await getAllPeople();
 const organizations = await getCollection("organizations", ({ data }) =>
-  isDraftVisible(data.draft),
+  isDraftVisible(data.draft, data.sites),
 );
 
 const orgNameById = Object.fromEntries(

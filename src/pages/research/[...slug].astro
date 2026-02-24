@@ -17,7 +17,7 @@ import { isDraftVisible } from "@/utils/drafts";
 export async function getStaticPaths() {
   const researchEntries = await getCollection("research", ({ data }) => {
     // In production, exclude drafts. In development, show all.
-    return isDraftVisible(data.draft);
+    return isDraftVisible(data.draft, data.sites);
   });
   return researchEntries.map((entry) => ({
     params: { slug: entry.id },
