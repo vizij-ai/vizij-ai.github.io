@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { generateDecapConfig } from "@semio-community/content-schema";
+import { generateDecapConfig } from "@semio/ecosystem-content-schema";
 
 const result = generateDecapConfig({ rootDir: process.cwd() });
 
