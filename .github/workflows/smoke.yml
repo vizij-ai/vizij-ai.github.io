@@ -8,17 +8,17 @@ on:
   workflow_dispatch:
     inputs:
       enable_hub_sync:
-        description: Check out semio-content-hub and run content sync before build
+        description: Check out ecosystem-content-hub and run content sync before build
         required: false
         default: false
         type: boolean
       hub_repo:
-        description: semio-content-hub repository (owner/name)
+        description: ecosystem-content-hub repository (owner/name)
         required: false
-        default: semio-community/semio-content-hub
+        default: semio-community/ecosystem-content-hub
         type: string
       hub_ref:
-        description: semio-content-hub ref to test (branch/tag/SHA)
+        description: ecosystem-content-hub ref to test (branch/tag/SHA)
         required: false
         default: main
         type: string
@@ -48,6 +48,22 @@ jobs:
         working-directory: site
         run: npm ci
 
+      - name: Resolve hub owner
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.enable_hub_sync }}
+        id: hub_owner
+        env:
+          HUB_REPO: ${{ inputs.hub_repo }}
+        run: echo "owner=${HUB_REPO%%/*}" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub App token
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.enable_hub_sync }}
+        id: app_token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.SEMIO_GH_APP_ID }}
+          private-key: ${{ secrets.SEMIO_GH_APP_PRIVATE_KEY }}
+          owner: ${{ steps.hub_owner.outputs.owner }}
+
       - name: Checkout content hub
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.enable_hub_sync }}
         uses: actions/checkout@v4
@@ -55,7 +71,7 @@ jobs:
           repository: ${{ inputs.hub_repo }}
           ref: ${{ inputs.hub_ref }}
           path: semio-content-hub
-          token: ${{ secrets.SEMIO_CROSS_REPO_TOKEN || github.token }}
+          token: ${{ steps.app_token.outputs.token }}
 
       - name: Sync content from hub
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.enable_hub_sync }}
