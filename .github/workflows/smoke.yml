@@ -6,28 +6,71 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      enable_hub_sync:
+        description: Check out semio-content-hub and run content sync before build
+        required: false
+        default: false
+        type: boolean
+      hub_repo:
+        description: semio-content-hub repository (owner/name)
+        required: false
+        default: semio-community/semio-content-hub
+        type: string
+      hub_ref:
+        description: semio-content-hub ref to test (branch/tag/SHA)
+        required: false
+        default: main
+        type: string
+      fail_on_dirty:
+        description: Fail when sync/generation leaves uncommitted changes
+        required: false
+        default: true
+        type: boolean
 
 jobs:
   smoke:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout site repo
         uses: actions/checkout@v4
+        with:
+          path: site
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
+          cache-dependency-path: site/package-lock.json
 
       - name: Install dependencies
+        working-directory: site
         run: npm ci
 
-      - name: Sync content hub (no-op if hub is unavailable)
+      - name: Checkout content hub
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.enable_hub_sync }}
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.hub_repo }}
+          ref: ${{ inputs.hub_ref }}
+          path: semio-content-hub
+          token: ${{ secrets.SEMIO_CROSS_REPO_TOKEN || github.token }}
+
+      - name: Sync content from hub
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.enable_hub_sync }}
+        working-directory: site
         run: npm run content:sync:hub
 
       - name: Generate CMS config
+        working-directory: site
         run: npm run cms:config
 
       - name: Build site
+        working-directory: site
         run: npm run build:site
+
+      - name: Verify clean working tree
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.fail_on_dirty }}
+        working-directory: site
+        run: git diff --exit-code
