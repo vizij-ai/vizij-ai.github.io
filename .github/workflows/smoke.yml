@@ -53,8 +53,6 @@ jobs:
       - name: Install dependencies
         working-directory: site
         run: npm ci
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Resolve hub owner
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.enable_hub_sync }}
