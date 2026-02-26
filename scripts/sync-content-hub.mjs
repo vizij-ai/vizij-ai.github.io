@@ -5,15 +5,7 @@ import path from "node:path";
 import YAML from "yaml";
 
 const root = process.cwd();
-function resolveHubContentRoot() {
-  const candidates = [
-    path.join(root, "../ecosystem-content-hub/content"),
-    path.join(root, "../semio-content-hub/content"),
-  ];
-  return candidates.find((candidate) => fs.existsSync(candidate));
-}
-
-const hubRoot = resolveHubContentRoot();
+const hubRoot = path.join(root, "../semio-content-hub/content");
 const siteRoot = path.join(root, "src/content");
 const collectionKeys = [
   "organizations",
@@ -85,13 +77,6 @@ function getContentFiles(directory) {
 
 let importedCount = 0;
 let skippedCount = 0;
-
-if (!hubRoot) {
-  console.error(
-    `Content hub folder not found. Checked ../ecosystem-content-hub/content and ../semio-content-hub/content from ${root}.`,
-  );
-  process.exit(1);
-}
 
 for (const collectionKey of collectionKeys) {
   const sourceDir = path.join(hubRoot, collectionKey);
