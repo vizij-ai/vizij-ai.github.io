@@ -13,6 +13,7 @@ permissions:
   contents: write
   pages: write
   id-token: write
+  packages: read
 
 jobs:
   deploy:
@@ -29,13 +30,13 @@ jobs:
         with:
           node-version: 20
           cache: "npm"
+          registry-url: https://npm.pkg.github.com
+          scope: "@semio-community"
 
-      - name: Clean install dependencies
-        run: |
-          rm -rf node_modules
-          rm -f package-lock.json
-          npm cache clean --force
-          npm install
+      - name: Install dependencies
+        run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build site + admin + search
         run: npm run build
 

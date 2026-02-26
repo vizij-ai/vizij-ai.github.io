@@ -15,6 +15,7 @@ permissions:
   contents: write
   pages: write
   id-token: write
+  packages: read
   pull-requests: write
 
 jobs:
@@ -30,10 +31,14 @@ jobs:
         with:
           node-version: 20
           cache: "npm"
+          registry-url: https://npm.pkg.github.com
+          scope: "@semio-community"
 
       - name: Install dependencies
         if: github.event.action != 'closed'
         run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Debug PR Preview Path
         if: github.event.action != 'closed'

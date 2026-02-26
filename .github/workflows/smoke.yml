@@ -28,6 +28,10 @@ on:
         default: true
         type: boolean
 
+permissions:
+  contents: read
+  packages: read
+
 jobs:
   smoke:
     runs-on: ubuntu-latest
@@ -43,10 +47,14 @@ jobs:
           node-version: 20
           cache: npm
           cache-dependency-path: site/package-lock.json
+          registry-url: https://npm.pkg.github.com
+          scope: "@semio-community"
 
       - name: Install dependencies
         working-directory: site
         run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Resolve hub owner
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.enable_hub_sync }}
