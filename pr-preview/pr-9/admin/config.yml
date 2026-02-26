@@ -278,6 +278,9 @@ collections:
         options: []
         multiple: true
         required: false
+      - label: Render Markdown
+        name: renderMarkdown
+        widget: boolean
   - name: organizations
     label: Organizations
     label_singular: Organization
@@ -538,6 +541,24 @@ collections:
         options: []
         multiple: true
         required: false
+      - label: Render Markdown
+        name: renderMarkdown
+        widget: boolean
+      - label: Visibility
+        name: visibility
+        widget: object
+        required: false
+        fields:
+          - label: Sites
+            name: sites
+            widget: select
+            options: []
+            multiple: true
+      - label: Overrides
+        name: overrides
+        widget: string
+        required: false
+        hint: "Unmapped schema: siteOverridesSchema"
       - label: Order
         name: order
         widget: number
@@ -837,6 +858,9 @@ collections:
         options: []
         multiple: true
         required: false
+      - label: Render Markdown
+        name: renderMarkdown
+        widget: boolean
   - name: software
     label: Software
     label_singular: Software
@@ -1144,6 +1168,24 @@ collections:
         options: []
         multiple: true
         required: false
+      - label: Render Markdown
+        name: renderMarkdown
+        widget: boolean
+      - label: Visibility
+        name: visibility
+        widget: object
+        required: false
+        fields:
+          - label: Sites
+            name: sites
+            widget: select
+            options: []
+            multiple: true
+      - label: Overrides
+        name: overrides
+        widget: string
+        required: false
+        hint: "Unmapped schema: siteOverridesSchema"
       - label: Publish Date
         name: publishDate
         widget: datetime
@@ -1477,6 +1519,24 @@ collections:
         options: []
         multiple: true
         required: false
+      - label: Render Markdown
+        name: renderMarkdown
+        widget: boolean
+      - label: Visibility
+        name: visibility
+        widget: object
+        required: false
+        fields:
+          - label: Sites
+            name: sites
+            widget: select
+            options: []
+            multiple: true
+      - label: Overrides
+        name: overrides
+        widget: string
+        required: false
+        hint: "Unmapped schema: siteOverridesSchema"
       - label: Publish Date
         name: publishDate
         widget: datetime
@@ -1799,6 +1859,24 @@ collections:
         options: []
         multiple: true
         required: false
+      - label: Render Markdown
+        name: renderMarkdown
+        widget: boolean
+      - label: Visibility
+        name: visibility
+        widget: object
+        required: false
+        fields:
+          - label: Sites
+            name: sites
+            widget: select
+            options: []
+            multiple: true
+      - label: Overrides
+        name: overrides
+        widget: string
+        required: false
+        hint: "Unmapped schema: siteOverridesSchema"
       - label: Topics
         name: topics
         widget: list
