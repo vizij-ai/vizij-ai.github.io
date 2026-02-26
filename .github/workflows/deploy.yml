@@ -35,6 +35,8 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.SEMIO_PACKAGES_READ_TOKEN }}
       - name: Build site + admin + search
         run: npm run build
 

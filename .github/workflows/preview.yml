@@ -37,6 +37,8 @@ jobs:
       - name: Install dependencies
         if: github.event.action != 'closed'
         run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.SEMIO_PACKAGES_READ_TOKEN }}
 
       - name: Debug PR Preview Path
         if: github.event.action != 'closed'
