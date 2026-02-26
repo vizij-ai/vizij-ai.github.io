@@ -10,11 +10,11 @@ on:
 
 concurrency: preview-${{ github.ref }}
 
-# Required permissions for GitHub Pages deployment
 permissions:
   contents: write
   pages: write
   id-token: write
+  packages: read
   pull-requests: write
 
 jobs:
@@ -30,6 +30,8 @@ jobs:
         with:
           node-version: 20
           cache: "npm"
+          registry-url: https://npm.pkg.github.com
+          scope: "@semio-community"
 
       - name: Install dependencies
         if: github.event.action != 'closed'
