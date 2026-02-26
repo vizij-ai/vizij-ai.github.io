@@ -43,7 +43,7 @@
     "@radix-ui/react-tooltip": "^1.2.8",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.5.0",
-    "@semio-community/ecosystem-content-schema": "^0.1.0",
+    "@semio/ecosystem-content-schema": "file:../semio-content-schema",
     "@shikijs/transformers": "^1.25.1",
     "@solar-icons/react-perf": "^1.0.0",
     "@tailwindcss/vite": "^4.1.11",

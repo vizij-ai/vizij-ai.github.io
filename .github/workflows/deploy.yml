@@ -13,7 +13,6 @@ permissions:
   contents: write
   pages: write
   id-token: write
-  packages: read
 
 jobs:
   deploy:
@@ -30,8 +29,6 @@ jobs:
         with:
           node-version: 20
           cache: "npm"
-          registry-url: https://npm.pkg.github.com
-          scope: "@semio-community"
 
       - name: Install dependencies
         run: npm ci
