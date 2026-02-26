@@ -74,7 +74,7 @@
     "unified": "^11.0.5",
     "unist-util-visit": "^5.0.0",
     "zustand": "^5.0.9",
-    "@semio-community/ecosystem-content-schema": "^0.1.0"
+    "@semio-community/ecosystem-content-schema": "^0.3.1"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.5",

@@ -347,18 +347,22 @@ const featuredState = data.featured
           }
         </Fragment>
 
-        <Fragment slot="content">
-          <div
-            class="bg-linear-to-br from-surface-lighter to-surface rounded-xl border border-accent-one/20 p-6"
-          >
-            <h2
-              class="text-xs font-semibold mb-3 text-accent-base uppercase tracking-wider"
-            >
-              EVENT DETAILS
-            </h2>
-            <MDXContent entry={entry} />
-          </div>
-        </Fragment>
+        {
+          data.renderMarkdown && (
+            <Fragment slot="content">
+              <div
+                class="bg-linear-to-br from-surface-lighter to-surface rounded-xl border border-accent-one/20 p-6"
+              >
+                <h2
+                  class="text-xs font-semibold mb-3 text-accent-base uppercase tracking-wider"
+                >
+                  EVENT DETAILS
+                </h2>
+                <MDXContent entry={entry} />
+              </div>
+            </Fragment>
+          )
+        }
 
         <Fragment slot="tags">
           {
