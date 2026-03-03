@@ -6,6 +6,7 @@ import {
   UserPlusRounded,
   Document2,
 } from "@solar-icons/react-perf/LineDuotone";
+import { mapSlugKeysToRouteKeys } from "@semio-community/ecosystem-site-core";
 import type { ComponentType, SVGProps } from "react";
 
 export type NavigationIcon = ComponentType<SVGProps<SVGSVGElement>>;
@@ -19,8 +20,6 @@ const baseRouteIconMap: Record<string, NavigationIcon> = {
   about: Document2,
 };
 
-export const navIconMap = Object.fromEntries(
-  Object.entries(baseRouteIconMap).map(([slug, Icon]) => [`/${slug}/`, Icon]),
-) as Record<string, NavigationIcon>;
+export const navIconMap = mapSlugKeysToRouteKeys(baseRouteIconMap);
 
 export const mainRouteIconMap = baseRouteIconMap;
