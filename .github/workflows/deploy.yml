@@ -34,6 +34,9 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.SEMIO_PACKAGES_READ_TOKEN }}
 
+      - name: Verify shared Tailwind wiring
+        run: npm run verify:shared-tailwind
+
       - name: Build site + admin + search
         run: npm run build
 

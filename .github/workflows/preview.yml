@@ -39,6 +39,10 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.SEMIO_PACKAGES_READ_TOKEN }}
 
+      - name: Verify shared Tailwind wiring
+        if: github.event.action != 'closed'
+        run: npm run verify:shared-tailwind
+
       - name: Debug PR Preview Path
         if: github.event.action != 'closed'
         run: echo "PR_PREVIEW_PATH will be set to:/pr-preview/pr-${{ github.event.number }}/"
