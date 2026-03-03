@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://semio.community/pr-preview/pr-10/sitemap-index.xml
