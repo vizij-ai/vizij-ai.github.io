@@ -272,6 +272,12 @@ collections:
         name: draft
         widget: boolean
         required: false
+      - label: Sites
+        name: sites
+        widget: select
+        options: []
+        multiple: true
+        required: false
   - name: organizations
     label: Organizations
     label_singular: Organization
@@ -525,6 +531,12 @@ collections:
       - label: Draft
         name: draft
         widget: boolean
+        required: false
+      - label: Sites
+        name: sites
+        widget: select
+        options: []
+        multiple: true
         required: false
       - label: Order
         name: order
@@ -818,6 +830,12 @@ collections:
       - label: Draft
         name: draft
         widget: boolean
+        required: false
+      - label: Sites
+        name: sites
+        widget: select
+        options: []
+        multiple: true
         required: false
   - name: software
     label: Software
@@ -1119,6 +1137,12 @@ collections:
       - label: Draft
         name: draft
         widget: boolean
+        required: false
+      - label: Sites
+        name: sites
+        widget: select
+        options: []
+        multiple: true
         required: false
       - label: Publish Date
         name: publishDate
@@ -1447,6 +1471,12 @@ collections:
         name: draft
         widget: boolean
         required: false
+      - label: Sites
+        name: sites
+        widget: select
+        options: []
+        multiple: true
+        required: false
       - label: Publish Date
         name: publishDate
         widget: datetime
@@ -1762,6 +1792,12 @@ collections:
       - label: Draft
         name: draft
         widget: boolean
+        required: false
+      - label: Sites
+        name: sites
+        widget: select
+        options: []
+        multiple: true
         required: false
       - label: Topics
         name: topics
