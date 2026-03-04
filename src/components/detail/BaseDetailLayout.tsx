@@ -38,7 +38,7 @@ export default function BaseDetailLayout({
   related,
   footer,
 }: BaseDetailLayoutProps) {
-  const paddingClass = hero ? "pt-16 md:pt-20 lg:pt-4" : "pt-20 lg:pt-4";
+  const paddingClass = "pt-18";
 
   const renderSection = (section?: SectionContent) => {
     if (section == null || section === "") return null;
@@ -62,14 +62,14 @@ export default function BaseDetailLayout({
 
         {renderSection(hero)}
 
-        {renderSection(actions) && (
-          <section className="mb-8">{renderSection(actions)}</section>
-        )}
-
         {renderSection(links) && (
           <section className="links-section mb-8">
             {renderSection(links)}
           </section>
+        )}
+
+        {renderSection(actions) && (
+          <section className="mb-8">{renderSection(actions)}</section>
         )}
 
         {renderSection(description) && (

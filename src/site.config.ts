@@ -77,7 +77,7 @@ export const menuLinks: {
   {
     path: "/demos/",
     title: "Demos",
-    inHeader: false,
+    inHeader: true,
   },
   {
     path: "/events/",

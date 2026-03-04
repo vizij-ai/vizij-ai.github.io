@@ -1,6 +1,6 @@
 ---
 // NOTE: `client:only` islands do not reliably emit CSS in Astro production builds.
-// We link the showcase stylesheet explicitly until the page adopts shared site styles.
+// Keep stylesheet linked explicitly until the demos page no longer relies on client-only hydration.
 import showcaseStylesUrl from "@/react-pages/showcase/styles.css?url";
 import ShowcasePage from "@/react-pages/showcase/ShowcasePage";
 import BaseHead from "@/components/BaseHead.astro";
@@ -25,7 +25,7 @@ const meta = {
     <link rel="stylesheet" href={showcaseStylesUrl} />
   </head>
   <body class="relative min-h-screen w-full bg-surface">
-    <SiteShell noPaddingTop containerClassName="max-w-6xl">
+    <SiteShell noPaddingTop containerClassName="max-w-full">
       <ShowcasePage client:only="react" />
     </SiteShell>
   </body>

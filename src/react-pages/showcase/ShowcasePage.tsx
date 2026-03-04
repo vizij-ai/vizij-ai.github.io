@@ -38,21 +38,23 @@ export default function ShowcasePage() {
 
   return (
     <OrchestratorProvider autostart={false}>
-      <SectionMenu sections={SECTION_LINKS} />
-      <div className="showcase-shell">
-        <HeroSection copy={sections.hero} />
-        <AboutSection copy={sections.about} />
-        <ExpressionsSection copy={sections.expressions} />
-        <GazePlaySection copy={sections.gaze} />
-        <VoiceSection copy={sections.voice} />
-        <ControlsSection copy={sections.controls} />
-        <PersonasSection copy={sections.personas} />
-        <MissionSection copy={sections.mission} />
-        <ArchitectureSection copy={sections.architecture} />
-        <CommunitySection copy={sections.community} />
-        <RoadmapSection copy={sections.roadmap} />
-        <StandardsSection copy={sections.standards} />
-        <FooterSection />
+      <div className="showcase-page">
+        <SectionMenu sections={SECTION_LINKS} />
+        <div className="showcase-shell">
+          <HeroSection copy={sections.hero} />
+          <AboutSection copy={sections.about} />
+          <ExpressionsSection copy={sections.expressions} />
+          <GazePlaySection copy={sections.gaze} />
+          <VoiceSection copy={sections.voice} />
+          <ControlsSection copy={sections.controls} />
+          <PersonasSection copy={sections.personas} />
+          <MissionSection copy={sections.mission} />
+          <ArchitectureSection copy={sections.architecture} />
+          <CommunitySection copy={sections.community} />
+          <RoadmapSection copy={sections.roadmap} />
+          <StandardsSection copy={sections.standards} />
+          <FooterSection />
+        </div>
       </div>
       <RuntimeDebugOverlay />
     </OrchestratorProvider>

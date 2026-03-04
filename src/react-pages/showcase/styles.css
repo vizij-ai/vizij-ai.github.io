@@ -1,5 +1,4 @@
-:root {
-  color-scheme: light;
+.showcase-page {
   --bg-base: #fef8f3;
   --bg-panel: rgba(255, 255, 255, 0.82);
   --bg-panel-strong: rgba(255, 255, 255, 0.94);
@@ -15,16 +14,17 @@
   --glow-teal: rgba(80, 196, 182, 0.4);
   --glow-coral: rgba(255, 179, 107, 0.35);
   --face-aspect-ratio: 12.068108 / 8.769684;
+  --showcase-menu-top: calc(var(--header-height, 72px) + 12px);
 }
 
-*,
-*::before,
-*::after {
+.showcase-page,
+.showcase-page *,
+.showcase-page *::before,
+.showcase-page *::after {
   box-sizing: border-box;
 }
 
-body {
-  margin: 0;
+.showcase-page {
   min-height: 100%;
   font-family:
     "Inter",
@@ -53,9 +53,6 @@ body {
     var(--bg-base);
 }
 
-#root {
-  min-height: 100vh;
-}
 
 .section-menu__backdrop {
   position: fixed;
@@ -67,7 +64,7 @@ body {
 
 .section-menu {
   position: fixed;
-  top: clamp(16px, 3vw, 32px);
+  top: var(--showcase-menu-top);
   right: clamp(16px, 6vw, 60px);
   z-index: 19;
   display: flex;
@@ -267,10 +264,10 @@ body {
   }
 }
 
-button,
-input,
-select,
-textarea {
+.showcase-page button,
+.showcase-page input,
+.showcase-page select,
+.showcase-page textarea {
   font: inherit;
   color: inherit;
 }
@@ -1291,9 +1288,4 @@ textarea {
   margin: 0;
   color: var(--text-muted);
   font-size: 0.85rem;
-}
-:root {
-  /* NOTE: This stylesheet is currently loaded explicitly from `src/pages/demos.astro`
-     because Astro may omit CSS imported only inside `client:only` islands in production.
-     Long-term goal: migrate these styles to shared site styles and remove this file. */
 }
