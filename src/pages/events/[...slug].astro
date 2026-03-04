@@ -198,14 +198,14 @@ const eventDetailsItems = [];
 if (isValidDate(submissionDeadlineDate)) {
   eventDetailsItems.push({
     label: "Submission Deadline",
-    value: formatDate(submissionDeadlineDate),
+    value: formatDate(submissionDeadlineDate as Date),
     icon: "solar:calendar-mark-line-duotone",
   });
 }
 if (isValidDate(notificationDate)) {
   eventDetailsItems.push({
     label: "Review Notification Date",
-    value: formatDate(notificationDate),
+    value: formatDate(notificationDate as Date),
     icon: "solar:calendar-mark-line-duotone",
   });
 }
@@ -266,7 +266,8 @@ const featuredState = data.featured
   ? eventStatus === "past"
     ? "previously-featured"
     : "featured"
-  : undefined;---
+  : undefined;
+---
 
 <html
   class="overflow-x-hidden grid scroll-pt-18 scroll-smooth font-sans text-text text-xl md:text-base antialiased"
@@ -325,9 +326,11 @@ const featuredState = data.featured
         </Fragment>
 
         <Fragment slot="actions">
-          {data.actions && data.actions.length > 0 && (
-            <ActionsSection title="ACTIONS" actions={data.actions} />
-          )}
+          {
+            data.actions && data.actions.length > 0 && (
+              <ActionsSection title="ACTIONS" actions={data.actions} />
+            )
+          }
         </Fragment>
 
         <Fragment slot="contributors">
