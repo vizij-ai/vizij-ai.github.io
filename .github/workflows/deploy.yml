@@ -38,7 +38,9 @@ jobs:
         run: npm run verify:shared-tailwind
 
       - name: Run TypeScript typecheck
-        run: npx tsc --noEmit --pretty false
+        run: |
+          npx astro sync
+          npx tsc --noEmit --pretty false
 
       - name: Build site + admin + search
         run: npm run build

@@ -45,7 +45,9 @@ jobs:
 
       - name: Run TypeScript typecheck
         if: github.event.action != 'closed'
-        run: npx tsc --noEmit --pretty false
+        run: |
+          npx astro sync
+          npx tsc --noEmit --pretty false
 
       - name: Debug PR Preview Path
         if: github.event.action != 'closed'
