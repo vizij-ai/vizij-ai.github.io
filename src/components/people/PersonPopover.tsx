@@ -100,7 +100,7 @@ export function PersonPopover({
             href={`/people/${person.id}`}
             className="flex items-start gap-4 no-underline hover:opacity-90 transition-opacity"
           >
-            <div className="flex-shrink-0 mt-3">
+            <div className="shrink-0 mt-3">
               <Avatar
                 src={person.images?.avatar}
                 alt={displayName}
