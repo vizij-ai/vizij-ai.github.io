@@ -111,10 +111,10 @@ export default function SiteLayout({
           >
             <div
               className={`m-auto grid min-h-screen grid-rows-[1fr_auto] px-4 md:px-8 ${
-                noPaddingTop ? "" : "pt-[72px] lg:pt-4"
+                noPaddingTop ? "" : "pt-18 lg:pt-4"
               }`}
             >
-              <main id="main" className="relative flex-grow" data-pagefind-body>
+              <main id="main" className="relative grow" data-pagefind-body>
                 {children}
               </main>
 

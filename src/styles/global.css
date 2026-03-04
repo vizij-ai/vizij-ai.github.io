@@ -553,7 +553,7 @@
 
     /* Style for code blocks */
     pre {
-      @apply m-0 static px-0 py-2 max-h-[612px] text-sm;
+      @apply m-0 static px-0 py-2 max-h-153 text-sm;
 
       /* Style for code content */
       > code {

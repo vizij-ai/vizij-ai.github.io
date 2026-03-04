@@ -25,7 +25,7 @@ function applyPreviewChrome() {
   root.classList.add(
     "overflow-x-hidden",
     "grid",
-    "scroll-pt-[72px]",
+    "scroll-pt-18",
     "scroll-smooth",
     "font-sans",
     "text-text",
