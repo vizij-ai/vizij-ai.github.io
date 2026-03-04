@@ -37,6 +37,9 @@ jobs:
       - name: Verify shared Tailwind wiring
         run: npm run verify:shared-tailwind
 
+      - name: Run TypeScript typecheck
+        run: npx tsc --noEmit --pretty false
+
       - name: Build site + admin + search
         run: npm run build
 

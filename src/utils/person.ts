@@ -1,7 +1,10 @@
 import type { CollectionEntry } from "astro:content";
+import type { KeyContact } from "@/components/detail/views/OrganizationDetail";
+import type { ResearchAuthor } from "@/components/detail/views/ResearchDetail";
 import type { PersonPopoverProps } from "@/components/people/PersonPopover";
 
 type PersonEntry = CollectionEntry<"people"> | null | undefined;
+type ResearchContributor = Omit<ResearchAuthor, "person">;
 
 export function serializePersonForPopover(
   personEntry: PersonEntry,
@@ -32,5 +35,41 @@ export function serializePersonForPopover(
           },
         }
       : undefined,
+  };
+}
+
+export function serializeOrganizationKeyContact(params: {
+  personEntry: CollectionEntry<"people">;
+  organizationId: string;
+  partnerName?: string;
+}): KeyContact {
+  const { personEntry, organizationId, partnerName } = params;
+  const affiliation = personEntry.data.affiliations?.find(
+    (aff) => aff.organizationId === organizationId,
+  );
+
+  return {
+    personId: personEntry.id,
+    person: personEntry.data,
+    role: affiliation?.role,
+    department: affiliation?.department,
+    currentAffiliation:
+      affiliation && affiliation.role
+        ? {
+            organizationId,
+            partnerName,
+            role: affiliation.role,
+          }
+        : undefined,
+  };
+}
+
+export function serializeResearchAuthor(
+  contributor: ResearchContributor,
+  personEntry: CollectionEntry<"people"> | undefined,
+): ResearchAuthor {
+  return {
+    ...contributor,
+    person: personEntry?.data ?? null,
   };
 }

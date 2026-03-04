@@ -60,6 +60,9 @@ jobs:
         working-directory: site
         run: npm run verify:shared-tailwind
 
+      - name: Run TypeScript typecheck
+        run: npx tsc --noEmit --pretty false
+
       - name: Resolve hub owner
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.enable_hub_sync }}
         id: hub_owner

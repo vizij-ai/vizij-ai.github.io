@@ -43,6 +43,10 @@ jobs:
         if: github.event.action != 'closed'
         run: npm run verify:shared-tailwind
 
+      - name: Run TypeScript typecheck
+        if: github.event.action != 'closed'
+        run: npx tsc --noEmit --pretty false
+
       - name: Debug PR Preview Path
         if: github.event.action != 'closed'
         run: echo "PR_PREVIEW_PATH will be set to:/pr-preview/pr-${{ github.event.number }}/"
