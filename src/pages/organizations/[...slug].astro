@@ -7,7 +7,6 @@ import { getAllOrganizations } from "@/data/organizations";
 import { getPeopleByOrganization } from "@/data/people";
 import { getAllHardware } from "@/data/hardware";
 import { getAllSoftware } from "@/data/software";
-import { serializePersonForPopover } from "@/utils/person";
 import { OrganizationDetail } from "@/components/detail/views/OrganizationDetail";
 import { isDraftVisible } from "@/utils/drafts";
 
@@ -93,16 +92,17 @@ const keyContacts = affiliatedPeople.slice(0, 6).map((personEntry) => {
   );
   return {
     personId: personEntry.id,
-    person: serializePersonForPopover(personEntry),
+    person: personEntry.data,
     role: affiliation?.role,
     department: affiliation?.department,
-    currentAffiliation: affiliation
-      ? {
-          organizationId: entry.id,
-          partnerName: data.shortName || data.name,
-          role: affiliation.role,
-        }
-      : undefined,
+    currentAffiliation:
+      affiliation && affiliation.role
+        ? {
+            organizationId: entry.id,
+            partnerName: data.shortName || data.name,
+            role: affiliation.role,
+          }
+        : undefined,
   };
 });---
 
