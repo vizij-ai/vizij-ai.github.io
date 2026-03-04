@@ -46,9 +46,10 @@ function filterBindingsByKind(bindings: PoseHotkeyBinding[], kind: PoseKind) {
       ? ["emotion", "mood", "affect", "feel"]
       : ["viseme", "phoneme", "lip", "speech"];
   return bindings.filter((binding) => {
-    const target = [binding.pose.group, binding.pose.name, binding.pose.id]
+    const valueKeys = Object.keys(binding.pose.values ?? {});
+    const target = [binding.pose.name, binding.pose.id, ...valueKeys]
       .filter(Boolean)
-      .map((value) => value?.toLowerCase() ?? "")
+      .map((value) => String(value).toLowerCase())
       .join(" ");
     return needles.some((needle) => target.includes(needle));
   });

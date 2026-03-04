@@ -18,18 +18,18 @@ type RigInputOption = {
 };
 
 export function RigControlPanel() {
-  const { ready, assetBundle, setInput, step, inputConstraints, namespace } =
-    useVizijRuntime();
+  const { ready, assetBundle, setInput, step } = useVizijRuntime();
   const rigSpec = assetBundle.rig?.spec;
+  const runtimeNamespace = assetBundle.namespace ?? "vizij";
   const rigInputOptions = useMemo(
-    () => extractRigInputOptions(rigSpec, inputConstraints, namespace),
-    [rigSpec, inputConstraints, namespace],
+    () => extractRigInputOptions(rigSpec, undefined, runtimeNamespace),
+    [rigSpec, runtimeNamespace],
   );
 
   const handleStageValue = useCallback(
     (path: string, value: number) => {
       setInput(path, { float: value });
-      step(1 / 30, { forceRuntime: true });
+      step(1 / 30);
     },
     [setInput, step],
   );

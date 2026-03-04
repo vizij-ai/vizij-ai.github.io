@@ -56,6 +56,11 @@ export function GazeInteractiveFace({ enabled = true }: { enabled?: boolean }) {
     }
     setOverlayVisible(false);
     const randomBinding = bindings[Math.floor(Math.random() * bindings.length)];
+    if (!randomBinding) {
+      setPrompt("Pose bundle required for click reactions.");
+      return;
+    }
+
     bindings.forEach((binding) => {
       if (binding.pose.id === randomBinding.pose.id) {
         return;

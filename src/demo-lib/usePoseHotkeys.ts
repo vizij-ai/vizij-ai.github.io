@@ -76,7 +76,7 @@ export function usePoseHotkeys(
     const poses = poseConfig.poses ?? [];
     return poses.map((pose) => {
       const faceSegment = sanitizeFaceSegment(poseFaceSegment);
-      const groupSegment = sanitizeGroupSegment(pose.group);
+      const groupSegment = sanitizeGroupSegment(inferPoseGroup(pose));
       const relativeSegment = sanitizePoseSegment(
         pose.name ?? pose.id,
         pose.id,
@@ -113,7 +113,7 @@ export function usePoseHotkeys(
     const entries = bindings.map((binding) => ({
       id: binding.pose.id,
       name: binding.pose.name ?? null,
-      group: binding.pose.group ?? null,
+      group: inferPoseGroup(binding.pose),
       path: binding.weightPath,
     }));
     console.log("[fullscreen-face] pose hotkey bindings", entries);
@@ -122,6 +122,28 @@ export function usePoseHotkeys(
   return { bindings, setPoseWeight };
 }
 
+
+function inferPoseGroup(pose: PoseDefinition): string {
+  const valueKeys = Object.keys(pose.values ?? {});
+  const target = [pose.name, pose.id, ...valueKeys]
+    .filter(Boolean)
+    .map((value) => String(value).toLowerCase())
+    .join(" ");
+
+  if (target.includes("viseme") || target.includes("phoneme")) {
+    return "visemes";
+  }
+  if (
+    target.includes("emotion") ||
+    target.includes("mood") ||
+    target.includes("affect") ||
+    target.includes("feel")
+  ) {
+    return "emotions";
+  }
+
+  return "poses";
+}
 function sanitizeFaceSegment(faceId: string | null | undefined): string {
   const trimmed = faceId?.trim();
   return trimmed && trimmed.length > 0 ? trimmed : "face";
@@ -176,7 +198,7 @@ function buildPoseWeightPathMap(
   const face = sanitizeFaceSegment(faceSegment);
 
   poses.forEach((pose) => {
-    const groupSegment = sanitizeGroupSegment(pose.group);
+    const groupSegment = sanitizeGroupSegment(inferPoseGroup(pose));
     const baseSegment = sanitizePoseSegment(pose.name ?? pose.id, pose.id);
     const usageKey = `${groupSegment}:${baseSegment}`;
     const count = usage.get(usageKey) ?? 0;

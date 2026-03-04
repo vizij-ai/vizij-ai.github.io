@@ -32,6 +32,9 @@ export function useSectionInView<T extends HTMLElement = HTMLElement>(
     const observer = new IntersectionObserver(
       (entries) => {
         const entry = entries[0];
+        if (!entry) {
+          return;
+        }
         const visible = entry.isIntersecting;
         setIsVisible(visible);
         if (visible) {

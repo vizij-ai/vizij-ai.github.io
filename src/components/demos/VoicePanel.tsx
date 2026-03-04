@@ -138,10 +138,11 @@ export function VoicePanel({
       }
       const timeline = visemeTimelineRef.current;
       let cursor = transitionCursorRef.current;
-      while (
-        cursor < timeline.length &&
-        timeMs >= timeline[cursor].transitionStart
-      ) {
+      while (cursor < timeline.length) {
+        const current = timeline[cursor];
+        if (!current || timeMs < current.transitionStart) {
+          break;
+        }
         triggerVisemeEntry(cursor, timeMs);
         cursor += 1;
       }
@@ -153,10 +154,11 @@ export function VoicePanel({
   const syncTransitionCursorToTime = useCallback((timeMs: number) => {
     const timeline = visemeTimelineRef.current;
     let cursor = 0;
-    while (
-      cursor < timeline.length &&
-      timeMs >= timeline[cursor].transitionStart
-    ) {
+    while (cursor < timeline.length) {
+      const current = timeline[cursor];
+      if (!current || timeMs < current.transitionStart) {
+        break;
+      }
       cursor += 1;
     }
     transitionCursorRef.current = cursor;
@@ -236,7 +238,7 @@ export function VoicePanel({
         visemeIndexRef.current = idx;
         setActiveVisemeIndex(idx);
       }
-      return idx >= 0 ? timeline[idx] : null;
+      return idx >= 0 ? (timeline[idx] ?? null) : null;
     },
     [],
   );
@@ -589,7 +591,11 @@ const createVisemeTimeline = (
     (a, b) => a.start - b.start || a.sourceCode.localeCompare(b.sourceCode),
   );
 
-  const lastStart = entries[entries.length - 1].start + RELEASE_TO_NEUTRAL_MS;
+  const lastEntry = entries[entries.length - 1];
+  if (!lastEntry) {
+    return entries;
+  }
+  const lastStart = lastEntry.start + RELEASE_TO_NEUTRAL_MS;
   entries.push({
     start: lastStart,
     end: lastStart + RELEASE_TO_NEUTRAL_MS,
@@ -602,6 +608,10 @@ const createVisemeTimeline = (
 
   for (let i = 0; i < entries.length; i += 1) {
     const current = entries[i];
+    if (!current) {
+      continue;
+    }
+
     const next = entries[i + 1];
     if (next) {
       current.end =
@@ -614,7 +624,8 @@ const createVisemeTimeline = (
     if (current.end <= current.start) {
       current.end = current.start + MIN_VISEME_SPAN_MS;
     }
-    const prevStart = i === 0 ? 0 : entries[i - 1].start;
+
+    const prevStart = i === 0 ? 0 : (entries[i - 1]?.start ?? 0);
     const gap = i === 0 ? current.start : current.start - prevStart;
     const ramp = clampMs(gap, MIN_VISEME_SPAN_MS, MAX_VISEME_SPAN_MS);
     current.transitionStart = current.start - ramp;
@@ -629,6 +640,9 @@ const findVisemeIndex = (
 ): number => {
   for (let i = timeline.length - 1; i >= 0; i -= 1) {
     const entry = timeline[i];
+    if (!entry) {
+      continue;
+    }
     if (timeMs >= entry.start && timeMs < entry.end) {
       return i;
     }

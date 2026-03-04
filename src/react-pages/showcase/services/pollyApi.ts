@@ -1,4 +1,4 @@
-import type { VisemeData } from "../types/polly";
+import type { VisemeData } from "@/demo-lib/polly";
 
 import { getApiBase } from "./apiBase";
 

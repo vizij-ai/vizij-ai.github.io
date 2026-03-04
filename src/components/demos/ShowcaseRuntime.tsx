@@ -49,16 +49,10 @@ export function ShowcaseRuntime({
   }
 
   const shouldAutostart = autostart && visible;
-  const shouldDriveVisible = driveOrchestrator && visible;
   const shouldDriveHidden = driveOrchestrator && !visible && hiddenStepHz > 0;
 
   return (
-    <VizijRuntimeProvider
-      assetBundle={bundle}
-      autostart={shouldAutostart}
-      driveOrchestrator={shouldDriveVisible}
-      orchestratorScope="shared"
-    >
+    <VizijRuntimeProvider assetBundle={bundle} autostart={shouldAutostart}>
       <HiddenStepController enabled={shouldDriveHidden} hz={hiddenStepHz} />
       <RuntimeDebugBeacon
         namespace={namespace}
@@ -88,7 +82,7 @@ function HiddenStepController({
     }
     const intervalMs = 1000 / hz;
     const id = window.setInterval(() => {
-      step(1 / hz, { forceRuntime: true });
+      step(1 / hz);
     }, intervalMs);
     return () => window.clearInterval(id);
   }, [enabled, hz, ready, step]);
@@ -105,8 +99,6 @@ function RuntimeDebugBeacon(props: {
   hiddenStepHz: number;
 }) {
   const { namespace, label, visible, driver, autostart, hiddenStepHz } = props;
-  const { stepHz } = useVizijRuntime();
-
   useEffect(() => {
     broadcastRuntimeStatus({
       namespace,
@@ -115,10 +107,9 @@ function RuntimeDebugBeacon(props: {
       driver,
       autostart,
       hiddenStepHz,
-      stepHz,
       timestamp: Date.now(),
     });
-  }, [autostart, driver, hiddenStepHz, label, namespace, visible, stepHz]);
+  }, [autostart, driver, hiddenStepHz, label, namespace, visible]);
 
   return null;
 }

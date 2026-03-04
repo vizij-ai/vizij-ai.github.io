@@ -63,7 +63,7 @@ export default function HeroHeader({
   fullBleedClassName = "relative pt-16 md:pt-20 lg:pt-4 mb-8 sm:mb-12",
 }: HeroHeaderProps) {
   const heroBody = (
-    <div className="hero-container min-h-[380px] sm:min-h-[420px] md:min-h-[480px] w-full bg-transparent flex items-center justify-center relative overflow-hidden py-16 sm:py-20 md:py-24 pt-24 sm:pt-28 md:pt-32">
+    <div className="hero-container min-h-95 sm:min-h-105 md:min-h-120 w-full bg-transparent flex items-center justify-center relative overflow-hidden py-16 sm:py-20 md:py-24 pt-24 sm:pt-28 md:pt-32">
       <div className="glyph-wrapper absolute inset-0 w-full h-full">
         <GlyphField {...DEFAULT_GLYPH_PROPS} />
       </div>
@@ -72,11 +72,16 @@ export default function HeroHeader({
         {icon ? (
           <div className="flex justify-center text-accent-base/80">{icon}</div>
         ) : null}
-        {title ? (
-          <HeadingTag className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-foreground uppercase">
-            {title}
-          </HeadingTag>
-        ) : null}
+        {title
+          ? React.createElement(
+              HeadingTag,
+              {
+                className:
+                  "text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-foreground uppercase",
+              },
+              title,
+            )
+          : null}
 
         {description ? (
           <p className="text-sm sm:text-base md:text-lg lg:text-xl font-light text-color-600 dark:text-color-400 max-w-3xl mx-auto leading-relaxed px-2 sm:px-0">
