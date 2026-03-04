@@ -3,18 +3,30 @@
 // We link the showcase stylesheet explicitly until the page adopts shared site styles.
 import showcaseStylesUrl from "@/react-pages/showcase/styles.css?url";
 import ShowcasePage from "@/react-pages/showcase/ShowcasePage";
-import SiteLayout from "@/layouts/SiteLayout";
+import BaseHead from "@/components/BaseHead.astro";
+import SiteShell from "@/layouts/SiteShell.astro";
 
-const metadata = {
+const meta = {
   title: "Vizij Demos",
   description: "Interactive Vizij demos.",
 };
 ---
 
-<head>
-  <link rel="stylesheet" href={showcaseStylesUrl} />
-</head>
-
-<SiteLayout metadata={metadata}>
-  <ShowcasePage client:only="react" />
-</SiteLayout>
+<html
+  class="overflow-x-hidden grid scroll-pt-18 scroll-smooth font-sans text-text text-xl md:text-base antialiased"
+  lang="en"
+>
+  <head>
+    <BaseHead
+      title={meta.title}
+      description={meta.description}
+      ogImage="/og/home.png"
+    />
+    <link rel="stylesheet" href={showcaseStylesUrl} />
+  </head>
+  <body class="relative min-h-screen w-full bg-surface">
+    <SiteShell noPaddingTop containerClassName="max-w-6xl">
+      <ShowcasePage client:only="react" />
+    </SiteShell>
+  </body>
+</html>

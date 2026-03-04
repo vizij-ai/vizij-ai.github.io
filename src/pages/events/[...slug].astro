@@ -181,7 +181,7 @@ if (eventStatus === "past") {
 }
 
 // Format dates for display
-const isValidDate = (date?: Date) =>
+const isValidDate = (date: Date | undefined): date is Date =>
   Boolean(date && !Number.isNaN(date.getTime()));
 
 const formatDate = (date: Date) => {
@@ -269,7 +269,7 @@ const featuredState = data.featured
   : undefined;---
 
 <html
-  class="overflow-x-hidden grid scroll-pt-[72px] scroll-smooth font-sans text-text text-xl md:text-base antialiased"
+  class="overflow-x-hidden grid scroll-pt-18 scroll-smooth font-sans text-text text-xl md:text-base antialiased"
   lang="en"
 >
   <head>
