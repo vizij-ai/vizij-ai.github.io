@@ -6,7 +6,7 @@ import React from "react";
 // import PartnersSection from "@/react-pages/home/sections/PartnersSection";
 // import ConnectSection from "@/react-pages/home/sections/ConnectSection";
 // import { CallToActionButton } from "@/components/ui/CallToActionButton";
-// import { url } from "@/utils/url";
+import { url } from "@/utils/url";
 
 export interface HomePageProps {
   projectCount: number;
@@ -29,7 +29,7 @@ export default function HomePage({
             actions={[
               {
                 label: "View Demos",
-                href: "/demos",
+                href: url("/demos/"),
                 variant: "primary",
                 indicatorText: undefined,
               },
@@ -41,7 +41,7 @@ export default function HomePage({
               },
               {
                 label: "HRI 2026 Tutorial Event",
-                href: "/events/hri-2026-tutorial",
+                href: url("/events/hri-2026-tutorial/"),
                 variant: "secondary",
                 indicatorText: undefined,
               },

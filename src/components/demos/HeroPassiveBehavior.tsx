@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from "react";
 import { useVizijRuntime } from "@vizij/runtime-react";
 import {
+  getPoseGroup,
   usePoseHotkeys,
   type PoseHotkeyBinding,
 } from "@/demo-lib/usePoseHotkeys";
@@ -47,7 +48,12 @@ function filterBindingsByKind(bindings: PoseHotkeyBinding[], kind: PoseKind) {
       : ["viseme", "phoneme", "lip", "speech"];
   return bindings.filter((binding) => {
     const valueKeys = Object.keys(binding.pose.values ?? {});
-    const target = [binding.pose.name, binding.pose.id, ...valueKeys]
+    const target = [
+      getPoseGroup(binding.pose),
+      binding.pose.name,
+      binding.pose.id,
+      ...valueKeys,
+    ]
       .filter(Boolean)
       .map((value) => String(value).toLowerCase())
       .join(" ");

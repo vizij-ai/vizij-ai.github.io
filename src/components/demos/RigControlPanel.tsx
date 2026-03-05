@@ -17,7 +17,11 @@ type RigInputOption = {
   defaultValue?: number;
 };
 
-export function RigControlPanel() {
+export function RigControlPanel({
+  unstyled = false,
+}: {
+  unstyled?: boolean;
+} = {}) {
   const { ready, assetBundle, setInput, step } = useVizijRuntime();
   const rigSpec = assetBundle.rig?.spec;
   const runtimeNamespace = assetBundle.namespace ?? "vizij";
@@ -40,6 +44,7 @@ export function RigControlPanel() {
       disabled={!ready}
       onStage={handleStageValue}
       constraintsCount={countWithConstraints(rigInputOptions)}
+      unstyled={unstyled}
     />
   );
 }
@@ -71,6 +76,7 @@ type InputStagerProps = {
   disabled: boolean;
   onStage: (path: string, value: number) => void;
   constraintsCount: { total: number; resolved: number };
+  unstyled: boolean;
 };
 
 function InputStager({
@@ -78,6 +84,7 @@ function InputStager({
   disabled,
   onStage,
   constraintsCount,
+  unstyled,
 }: InputStagerProps) {
   const FALLBACK_MIN = -1;
   const FALLBACK_MAX = 1;
@@ -204,7 +211,7 @@ function InputStager({
       const clamped = Math.min(max, Math.max(min, defaultValue));
       onStage(path, clamped);
     },
-    [onStage, selectedPath],
+    [onStage, selectedPath, getBounds],
   );
 
   const handleResetAll = useCallback(() => {
@@ -238,22 +245,30 @@ function InputStager({
     selectedPath;
 
   return (
-    <div className="input-stage">
-      <div className="input-stage__header">
+    <div
+      className={
+        unstyled
+          ? "space-y-4"
+          : "rounded-xl border border-accent-base/20 bg-surface-lighter/40 p-4 backdrop-blur-md"
+      }
+    >
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p className="input-stage__title">Direct feature overrides</p>
-          <p className="input-stage__subtitle">
-            Search any path on the face and set an exact value—color, opacity,
-            transforms, anything the rig exposes.
+          <p className="text-xs font-semibold uppercase tracking-wider text-accent-base/80">
+            Direct feature overrides
           </p>
-          <p className="input-stage__subtitle input-stage__subtitle--meta">
+          <p className="mt-2 text-sm text-color-500">
+            Search any path on the face and set exact values for transforms,
+            colors, or blend parameters.
+          </p>
+          <p className="mt-2 text-xs text-color-500/90">
             Authored ranges resolved for {constraintsCount.resolved} of{" "}
             {constraintsCount.total} inputs.
           </p>
         </div>
         <button
           type="button"
-          className="input-stage__reset-all"
+          className="rounded-md border border-accent-base/25 bg-surface px-3 py-1.5 text-sm text-foreground transition-colors hover:border-accent-base/45 hover:bg-accent-base/10 disabled:cursor-not-allowed disabled:opacity-50"
           onClick={handleResetAll}
           disabled={disabled || Object.keys(stagedValues).length === 0}
         >
@@ -261,15 +276,15 @@ function InputStager({
         </button>
       </div>
 
-      <label className="input-stage__label">
+      <label className="mt-4 block text-xs font-semibold uppercase tracking-wider text-accent-base/80">
         <span>Rig input path</span>
         <input
           type="search"
           list={listId}
-          className="input-stage__search"
+          className="mt-2 w-full rounded-md border border-accent-base/20 bg-surface px-3 py-2 text-sm text-foreground outline-none transition-colors focus:border-accent-base/50"
           placeholder={
             inputs.length > 0
-              ? "Search any feature path (e.g. rig/face/smile_left)"
+              ? "Search feature path (e.g. rig/face/smile_left)"
               : "No feature paths available"
           }
           value={query}
@@ -286,12 +301,12 @@ function InputStager({
       </label>
 
       {selectedPath && (
-        <div className="input-stage__value-row">
-          <label className="input-stage__label">
+        <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-end">
+          <label className="grow text-xs font-semibold uppercase tracking-wider text-accent-base/80">
             <span>Value for {selectedLabel || selectedPath}</span>
             <input
               type="number"
-              className="input-stage__number"
+              className="mt-2 w-full rounded-md border border-accent-base/20 bg-surface px-3 py-2 text-sm text-foreground outline-none transition-colors focus:border-accent-base/50"
               step="0.01"
               value={valueDraft}
               onChange={handleValueChange}
@@ -300,7 +315,7 @@ function InputStager({
           </label>
           <button
             type="button"
-            className="input-stage__reset"
+            className="rounded-md border border-accent-base/25 bg-surface px-3 py-2 text-sm text-foreground transition-colors hover:border-accent-base/45 hover:bg-accent-base/10 disabled:cursor-not-allowed disabled:opacity-50"
             onClick={() => handleReset(selectedPath)}
             disabled={disabled}
           >
@@ -310,19 +325,24 @@ function InputStager({
       )}
 
       {Object.keys(stagedValues).length > 0 && (
-        <div className="input-stage__staged">
-          <p className="input-stage__subtitle">Staged overrides</p>
-          <ul>
+        <div className="mt-4">
+          <p className="text-xs font-semibold uppercase tracking-wider text-accent-base/80">
+            Staged overrides
+          </p>
+          <ul className="mt-2 space-y-2">
             {Object.entries(stagedValues).map(([path, value]) => (
-              <li key={path} className="input-stage__staged-item">
-                <div className="input-stage__staged-meta">
-                  <strong>{path}</strong>
-                  <span> → {value.toFixed(2)}</span>
+              <li
+                key={path}
+                className="rounded-md border border-accent-base/15 bg-surface/70 p-3"
+              >
+                <div className="flex flex-wrap items-center gap-2 text-xs text-color-500">
+                  <strong className="text-foreground">{path}</strong>
+                  <span>→ {value.toFixed(2)}</span>
                 </div>
-                <div className="input-stage__staged-controls">
+                <div className="mt-2 flex items-center gap-3">
                   <input
                     type="range"
-                    className="input-stage__slider"
+                    className="h-2 w-full accent-accent-base"
                     min={getBounds(path).min}
                     max={getBounds(path).max}
                     step={0.01}
@@ -334,7 +354,7 @@ function InputStager({
                   />
                   <button
                     type="button"
-                    className="input-stage__pill-reset"
+                    className="rounded-md border border-accent-base/20 bg-surface px-2 py-1 text-xs text-foreground transition-colors hover:border-accent-base/45 hover:bg-accent-base/10 disabled:cursor-not-allowed disabled:opacity-50"
                     onClick={() => handleReset(path)}
                     disabled={disabled}
                   >

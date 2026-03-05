@@ -5,7 +5,13 @@ import { useMouseGaze } from "@/demo-lib/useMouseGaze";
 import { usePoseHotkeys } from "@/demo-lib/usePoseHotkeys";
 import { RuntimeFaceFrame } from "./RuntimeFaceFrame";
 
-export function GazeInteractiveFace({ enabled = true }: { enabled?: boolean }) {
+export function GazeInteractiveFace({
+  enabled = true,
+  mode = "panel",
+}: {
+  enabled?: boolean;
+  mode?: "panel" | "media";
+}) {
   const { ready, assetBundle } = useVizijRuntime();
   const poseConfig = assetBundle.pose?.config ?? null;
   const { bindings, setPoseWeight } = usePoseHotkeys(
@@ -81,6 +87,27 @@ export function GazeInteractiveFace({ enabled = true }: { enabled?: boolean }) {
     }, 520);
   }, [bindings, ready, setPoseWeight]);
 
+  const overlay = overlayVisible ? (
+    <div className="absolute bottom-4 left-4 right-4 rounded-lg border border-accent-base/20 bg-surface/85 p-3 text-xs text-color-500 backdrop-blur-md">
+      <p className="text-[11px] font-semibold uppercase tracking-wider text-accent-base/80">
+        Live Demo
+      </p>
+      <p>{prompt}</p>
+      <p>Mouse movement steers gaze. Click triggers random expressions.</p>
+    </div>
+  ) : null;
+
+  if (mode === "media") {
+    return (
+      <RuntimeFaceFrame
+        mode="media"
+        pointerTargetRef={gazeRef}
+        onCanvasClick={handleClick}
+        overlay={overlay}
+      />
+    );
+  }
+
   return (
     <RuntimeFaceFrame
       variant="lg"
@@ -88,19 +115,11 @@ export function GazeInteractiveFace({ enabled = true }: { enabled?: boolean }) {
       subtitle="Pointer tracking + pose triggers"
       pointerTargetRef={gazeRef}
       onCanvasClick={handleClick}
-      overlay={
-        overlayVisible ? (
-          <div className="face-overlay">
-            <span className="face-overlay__pill">Live demo</span>
-            <p>{prompt}</p>
-            <p>Mouse movements steer the eyes, clicks trigger random poses.</p>
-          </div>
-        ) : null
-      }
+      overlay={overlay}
       footer={
-        <p className="face-frame__note">
-          In this demo we normalise pointer movement into Vizij eye rig paths so
-          any cursor, touch, or gaze input can puppeteer attention.
+        <p>
+          Pointer and click inputs are mapped onto rig paths so the same behavior
+          can be driven by cursor, touch, or sensor streams.
         </p>
       }
     />

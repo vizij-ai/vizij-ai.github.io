@@ -1,10 +1,7 @@
 ---
-// NOTE: `client:only` islands do not reliably emit CSS in Astro production builds.
-// Keep stylesheet linked explicitly until the demos page no longer relies on client-only hydration.
-import showcaseStylesUrl from "@/react-pages/showcase/styles.css?url";
-import ShowcasePage from "@/react-pages/showcase/ShowcasePage";
 import BaseHead from "@/components/BaseHead.astro";
 import SiteShell from "@/layouts/SiteShell.astro";
+import DemosPage from "@/react-pages/demos/DemosPage";
 
 const meta = {
   title: "Vizij Demos",
@@ -22,11 +19,10 @@ const meta = {
       description={meta.description}
       ogImage="/og/home.png"
     />
-    <link rel="stylesheet" href={showcaseStylesUrl} />
   </head>
   <body class="relative min-h-screen w-full bg-surface">
-    <SiteShell noPaddingTop containerClassName="max-w-full">
-      <ShowcasePage client:only="react" />
+    <SiteShell noPaddingTop>
+      <DemosPage client:only="react" />
     </SiteShell>
   </body>
 </html>

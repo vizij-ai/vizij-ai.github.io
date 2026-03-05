@@ -78,6 +78,16 @@ export const menuLinks: {
     path: "/demos/",
     title: "Demos",
     inHeader: true,
+    dropdownSubtitle: "Interactive runtime demos and section shortcuts",
+    sections: [
+      { kind: "link", title: "Overview", href: "/demos/#hero" },
+      { kind: "link", title: "Rig Controls", href: "/demos/#controls" },
+      { kind: "link", title: "Expressions", href: "/demos/#expressions" },
+      { kind: "link", title: "Gaze", href: "/demos/#gaze" },
+      { kind: "link", title: "Voice", href: "/demos/#voice" },
+      { kind: "link", title: "Architecture", href: "/demos/#architecture" },
+      { kind: "link", title: "Community", href: "/demos/#community" },
+    ],
   },
   {
     path: "/events/",

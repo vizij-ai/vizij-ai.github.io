@@ -24,7 +24,10 @@
     "cms:preview": "vite build --config vite.cms.config.mjs",
     "cms:copy-assets": "node scripts/copy-admin-assets.mjs",
     "cms:config": "node scripts/generate-decap-config.mjs",
-    "content:sync:hub": "node scripts/sync-content-hub.mjs"
+    "content:sync:hub": "node scripts/sync-content-hub.mjs",
+    "site-core:build": "npm --prefix ../ecosystem-site-core run build",
+    "site-core:link": "npm --prefix ../ecosystem-site-core run build && npm --prefix ../ecosystem-site-core link && npm link @semio-community/ecosystem-site-core",
+    "site-core:unlink": "npm unlink @semio-community/ecosystem-site-core && npm install"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.10",
@@ -45,7 +48,6 @@
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.5.0",
     "@semio-community/ecosystem-content-schema": "^0.3.5",
-    "@semio-community/ecosystem-site-core": "^0.3.11",
     "@shikijs/transformers": "^1.25.1",
     "@solar-icons/react-perf": "^1.0.0",
     "@tailwindcss/vite": "^4.1.11",

@@ -122,6 +122,17 @@ export default defineConfig({
   // Add dynamic base path for PR previews
   base: process.env.PR_PREVIEW_PATH || "/",
   vite: {
+    resolve: {
+      dedupe: ["react", "react-dom"],
+    },
+    ssr: {
+      noExternal: [
+        "@semio-community/ecosystem-site-core",
+        /^@radix-ui\/react-/,
+        /^motion(\/.*)?$/,
+        /^framer-motion(\/.*)?$/,
+      ],
+    },
     build: {
       sourcemap: true, // Source maps generation
     },

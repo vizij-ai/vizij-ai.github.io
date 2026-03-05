@@ -291,7 +291,7 @@ export default function ServicesPage() {
         <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="flex items-start gap-4">
-              <VerifiedCheck className="w-10 h-10 text-accent-one flex-shrink-0" />
+              <VerifiedCheck className="w-10 h-10 text-accent-one shrink-0" />
               <div>
                 <h3 className="font-semibold mb-2">Community-Driven</h3>
                 <p className="text-sm text-color-600 dark:text-color-400">
@@ -301,7 +301,7 @@ export default function ServicesPage() {
               </div>
             </div>
             <div className="flex items-start gap-4">
-              <Rocket className="w-10 h-10 text-accent-two flex-shrink-0" />
+              <Rocket className="w-10 h-10 text-accent-two shrink-0" />
               <div>
                 <h3 className="font-semibold mb-2">Accelerate Development</h3>
                 <p className="text-sm text-color-600 dark:text-color-400">
@@ -311,7 +311,7 @@ export default function ServicesPage() {
               </div>
             </div>
             <div className="flex items-start gap-4">
-              <ShieldCheck className="w-10 h-10 text-special flex-shrink-0" />
+              <ShieldCheck className="w-10 h-10 text-special shrink-0" />
               <div>
                 <h3 className="font-semibold mb-2">Quality Assurance</h3>
                 <p className="text-sm text-color-600 dark:text-color-400">
@@ -321,7 +321,7 @@ export default function ServicesPage() {
               </div>
             </div>
             <div className="flex items-start gap-4">
-              <UsersGroupTwoRounded className="w-10 h-10 text-green-500 flex-shrink-0" />
+              <UsersGroupTwoRounded className="w-10 h-10 text-green-500 shrink-0" />
               <div>
                 <h3 className="font-semibold mb-2">Global Network</h3>
                 <p className="text-sm text-color-600 dark:text-color-400">
@@ -368,7 +368,7 @@ export default function ServicesPage() {
               },
             ].map(({ step, title, description }) => (
               <div key={step} className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-full bg-accent-base/20 flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-full bg-accent-base/20 flex items-center justify-center shrink-0">
                   <span className="text-lg font-bold text-accent-base">
                     {step}
                   </span>

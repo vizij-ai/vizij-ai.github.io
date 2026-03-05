@@ -12,7 +12,11 @@ type PoseTimerEntry = {
   binding: PoseHotkeyBinding;
 };
 
-export function PoseButtonPanel() {
+export function PoseButtonPanel({
+  unstyled = false,
+}: {
+  unstyled?: boolean;
+} = {}) {
   const { ready, assetBundle } = useVizijRuntime();
   const poseConfig = assetBundle.pose?.config ?? null;
   const { bindings, setPoseWeight } = usePoseHotkeys(poseConfig, ready);
@@ -159,36 +163,56 @@ export function PoseButtonPanel() {
 
   if (featuredBindings.length === 0) {
     return (
-      <div className="feature-card expression-panel">
-        <p className="feature-card__eyebrow">Pose presets</p>
-        <h3>Load a pose rig bundle to unlock presets.</h3>
-        <p className="feature-card__description">
-          The current GLB exposes pose metadata. Once loaded, the buttons here
-          will trigger them instantly.
+      <div
+        className={
+          unstyled
+            ? ""
+            : "rounded-xl border border-dashed border-accent-base/25 bg-surface-lighter/40 p-4"
+        }
+      >
+        <p className="text-xs font-semibold uppercase tracking-wider text-accent-base/80">
+          Pose Presets
+        </p>
+        <h3 className="mt-2 text-base font-semibold">No pose rig metadata found.</h3>
+        <p className="mt-2 text-sm text-color-500">
+          Load a rig bundle with pose definitions to unlock instant expression
+          triggers.
         </p>
       </div>
     );
   }
 
   return (
-    <div className="feature-card expression-panel">
-      <p className="feature-card__eyebrow">Pose presets</p>
-      <h3>Tap to emote.</h3>
-      <p className="feature-card__description">
+    <div
+      className={
+        unstyled
+          ? ""
+          : "rounded-xl border border-accent-base/20 bg-surface-lighter/40 p-4 backdrop-blur-md"
+      }
+    >
+      <p className="text-xs font-semibold uppercase tracking-wider text-accent-base/80">
+        Pose Presets
+      </p>
+      <h3 className="mt-2 text-base font-semibold">Tap to emote.</h3>
+      <p className="mt-2 text-sm text-color-500">
         Buttons map straight to Vizij pose weights. Hotkeys mirror each button
         so you can rehearse and perform live.
       </p>
-      <div className="pose-grid">
+      <div className="mt-4 grid grid-cols-2 gap-2">
         {bindingHotkeys.map(({ binding, hotkey }, index) => (
           <button
             key={binding.pose.id}
             type="button"
-            className="pose-button"
+            className="flex items-center justify-between rounded-md border border-accent-base/20 bg-surface px-3 py-2 text-left text-sm transition-colors hover:border-accent-base/50 hover:bg-accent-base/10 disabled:cursor-not-allowed disabled:opacity-60"
             disabled={!ready}
             onClick={() => triggerPose(binding)}
           >
             <span>{binding.pose.name ?? `Pose ${index + 1}`}</span>
-            {hotkey ? <kbd>{hotkey.label}</kbd> : null}
+            {hotkey ? (
+              <kbd className="rounded border border-accent-base/20 bg-surface-lighter px-1.5 py-0.5 text-[11px] text-color-500">
+                {hotkey.label}
+              </kbd>
+            ) : null}
           </button>
         ))}
       </div>

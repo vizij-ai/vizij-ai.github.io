@@ -207,7 +207,7 @@ export const ItemCard: FC<ItemCardProps> = ({
 
             {/* Category */}
             {category && !displayStatus && (
-              <span className="text-sm text-color-600 dark:text-color-400 truncate max-w-[200px]">
+              <span className="text-sm text-color-600 dark:text-color-400 truncate max-w-50">
                 {category}
               </span>
             )}

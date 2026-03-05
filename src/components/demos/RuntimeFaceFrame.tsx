@@ -1,4 +1,5 @@
 import { useEffect, type ReactNode, type RefObject } from "react";
+import { clsx } from "clsx";
 import { useVizijStore, useVizijStoreSetter } from "@vizij/render";
 import {
   VizijRuntimeFace,
@@ -16,6 +17,19 @@ export type RuntimeFaceFrameProps = {
   onCanvasClick?: () => void;
   overlay?: ReactNode;
   footer?: ReactNode;
+  mode?: "panel" | "media";
+};
+
+const FRAME_VARIANTS: Record<NonNullable<RuntimeFaceFrameProps["variant"]>, string> = {
+  sm: "min-h-[18rem]",
+  md: "min-h-[22rem]",
+  lg: "min-h-[26rem]",
+};
+
+const CANVAS_VARIANTS: Record<NonNullable<RuntimeFaceFrameProps["variant"]>, string> = {
+  sm: "h-[16rem] sm:h-[18rem]",
+  md: "h-[18rem] sm:h-[22rem]",
+  lg: "h-[22rem] sm:h-[28rem]",
 };
 
 export function RuntimeFaceFrame({
@@ -27,6 +41,7 @@ export function RuntimeFaceFrame({
   onCanvasClick,
   overlay,
   footer,
+  mode = "panel",
 }: RuntimeFaceFrameProps) {
   const { ready, loading, error, stagePoseNeutral } = useVizijRuntime();
 
@@ -36,29 +51,64 @@ export function RuntimeFaceFrame({
     }
   }, [ready, stagePoseNeutral]);
 
-  const frameClassName = ["face-frame", `face-frame--${variant}`, className]
-    .filter(Boolean)
-    .join(" ");
 
-  return (
-    <div className={frameClassName}>
-      {(label || subtitle) && (
-        <div className="face-frame__meta">
-          {label && <p className="face-frame__label">{label}</p>}
-          {subtitle && <p className="face-frame__subtitle">{subtitle}</p>}
-        </div>
-      )}
+  if (mode === "media") {
+    return (
       <div
         ref={pointerTargetRef ?? undefined}
-        className="face-frame__canvas"
+        className={clsx("relative h-full w-full overflow-hidden bg-surface", className)}
         onClick={onCanvasClick}
       >
         <FaceCameraBounds />
-        <VizijRuntimeFace className="face-canvas" showSafeArea={false} />
+        <VizijRuntimeFace
+          className="h-full w-full"
+          style={{ width: "100%", height: "100%", display: "block" }}
+          showSafeArea={false}
+        />
         <RuntimeStatusBadge ready={ready} loading={loading} error={error} />
         {overlay}
       </div>
-      {footer && <div className="face-frame__footer">{footer}</div>}
+    );
+  }
+
+  return (
+    <div
+      className={clsx(
+        "flex flex-col gap-3 rounded-xl border border-accent-base/20 bg-surface-lighter/40 p-4 backdrop-blur-md",
+        FRAME_VARIANTS[variant],
+        className,
+      )}
+    >
+      {(label || subtitle) && (
+        <div className="flex flex-col gap-1">
+          {label ? (
+            <p className="text-xs font-semibold uppercase tracking-wider text-accent-base/80">
+              {label}
+            </p>
+          ) : null}
+          {subtitle ? <p className="text-sm text-color-500">{subtitle}</p> : null}
+        </div>
+      )}
+
+      <div
+        ref={pointerTargetRef ?? undefined}
+        className={clsx(
+          "relative w-full overflow-hidden rounded-lg border border-accent-base/20 bg-surface",
+          CANVAS_VARIANTS[variant],
+        )}
+        onClick={onCanvasClick}
+      >
+        <FaceCameraBounds />
+        <VizijRuntimeFace
+          className="h-full w-full"
+          style={{ width: "100%", height: "100%", display: "block" }}
+          showSafeArea={false}
+        />
+        <RuntimeStatusBadge ready={ready} loading={loading} error={error} />
+        {overlay}
+      </div>
+
+      {footer ? <div className="text-xs text-color-500">{footer}</div> : null}
     </div>
   );
 }
@@ -71,23 +121,27 @@ type RuntimeStatusBadgeProps = {
   error: RuntimeErrorLike | Error | null | undefined;
 };
 
-function RuntimeStatusBadge({
-  ready,
-  loading,
-  error,
-}: RuntimeStatusBadgeProps) {
+function RuntimeStatusBadge({ ready, loading, error }: RuntimeStatusBadgeProps) {
   if (error) {
     return (
-      <div className="face-frame__status face-frame__status--error">
+      <div className="absolute inset-0 flex items-center justify-center bg-surface/85 text-sm font-medium text-accent-two">
         {error.message}
       </div>
     );
   }
   if (!ready) {
-    return <div className="face-frame__status">Initialising Vizij…</div>;
+    return (
+      <div className="absolute inset-0 flex items-center justify-center bg-surface/70 text-sm text-color-500">
+        Initialising Vizij...
+      </div>
+    );
   }
   if (loading) {
-    return <div className="face-frame__status">Loading face…</div>;
+    return (
+      <div className="absolute inset-0 flex items-center justify-center bg-surface/70 text-sm text-color-500">
+        Loading face...
+      </div>
+    );
   }
   return null;
 }

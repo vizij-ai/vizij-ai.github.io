@@ -33,6 +33,7 @@ export interface HeroHeaderProps {
   icon?: React.ReactNode;
   fullBleed?: boolean;
   fullBleedClassName?: string;
+  showGlyphField?: boolean;
 }
 
 const FULL_BLEED_STYLE: React.CSSProperties = {
@@ -61,12 +62,15 @@ export default function HeroHeader({
   icon,
   fullBleed = false,
   fullBleedClassName = "relative pt-16 md:pt-20 lg:pt-4 mb-8 sm:mb-12",
+  showGlyphField = true,
 }: HeroHeaderProps) {
   const heroBody = (
     <div className="hero-container min-h-95 sm:min-h-105 md:min-h-120 w-full bg-transparent flex items-center justify-center relative overflow-hidden py-16 sm:py-20 md:py-24 pt-24 sm:pt-28 md:pt-32">
-      <div className="glyph-wrapper absolute inset-0 w-full h-full">
-        <GlyphField {...DEFAULT_GLYPH_PROPS} />
-      </div>
+      {showGlyphField ? (
+        <div className="glyph-wrapper absolute inset-0 w-full h-full">
+          <GlyphField {...DEFAULT_GLYPH_PROPS} />
+        </div>
+      ) : null}
 
       <div className="relative px-4 sm:px-6 md:px-8 max-w-5xl mx-auto w-full pointer-events-none space-y-6 text-center">
         {icon ? (

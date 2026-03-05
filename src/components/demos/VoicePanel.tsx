@@ -19,6 +19,7 @@ export type VoicePanelProps = {
   status: SpeechStatus;
   onStatusChange: Dispatch<SetStateAction<SpeechStatus>>;
   enabled?: boolean;
+  unstyled?: boolean;
 };
 
 type VisemeTimelineEntry = {
@@ -48,6 +49,7 @@ export function VoicePanel({
   status,
   onStatusChange,
   enabled = true,
+  unstyled = false,
 }: VoicePanelProps) {
   const { ready, setInput, faceId, animateValue } = useVizijRuntime();
   const [script, setScript] = useState(DEFAULT_SCRIPT);
@@ -438,51 +440,65 @@ export function VoicePanel({
       : "Generate sample read";
 
   return (
-    <div className="feature-card voice-panel">
-      <p className="feature-card__eyebrow">Speech pipeline</p>
-      <h3>Generate a sample line powered by Polly.</h3>
-      <p className="feature-card__description">
-        Request live Amazon Polly audio + viseme metadata, then stream the
-        visemes into Vizij via the runtime staging API.
+    <div
+      className={
+        unstyled
+          ? ""
+          : "rounded-xl border border-accent-base/20 bg-surface-lighter/40 p-4 backdrop-blur-md"
+      }
+    >
+      <p className="text-xs font-semibold uppercase tracking-wider text-accent-base/80">
+        Speech pipeline
       </p>
-      <form className="voice-panel__form" onSubmit={(e) => e.preventDefault()}>
-        <label className="voice-panel__label" htmlFor="voice-script">
+      <h3 className="mt-2 text-base font-semibold">
+        Generate a sample line powered by Polly.
+      </h3>
+      <p className="mt-2 text-sm text-color-500">
+        Request Amazon Polly audio + viseme metadata, then stream visemes into
+        Vizij via runtime staging inputs.
+      </p>
+
+      <form className="mt-4 space-y-3" onSubmit={(e) => e.preventDefault()}>
+        <label className="block text-xs font-semibold uppercase tracking-wider text-accent-base/80" htmlFor="voice-script">
           Script
+          <textarea
+            id="voice-script"
+            className="mt-2 min-h-24 w-full rounded-md border border-accent-base/20 bg-surface px-3 py-2 text-sm text-foreground outline-none transition-colors focus:border-accent-base/50"
+            value={script}
+            onChange={handleScriptChange}
+            rows={3}
+            placeholder="Type something for Polly to say"
+          />
         </label>
-        <textarea
-          id="voice-script"
-          className="voice-panel__textarea"
-          value={script}
-          onChange={handleScriptChange}
-          rows={3}
-          placeholder="Type something for Polly to say"
-        />
-        <label className="voice-panel__label" htmlFor="voice-select">
+
+        <label className="block text-xs font-semibold uppercase tracking-wider text-accent-base/80" htmlFor="voice-select">
           Voice
+          <select
+            id="voice-select"
+            className="mt-2 w-full rounded-md border border-accent-base/20 bg-surface px-3 py-2 text-sm text-foreground outline-none transition-colors focus:border-accent-base/50"
+            value={selectedVoice}
+            onChange={handleVoiceChange}
+          >
+            {POLLY_VOICES.map((voice) => (
+              <option key={voice} value={voice}>
+                {voice}
+              </option>
+            ))}
+          </select>
         </label>
-        <select
-          id="voice-select"
-          className="voice-panel__select"
-          value={selectedVoice}
-          onChange={handleVoiceChange}
-        >
-          {POLLY_VOICES.map((voice) => (
-            <option key={voice} value={voice}>
-              {voice}
-            </option>
-          ))}
-        </select>
       </form>
-      {formError && <p className="voice-panel__error">{formError}</p>}
+
+      {formError && <p className="mt-3 text-sm text-accent-two">{formError}</p>}
       {pollyError && (
-        <p className="voice-panel__error">
+        <p className="mt-3 text-sm text-accent-two">
           {pollyError.message || "Failed to fetch Polly visemes."}
         </p>
       )}
-      <div className="voice-panel__actions">
+
+      <div className="mt-4 flex flex-wrap gap-2">
         <button
           type="button"
-          className="cta"
+          className="rounded-md border border-accent-base/40 bg-accent-base/10 px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent-base/20 disabled:cursor-not-allowed disabled:opacity-50"
           disabled={!ready || pollyLoading || status === "speaking"}
           onClick={handleGenerate}
         >
@@ -491,16 +507,20 @@ export function VoicePanel({
         {status === "speaking" && (
           <button
             type="button"
-            className="ghost-button"
+            className="rounded-md border border-accent-base/25 bg-surface px-3 py-2 text-sm text-foreground transition-colors hover:border-accent-base/45 hover:bg-accent-base/10"
             onClick={handleStopClick}
           >
             Stop playback
           </button>
         )}
       </div>
-      <div className="voice-panel__status">Status: {statusCopy.label}</div>
+
+      <div className="mt-3 text-xs text-color-500">
+        Status: <span className="text-foreground">{statusCopy.label}</span>
+      </div>
+
       {spokenAudio && (
-        <div className="voice-panel__audio">
+        <div className="mt-3 rounded-md border border-accent-base/20 bg-surface p-2">
           <audio
             key={spokenAudio}
             controls
@@ -515,32 +535,44 @@ export function VoicePanel({
             onSeeked={(event) =>
               handleAudioScrub(event.currentTarget.currentTime)
             }
+            className="w-full"
           />
         </div>
       )}
+
       {(spokenWords.length > 0 || faceVisemeLabels.length > 0) && (
-        <div className="voice-panel__transcript">
+        <div className="mt-4 space-y-3">
           {spokenWords.length > 0 && (
             <div>
-              <p className="voice-panel__label">Words</p>
-              <div className="voice-panel__tokens">
+              <p className="text-xs font-semibold uppercase tracking-wider text-accent-base/80">
+                Words
+              </p>
+              <div className="mt-2 flex flex-wrap gap-1.5">
                 {spokenWords.map((word, index) => (
-                  <span key={`${word.value}-${index}`}>{word.value}</span>
+                  <span
+                    key={`${word.value}-${index}`}
+                    className="rounded border border-accent-base/20 bg-surface px-2 py-1 text-xs text-color-500"
+                  >
+                    {word.value}
+                  </span>
                 ))}
               </div>
             </div>
           )}
+
           {faceVisemeLabels.length > 0 && (
             <div>
-              <p className="voice-panel__label">Visemes</p>
-              <div className="voice-panel__tokens">
+              <p className="text-xs font-semibold uppercase tracking-wider text-accent-base/80">
+                Visemes
+              </p>
+              <div className="mt-2 flex flex-wrap gap-1.5">
                 {faceVisemeLabels.map((label, index) => (
                   <span
                     key={`${label}-${index}`}
                     className={
                       index === activeVisemeIndex
-                        ? "voice-panel__token--active"
-                        : undefined
+                        ? "rounded border border-accent-base/40 bg-accent-base/15 px-2 py-1 text-xs text-foreground"
+                        : "rounded border border-accent-base/20 bg-surface px-2 py-1 text-xs text-color-500"
                     }
                   >
                     {label}
@@ -551,7 +583,8 @@ export function VoicePanel({
           )}
         </div>
       )}
-      <ul className="voice-panel__steps">
+
+      <ul className="mt-4 space-y-1 text-xs text-color-500">
         <li>1. Request Amazon Polly neural audio + viseme metadata.</li>
         <li>2. Convert viseme timeline to Vizij rig input paths.</li>
         <li>3. Blend visemes with orchestrator cues + expressions.</li>

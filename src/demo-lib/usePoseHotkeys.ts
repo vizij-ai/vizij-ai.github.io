@@ -76,7 +76,7 @@ export function usePoseHotkeys(
     const poses = poseConfig.poses ?? [];
     return poses.map((pose) => {
       const faceSegment = sanitizeFaceSegment(poseFaceSegment);
-      const groupSegment = sanitizeGroupSegment(inferPoseGroup(pose));
+      const groupSegment = sanitizeGroupSegment(getPoseGroup(pose));
       const relativeSegment = sanitizePoseSegment(
         pose.name ?? pose.id,
         pose.id,
@@ -113,7 +113,7 @@ export function usePoseHotkeys(
     const entries = bindings.map((binding) => ({
       id: binding.pose.id,
       name: binding.pose.name ?? null,
-      group: inferPoseGroup(binding.pose),
+      group: getPoseGroup(binding.pose) ?? null,
       path: binding.weightPath,
     }));
     console.log("[fullscreen-face] pose hotkey bindings", entries);
@@ -122,8 +122,16 @@ export function usePoseHotkeys(
   return { bindings, setPoseWeight };
 }
 
+type PoseDefinitionWithGroup = PoseDefinition & { group?: unknown };
 
-function inferPoseGroup(pose: PoseDefinition): string {
+export function getPoseGroup(pose: PoseDefinition): string | undefined {
+  const explicitGroup = (pose as PoseDefinitionWithGroup).group;
+  if (typeof explicitGroup === "string" && explicitGroup.trim().length > 0) {
+    return explicitGroup;
+  }
+
+  // Runtime bundles in this project sometimes omit `group` in typings while
+  // still exposing enough metadata to infer a stable grouping.
   const valueKeys = Object.keys(pose.values ?? {});
   const target = [pose.name, pose.id, ...valueKeys]
     .filter(Boolean)
@@ -142,8 +150,9 @@ function inferPoseGroup(pose: PoseDefinition): string {
     return "emotions";
   }
 
-  return "poses";
+  return undefined;
 }
+
 function sanitizeFaceSegment(faceId: string | null | undefined): string {
   const trimmed = faceId?.trim();
   return trimmed && trimmed.length > 0 ? trimmed : "face";
@@ -198,7 +207,7 @@ function buildPoseWeightPathMap(
   const face = sanitizeFaceSegment(faceSegment);
 
   poses.forEach((pose) => {
-    const groupSegment = sanitizeGroupSegment(inferPoseGroup(pose));
+    const groupSegment = sanitizeGroupSegment(getPoseGroup(pose));
     const baseSegment = sanitizePoseSegment(pose.name ?? pose.id, pose.id);
     const usageKey = `${groupSegment}:${baseSegment}`;
     const count = usage.get(usageKey) ?? 0;
