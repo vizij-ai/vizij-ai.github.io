@@ -5,7 +5,7 @@ import BaseHead from "@/components/BaseHead.astro";
 import SiteShell from "@/layouts/SiteShell.astro";
 import { getRelatedResearch as fetchRelatedResearch } from "@/data/research";
 import { getPerson, getFormattedAuthors } from "@/data/people";
-import { serializeResearchAuthor } from "@/utils/person";
+import { toResearchAuthor } from "@semio-community/ecosystem-site-core";
 import {
   ResearchDetail,
   type OrganizationRole,
@@ -42,7 +42,7 @@ const ogImage = `/og/research/${entry.id}.png`;
 const authorsWithData: ResearchAuthor[] = await Promise.all(
   authors.map(async (contributor) => {
     const personEntry = await getPerson(contributor.personId);
-    return serializeResearchAuthor(contributor, personEntry);
+    return toResearchAuthor(contributor, personEntry);
   }),
 );
 

@@ -7,7 +7,7 @@ import { getAllOrganizations } from "@/data/organizations";
 import { getPeopleByOrganization } from "@/data/people";
 import { getAllHardware } from "@/data/hardware";
 import { getAllSoftware } from "@/data/software";
-import { serializeOrganizationKeyContact } from "@/utils/person";
+import { toOrganizationKeyContact } from "@semio-community/ecosystem-site-core";
 import { OrganizationDetail } from "@/components/detail/views/OrganizationDetail";
 import { isDraftVisible } from "@/utils/drafts";
 
@@ -90,7 +90,7 @@ const affiliatedPeople = await getPeopleByOrganization(entry.id);
 const keyContacts = affiliatedPeople
   .slice(0, 6)
   .map((personEntry) =>
-    serializeOrganizationKeyContact({
+    toOrganizationKeyContact({
       personEntry,
       organizationId: entry.id,
       partnerName: data.shortName || data.name,
