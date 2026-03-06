@@ -4,7 +4,7 @@ import BaseHead from "@/components/BaseHead.astro";
 import SiteShell from "@/layouts/SiteShell.astro";
 import { getRelatedSoftware } from "@/data/software";
 import { getPerson } from "@/data/people";
-import { SoftwareDetail, BaseUrlProvider } from "@semio-community/ecosystem-site-core";
+import { SoftwareDetail } from "@semio-community/ecosystem-site-core";
 import { isDraftVisible } from "@/utils/drafts";
 import { toOrganizationCardData } from "@/utils/card-mappers";
 
@@ -95,14 +95,13 @@ const orgContributors = await Promise.all(
   </head>
   <body class="relative min-h-screen w-full bg-surface text-xl md:text-base">
     <SiteShell containerClassName="max-w-5xl">
-      <BaseUrlProvider baseUrl={import.meta.env.BASE_URL}>
-        <SoftwareDetail
-          data={data}
-          organizationContributors={orgContributors}
-          peopleContributors={validPeopleContributors}
-          relatedSoftware={relatedSoftware}
-        />
-      </BaseUrlProvider>
+      <SoftwareDetail
+        data={data}
+        organizationContributors={orgContributors}
+        peopleContributors={validPeopleContributors}
+        relatedSoftware={relatedSoftware}
+        baseUrl={import.meta.env.BASE_URL}
+      />
     </SiteShell>
   </body>
 </html>
