@@ -10,7 +10,7 @@ const previewBundle = `${basePath}admin/preview.bundle.js`;
 
 <!doctype html>
 <html
-  class="overflow-x-hidden grid scroll-pt-18 scroll-smooth font-sans text-text text-xl md:text-base antialiased"
+  class="overflow-x-hidden grid scroll-pt-18 scroll-smooth font-sans text-text antialiased"
   lang="en"
 >
   <head>
@@ -18,7 +18,7 @@ const previewBundle = `${basePath}admin/preview.bundle.js`;
     <meta name="robots" content="noindex" />
     <link href={configUrl} type="text/yaml" rel="cms-config-url" />
   </head>
-  <body class="relative min-h-screen w-full bg-surface">
+  <body class="relative min-h-screen w-full bg-surface text-xl md:text-base">
     <script type="module" src={previewBundle}></script>
   </body>
 </html>

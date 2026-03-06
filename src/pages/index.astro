@@ -41,13 +41,13 @@ const ogImage = "/og/home.png";
 ---
 
 <html
-  class="overflow-x-hidden grid scroll-pt-18 scroll-smooth font-sans text-text text-xl md:text-base antialiased"
+  class="overflow-x-hidden grid scroll-pt-18 scroll-smooth font-sans text-text antialiased"
   lang={siteConfig.lang}
 >
   <head>
     <BaseHead title={pageTitle} description={description} ogImage={ogImage} />
   </head>
-  <body class="relative min-h-screen w-full bg-surface">
+  <body class="relative min-h-screen w-full bg-surface text-xl md:text-base">
     <SiteShell>
       <HomePage
         projectCount={projectCount}
