@@ -2,7 +2,6 @@
 import BaseHead from "@/components/BaseHead.astro";
 import SiteShell from "@/layouts/SiteShell.astro";
 import ContributorsPage from "@/react-pages/contributors/ContributorsPage";
-import { BaseUrlProvider } from "@semio-community/ecosystem-site-core";
 import { getAllOrganizations } from "@/data/organizations";
 import { getAllPeople } from "@/data/people";
 import { getCollection } from "astro:content";
@@ -106,21 +105,20 @@ const sponsorsUniqueCount = (() => {
   </head>
   <body class="relative min-h-screen w-full bg-surface text-xl md:text-base">
     <SiteShell containerClassName="max-w-6xl">
-      <BaseUrlProvider baseUrl={import.meta.env.BASE_URL}>
-        <ContributorsPage
-          meta={meta}
-          hideBoardMembers={HIDE_BOARD_MEMBERS}
-          boardMembers={boardMembers}
-          communityMembers={communityMembers}
-          partnerSections={partnerSections}
-          donorPeople={donorPeople}
-          donorOrganizations={donorOrganizations}
-          grantMakers={grantMakers}
-          donorsCount={donorsCount}
-          sponsorsUniqueCount={sponsorsUniqueCount}
-          orgNameById={orgNameById}
-        />
-      </BaseUrlProvider>
+      <ContributorsPage
+        meta={meta}
+        hideBoardMembers={HIDE_BOARD_MEMBERS}
+        boardMembers={boardMembers}
+        communityMembers={communityMembers}
+        partnerSections={partnerSections}
+        donorPeople={donorPeople}
+        donorOrganizations={donorOrganizations}
+        grantMakers={grantMakers}
+        donorsCount={donorsCount}
+        sponsorsUniqueCount={sponsorsUniqueCount}
+        orgNameById={orgNameById}
+        baseUrl={import.meta.env.BASE_URL}
+      />
     </SiteShell>
   </body>
 </html>

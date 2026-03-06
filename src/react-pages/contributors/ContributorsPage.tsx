@@ -7,6 +7,7 @@ import {
   PersonListElement,
   PersonCard,
   OrganizationCard,
+  BaseUrlProvider,
 } from "@semio-community/ecosystem-site-core";
 import {
   toPersonCardData,
@@ -39,6 +40,7 @@ export interface ContributorsPageProps {
   donorsCount: number;
   sponsorsUniqueCount: number;
   orgNameById: Record<string, string>;
+  baseUrl?: string;
 }
 
 export default function ContributorsPage({
@@ -53,8 +55,10 @@ export default function ContributorsPage({
   donorsCount,
   sponsorsUniqueCount,
   orgNameById,
+  baseUrl,
 }: ContributorsPageProps) {
   return (
+    <BaseUrlProvider baseUrl={baseUrl ?? "/"}>
     <div className="space-y-16">
       <HeroHeader
         icon={<UsersGroupTwoRounded className="w-16 h-16 text-accent-two" />}
@@ -221,6 +225,7 @@ export default function ContributorsPage({
         </div>
       </Section>
     </div>
+    </BaseUrlProvider>
   );
 }
 
