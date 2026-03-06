@@ -3,17 +3,15 @@ import CMS from "decap-cms-app";
 import type { DetailHeroBadge } from "@/components/detail/DetailHero";
 import {
   PersonDetail,
-  type AffiliationDisplay,
-} from "@/components/detail/views/PersonDetail";
-import { EventDetail } from "@/components/detail/views/EventDetail";
-import { OrganizationDetail } from "@/components/detail/views/OrganizationDetail";
-import { HardwareDetail } from "@/components/detail/views/HardwareDetail";
-import { SoftwareDetail } from "@/components/detail/views/SoftwareDetail";
-import {
+  EventDetail,
+  OrganizationDetail,
+  HardwareDetail,
+  SoftwareDetail,
   ResearchDetail,
-  type ResearchAuthor,
+  type AffiliationDisplay,
   type ResearchOrganizationLink,
-} from "@/components/detail/views/ResearchDetail";
+} from "@semio-community/ecosystem-site-core";
+import type { ResearchAuthorModel as ResearchAuthor } from "@semio-community/ecosystem-site-core";
 import Footer from "@/components/layout/Footer";
 import previewStyles from "@/styles/global.css?inline";
 declare const __CMS_ROOT__: string;
