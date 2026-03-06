@@ -391,7 +391,6 @@ const featuredState = data.featured
             relatedEvents && relatedEvents.length > 0 && (
               <BaseUrlProvider baseUrl={import.meta.env.BASE_URL}>
                 <RelatedItemsGrid
-                  client:load
                   title="Related Events"
                   subtitle="Similar upcoming and past events"
                   items={
