@@ -3,9 +3,15 @@ import type { CollectionEntry } from "astro:content";
 import Section from "@/components/sections/Section";
 import HeroHeader from "@/components/hero/HeroHeader";
 import { SubsectionGrid } from "@/components/sections/SubsectionGrid";
-import { PersonListElement } from "@/components/cards/PersonListElement";
-import { PersonCard } from "@/components/cards/PersonCard";
-import { OrganizationCard } from "@/components/cards/OrganizationCard";
+import {
+  PersonListElement,
+  PersonCard,
+  OrganizationCard,
+} from "@semio-community/ecosystem-site-core";
+import {
+  toPersonCardData,
+  toOrganizationCardData,
+} from "@/utils/card-mappers";
 import { UsersGroupTwoRounded } from "@solar-icons/react-perf/LineDuotone";
 
 interface PartnerSection {
@@ -101,7 +107,7 @@ export default function ContributorsPage({
                 <PersonListElement
                   key={person.id}
                   personId={person.id}
-                  data={person.data}
+                  data={toPersonCardData(person.data)}
                   affiliationLabel={affiliationLabelFor(person, orgNameById)}
                 />
               ))}
@@ -122,7 +128,7 @@ export default function ContributorsPage({
               <PersonListElement
                 key={person.id}
                 personId={person.id}
-                data={person.data}
+                data={toPersonCardData(person.data)}
                 affiliationLabel={affiliationLabelFor(person, orgNameById)}
               />
             ))}
@@ -152,7 +158,7 @@ export default function ContributorsPage({
                 <OrganizationCard
                   key={partner.id}
                   organizationId={partner.id}
-                  data={partner.data}
+                  data={toOrganizationCardData(partner.data)}
                   className="h-full"
                 />
               ))}
@@ -180,7 +186,7 @@ export default function ContributorsPage({
               <PersonCard
                 key={person.id}
                 personId={person.id}
-                data={person.data}
+                data={toPersonCardData(person.data)}
                 className="h-full"
               />
             ))}
@@ -188,7 +194,7 @@ export default function ContributorsPage({
               <OrganizationCard
                 key={org.id}
                 organizationId={org.id}
-                data={org.data}
+                data={toOrganizationCardData(org.data)}
                 className="h-full"
               />
             ))}
@@ -207,7 +213,7 @@ export default function ContributorsPage({
               <OrganizationCard
                 key={org.id}
                 organizationId={org.id}
-                data={org.data}
+                data={toOrganizationCardData(org.data)}
                 className="h-full"
               />
             ))}

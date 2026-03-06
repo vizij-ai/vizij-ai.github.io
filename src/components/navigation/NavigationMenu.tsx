@@ -1,5 +1,5 @@
 import React from "react";
-import { CallToActionButton } from "../ui/CallToActionButton";
+import { CallToActionButton } from "@semio-community/ecosystem-site-core";
 import { navIconMap } from "@/components/navigation/navIcons";
 import {
   getNavCtaVariant,

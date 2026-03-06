@@ -25,7 +25,7 @@ import {
   getStatusLabel,
   getCategoryLabel,
   STATUS_COLORS,
-} from "@/config/statusConfig";
+} from "@semio-community/ecosystem-site-core";
 import { resolveLogoAsset } from "@/utils/images";
 
 const intlShort = new Intl.DateTimeFormat("en-US", {

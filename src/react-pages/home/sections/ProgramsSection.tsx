@@ -3,7 +3,7 @@ import { clsx } from "clsx";
 import SectionBlock, {
   type SectionVariant,
 } from "@/components/sections/SectionBlock";
-import LinkCard from "@/components/cards/LinkCard";
+import { LinkCard } from "@semio-community/ecosystem-site-core";
 import {
   CpuBolt,
   CodeSquare,

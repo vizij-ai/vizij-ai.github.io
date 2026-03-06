@@ -1,5 +1,5 @@
 import React from "react";
-import { CallToActionButton } from "@/components/ui/CallToActionButton";
+import { CallToActionButton } from "@semio-community/ecosystem-site-core";
 
 type Action = {
   label: string;

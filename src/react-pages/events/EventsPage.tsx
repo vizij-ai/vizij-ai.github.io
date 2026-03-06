@@ -1,6 +1,6 @@
 import React from "react";
 import HeroHeader from "@/components/hero/HeroHeader";
-import { CallToActionButton } from "@/components/ui/CallToActionButton";
+import { CallToActionButton } from "@semio-community/ecosystem-site-core";
 import Section from "@/components/sections/Section";
 import { Calendar } from "@solar-icons/react-perf/LineDuotone";
 

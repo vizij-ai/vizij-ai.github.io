@@ -8,7 +8,7 @@ import {
 import ContentSection from "@/components/detail/ContentSection";
 import SpecificationsList from "@/components/detail/SpecificationsList";
 import LinkSection from "@/components/detail/LinkSection";
-import BasicChip from "@/components/ui/BasicChip";
+import { BasicChip } from "@semio-community/ecosystem-site-core";
 import { RelatedItemsGrid } from "@/components/detail/RelatedItemsGrid";
 import { resolveDetailImagePolicy, resolveLogoAsset } from "@/utils/images";
 import { getEventPreviewDescriptionText } from "@/utils/events";

@@ -1,6 +1,10 @@
 import type React from "react";
-import { FeaturedStar, type FeaturedState } from "@/components/ui/FeaturedStar";
-import { Avatar, type AvatarType } from "@/components/ui/Avatar";
+import {
+  FeaturedStar,
+  type FeaturedState,
+  Avatar,
+  type AvatarType,
+} from "@semio-community/ecosystem-site-core";
 import type { ImageLike } from "@/utils/images";
 import clsx from "clsx";
 

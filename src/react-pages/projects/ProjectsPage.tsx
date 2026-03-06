@@ -3,9 +3,11 @@ import Section from "@/components/sections/Section";
 import HeroHeader from "@/components/hero/HeroHeader";
 import { Icon } from "@/components/ui/Icon";
 import ConnectSection from "@/react-pages/home/sections/ConnectSection";
-import { HardwareCard } from "@/components/cards/HardwareCard";
-import { SoftwareCard } from "@/components/cards/SoftwareCard";
-import { ResearchCard } from "@/components/cards/ResearchCard";
+import {
+  HardwareCard,
+  SoftwareCard,
+  ResearchCard,
+} from "@semio-community/ecosystem-site-core";
 import type { ImageLike, ImagePolicy } from "@/utils/images";
 import { TestTube } from "@solar-icons/react-perf/LineDuotone";
 

@@ -1,10 +1,5 @@
 import React from "react";
-import { OrganizationCard } from "../cards/OrganizationCard";
-import { EventCard } from "../cards/EventCard";
-import { HardwareCard } from "../cards/HardwareCard";
-import { SoftwareCard } from "../cards/SoftwareCard";
-import { ResearchCard } from "../cards/ResearchCard";
-import { PersonCard } from "../cards/PersonCard";
+import { OrganizationCard, EventCard, HardwareCard, SoftwareCard, ResearchCard, PersonCard } from "@semio-community/ecosystem-site-core";
 import { resolveLogoAsset, type ImagePolicy } from "@/utils/images";
 
 export interface RelatedItem {

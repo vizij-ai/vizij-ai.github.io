@@ -8,13 +8,16 @@ import {
 import ContentSection from "@/components/detail/ContentSection";
 import InfoCard from "@/components/detail/InfoCard";
 import LinkSection from "@/components/detail/LinkSection";
-import { ResearchCard } from "@/components/cards/ResearchCard";
-import { HardwareCard } from "@/components/cards/HardwareCard";
-import { SoftwareCard } from "@/components/cards/SoftwareCard";
-import { EventCard } from "@/components/cards/EventCard";
+import {
+  ResearchCard,
+  HardwareCard,
+  SoftwareCard,
+  EventCard,
+  OrganizationListElement,
+} from "@semio-community/ecosystem-site-core";
 import { RelatedItemsGrid } from "@/components/detail/RelatedItemsGrid";
-import { OrganizationListElement } from "@/components/cards/OrganizationListElement";
 import { resolveDetailImagePolicy } from "@/utils/images";
+import { toOrganizationCardData } from "@/utils/card-mappers";
 
 type PersonData = CollectionEntry<"people">["data"];
 
@@ -104,14 +107,15 @@ export function PersonDetail({
                       key={`${aff.organizationId}-current-${idx}`}
                       organizationId={aff.organizationId}
                       data={
-                        aff.organizationData ??
-                        (aff.organizationName || aff.organizationImages
-                          ? ({
-                              name: aff.organizationName || aff.organizationId,
-                              shortName: aff.organizationName,
-                              images: aff.organizationImages,
-                            } as any)
-                          : undefined)
+                        aff.organizationData
+                          ? toOrganizationCardData(aff.organizationData)
+                          : (aff.organizationName || aff.organizationImages
+                              ? ({
+                                  name: aff.organizationName || aff.organizationId,
+                                  shortName: aff.organizationName,
+                                  images: aff.organizationImages,
+                                } as any)
+                              : undefined)
                       }
                       roleLabel={
                         aff.department
@@ -136,14 +140,15 @@ export function PersonDetail({
                       key={`${aff.organizationId}-past-${idx}`}
                       organizationId={aff.organizationId}
                       data={
-                        aff.organizationData ??
-                        (aff.organizationName || aff.organizationImages
-                          ? ({
-                              name: aff.organizationName || aff.organizationId,
-                              shortName: aff.organizationName,
-                              images: aff.organizationImages,
-                            } as any)
-                          : undefined)
+                        aff.organizationData
+                          ? toOrganizationCardData(aff.organizationData)
+                          : (aff.organizationName || aff.organizationImages
+                              ? ({
+                                  name: aff.organizationName || aff.organizationId,
+                                  shortName: aff.organizationName,
+                                  images: aff.organizationImages,
+                                } as any)
+                              : undefined)
                       }
                       roleLabel={
                         aff.department

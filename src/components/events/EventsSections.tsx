@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useRef, useEffect } from "react";
-import { EventCard } from "@/components/cards/EventCard";
+import { EventCard } from "@semio-community/ecosystem-site-core";
 import Section from "@/components/sections/Section";
 import type { ImageLike, ImagePolicy } from "@/utils/images";
 

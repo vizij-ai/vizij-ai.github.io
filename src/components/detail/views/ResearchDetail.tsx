@@ -9,10 +9,10 @@ import { RelatedItemsGrid } from "@/components/detail/RelatedItemsGrid";
 import {
   PersonListElement,
   type PersonListElementProps,
-} from "@/components/cards/PersonListElement";
-import { OrganizationListElement } from "@/components/cards/OrganizationListElement";
-import { HardwareCard } from "@/components/cards/HardwareCard";
-import { SoftwareCard } from "@/components/cards/SoftwareCard";
+  OrganizationListElement,
+  HardwareCard,
+  SoftwareCard,
+} from "@semio-community/ecosystem-site-core";
 import { resolveDetailImagePolicy, resolveLogoAsset } from "@/utils/images";
 
 type ResearchData = CollectionEntry<"research">["data"];

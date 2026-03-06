@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { CallToActionButton } from "../ui/CallToActionButton";
+import { CallToActionButton } from "@semio-community/ecosystem-site-core";
 import { useSearch } from "@/components/search";
 import { navIconMap } from "@/components/navigation/navIcons";
 import {

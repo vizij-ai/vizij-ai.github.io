@@ -1,6 +1,6 @@
 import React from "react";
 import Section from "@/components/sections/Section";
-import { CallToActionButton } from "@/components/ui/CallToActionButton";
+import { CallToActionButton } from "@semio-community/ecosystem-site-core";
 import { url } from "@/utils/url";
 import { Icon } from "@/components/ui/Icon";
 

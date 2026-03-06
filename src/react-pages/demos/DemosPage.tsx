@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import HeroHeader from "@/components/hero/HeroHeader";
 import Section from "@/components/sections/Section";
-import FeatureCard from "@/components/cards/FeatureCard";
+import { FeatureCard } from "@semio-community/ecosystem-site-core";
 import { EmojiFunnySquare } from "@solar-icons/react-perf/LineDuotone";
 import { OrchestratorProvider } from "@vizij/orchestrator-react";
 import { ShowcaseRuntime } from "@/components/demos/ShowcaseRuntime";

@@ -1,6 +1,6 @@
 import React from "react";
 import SectionBlock from "@/components/sections/SectionBlock";
-import { CallToActionButton } from "@/components/ui/CallToActionButton";
+import { CallToActionButton } from "@semio-community/ecosystem-site-core";
 
 export interface ConnectSectionProps {
   /**

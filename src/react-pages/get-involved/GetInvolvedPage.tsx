@@ -1,6 +1,6 @@
 import HeroHeader from "@/components/hero/HeroHeader";
 import Section from "@/components/sections/Section";
-import { CallToActionButton } from "@/components/ui/CallToActionButton";
+import { CallToActionButton } from "@semio-community/ecosystem-site-core";
 import {
   ShieldCheck,
   Eye,

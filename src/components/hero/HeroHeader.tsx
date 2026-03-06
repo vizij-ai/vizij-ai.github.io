@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import { clsx } from "clsx";
-import { CallToActionButton } from "@/components/ui/CallToActionButton";
+import { CallToActionButton } from "@semio-community/ecosystem-site-core";
 
 export type HeroAction = {
   label: React.ReactNode;

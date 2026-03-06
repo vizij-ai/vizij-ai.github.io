@@ -1,7 +1,9 @@
 import HeroHeader from "@/components/hero/HeroHeader";
 import Section from "@/components/sections/Section";
-import FeatureCard from "@/components/cards/FeatureCard";
-import { CallToActionButton } from "@/components/ui/CallToActionButton";
+import {
+  FeatureCard,
+  CallToActionButton,
+} from "@semio-community/ecosystem-site-core";
 import {
   SettingsMinimalistic,
   BoxMinimalistic,

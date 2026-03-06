@@ -5,7 +5,7 @@ import React from "react";
 // import ProgramsSection from "@/react-pages/home/sections/ProgramsSection";
 // import PartnersSection from "@/react-pages/home/sections/PartnersSection";
 // import ConnectSection from "@/react-pages/home/sections/ConnectSection";
-// import { CallToActionButton } from "@/components/ui/CallToActionButton";
+// import { CallToActionButton } from "@semio-community/ecosystem-site-core";
 import { url } from "@/utils/url";
 
 export interface HomePageProps {

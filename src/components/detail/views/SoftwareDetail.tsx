@@ -9,13 +9,15 @@ import SpecificationsList from "@/components/detail/SpecificationsList";
 import FeaturesList from "@/components/detail/FeaturesList";
 import ChipsList from "@/components/detail/ChipsList";
 import { RelatedItemsGrid } from "@/components/detail/RelatedItemsGrid";
-import { OrganizationListElement } from "@/components/cards/OrganizationListElement";
 import {
+  OrganizationListElement,
   PersonListElement,
   type PersonListElementProps,
-} from "@/components/cards/PersonListElement";
-import { getStatusColor, getStatusLabel } from "@/config/statusConfig";
+  getStatusColor,
+  getStatusLabel,
+} from "@semio-community/ecosystem-site-core";
 import { resolveDetailImagePolicy, resolveLogoAsset } from "@/utils/images";
+import { toOrganizationCardData } from "@/utils/card-mappers";
 
 type SoftwareData = CollectionEntry<"software">["data"];
 
@@ -173,7 +175,7 @@ export function SoftwareDetail({
                       <OrganizationListElement
                         key={contributor.organizationId}
                         organizationId={contributor.organizationId}
-                        data={contributor.data}
+                        data={contributor.data ? toOrganizationCardData(contributor.data) : undefined}
                         roleLabel={
                           contributor.role ||
                           (contributor.primary
