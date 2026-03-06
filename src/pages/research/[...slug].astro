@@ -6,13 +6,10 @@ import SiteShell from "@/layouts/SiteShell.astro";
 import { getRelatedResearch as fetchRelatedResearch } from "@/data/research";
 import { getPerson, getFormattedAuthors } from "@/data/people";
 import { toResearchAuthor } from "@semio-community/ecosystem-site-core";
-import {
-  ResearchDetail,
-  type OrganizationRole,
-  type ResearchAuthor,
-  type ResearchOrganizationLink,
-} from "@/components/detail/views/ResearchDetail";
+import { ResearchDetail, type ResearchOrganizationLink } from "@semio-community/ecosystem-site-core";
+import type { ResearchAuthorModel } from "@semio-community/ecosystem-site-core";
 import { isDraftVisible } from "@/utils/drafts";
+import { toOrganizationCardData } from "@/utils/card-mappers";
 
 export async function getStaticPaths() {
   const researchEntries = await getCollection("research", ({ data }) => {
@@ -39,30 +36,25 @@ const meta = {
 };
 const ogImage = `/og/research/${entry.id}.png`;
 
-const authorsWithData: ResearchAuthor[] = await Promise.all(
+const authorsWithData: ResearchAuthorModel[] = await Promise.all(
   authors.map(async (contributor) => {
     const personEntry = await getPerson(contributor.personId);
     return toResearchAuthor(contributor, personEntry);
   }),
 );
 
-const validRoles: OrganizationRole[] = [
-  "lead",
-  "affiliated",
-  "funding",
-  "collaborator",
-];
+const validRoles = new Set(["lead", "affiliated", "funding", "collaborator"]);
 const organizationLinks: ResearchOrganizationLink[] = [];
 
 for (const orgLink of data.organizations ?? []) {
-  const role = orgLink.role as OrganizationRole;
-  if (!role || !validRoles.includes(role)) continue;
+  const role = orgLink.role as ResearchOrganizationLink["role"];
+  if (!role || !validRoles.has(role)) continue;
   const organization = await getEntry("organizations", orgLink.organizationId);
   if (!organization) continue;
   organizationLinks.push({
     role,
     note: orgLink.note,
-    organization,
+    organization: { ...toOrganizationCardData(organization.data), id: organization.id },
   });
 }
 

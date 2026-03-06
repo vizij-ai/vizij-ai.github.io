@@ -4,8 +4,9 @@ import BaseHead from "@/components/BaseHead.astro";
 import SiteShell from "@/layouts/SiteShell.astro";
 import { getRelatedHardware } from "@/data/hardware";
 import { getPerson } from "@/data/people";
-import { HardwareDetail } from "@/components/detail/views/HardwareDetail";
+import { HardwareDetail } from "@semio-community/ecosystem-site-core";
 import { isDraftVisible } from "@/utils/drafts";
+import { toOrganizationCardData } from "@/utils/card-mappers";
 
 export async function getStaticPaths() {
   const hardware = await getCollection("hardware", ({ data }) => {
@@ -76,7 +77,7 @@ const orgContributors = await Promise.all(
       const org = await getEntry("organizations", contributor.organizationId);
       return {
         ...contributor,
-        data: org?.data,
+        data: org?.data ? toOrganizationCardData(org.data) : undefined,
       };
     }),
 );---
