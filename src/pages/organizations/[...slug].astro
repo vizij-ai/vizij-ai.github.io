@@ -7,7 +7,7 @@ import { getAllOrganizations } from "@/data/organizations";
 import { getPeopleByOrganization } from "@/data/people";
 import { getAllHardware } from "@/data/hardware";
 import { getAllSoftware } from "@/data/software";
-import { toOrganizationKeyContact } from "@semio-community/ecosystem-site-core";
+import { toOrganizationKeyContact, BaseUrlProvider } from "@semio-community/ecosystem-site-core";
 import { OrganizationDetail } from "@semio-community/ecosystem-site-core";
 import { isDraftVisible } from "@/utils/drafts";
 
@@ -110,12 +110,14 @@ const keyContacts = affiliatedPeople
   </head>
   <body class="relative min-h-screen w-full bg-surface text-xl md:text-base">
     <SiteShell containerClassName="max-w-5xl">
-      <OrganizationDetail
-        data={data}
-        relatedContent={relatedContent}
-        relatedOrganizations={relatedOrganizations}
-        keyContacts={keyContacts}
-      />
+      <BaseUrlProvider baseUrl={import.meta.env.BASE_URL}>
+        <OrganizationDetail
+          data={data}
+          relatedContent={relatedContent}
+          relatedOrganizations={relatedOrganizations}
+          keyContacts={keyContacts}
+        />
+      </BaseUrlProvider>
     </SiteShell>
   </body>
 </html>

@@ -1,7 +1,9 @@
 import React, { useMemo, useState, useRef, useEffect } from "react";
-import { EventCard } from "@semio-community/ecosystem-site-core";
+import { EventCard, BaseUrlProvider } from "@semio-community/ecosystem-site-core";
 import Section from "@/components/sections/Section";
 import type { ImageLike, ImagePolicy } from "@/utils/images";
+
+const BASE_URL = import.meta.env.BASE_URL;
 
 type LinkMap = {
   website?: string;
@@ -261,6 +263,7 @@ export const EventsSections: React.FC<EventsSectionsProps> = ({
     parts.filter(Boolean).join(" ");
 
   return (
+    <BaseUrlProvider baseUrl={BASE_URL}>
     <div className={cls("flex flex-col gap-10", className)}>
       {/* Featured */}
       {featuredEvents.length > 0 && (
@@ -331,6 +334,7 @@ export const EventsSections: React.FC<EventsSectionsProps> = ({
         </Section>
       )}
     </div>
+    </BaseUrlProvider>
   );
 };
 

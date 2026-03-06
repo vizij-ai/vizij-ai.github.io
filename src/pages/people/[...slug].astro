@@ -7,7 +7,7 @@ import { getPeopleByExpertise, getPeopleByOrganization } from "@/data/people";
 import { getAllResearch } from "@/data/research";
 import { getAllHardware } from "@/data/hardware";
 import { getAllSoftware } from "@/data/software";
-import { PersonDetail } from "@semio-community/ecosystem-site-core";
+import { PersonDetail, BaseUrlProvider } from "@semio-community/ecosystem-site-core";
 import { isDraftVisible } from "@/utils/drafts";
 import { toOrganizationCardData } from "@/utils/card-mappers";
 
@@ -280,36 +280,38 @@ if (data.links?.mastodon) {
   </head>
   <body class="relative min-h-screen w-full bg-surface text-xl md:text-base">
     <SiteShell containerClassName="max-w-5xl">
-      <PersonDetail
-        data={data}
-        fullName={fullName}
-        badges={badges}
-        currentAffiliations={currentAffiliations.map((aff) => ({
-          organizationId: aff.organizationId,
-          organizationName:
-            aff.organization?.data?.shortName || aff.organization?.data?.name,
-          organizationImages: aff.organization?.data?.images,
-          organizationData: aff.organization?.data ? toOrganizationCardData(aff.organization.data) : undefined,
-          role: aff.role,
-          department: aff.department,
-        }))}
-        pastAffiliations={pastAffiliations.map((aff) => ({
-          organizationId: aff.organizationId,
-          organizationName:
-            aff.organization?.data?.shortName || aff.organization?.data?.name,
-          organizationImages: aff.organization?.data?.images,
-          organizationData: aff.organization?.data ? toOrganizationCardData(aff.organization.data) : undefined,
-          role: aff.role,
-          department: aff.department,
-        }))}
-        relatedContent={{
-          research: relatedContent.research,
-          hardware: relatedContent.hardware,
-          software: relatedContent.software,
-          events: relatedContent.events,
-        }}
-        relatedPeople={relatedPeople}
-      />
+      <BaseUrlProvider baseUrl={import.meta.env.BASE_URL}>
+        <PersonDetail
+          data={data}
+          fullName={fullName}
+          badges={badges}
+          currentAffiliations={currentAffiliations.map((aff) => ({
+            organizationId: aff.organizationId,
+            organizationName:
+              aff.organization?.data?.shortName || aff.organization?.data?.name,
+            organizationImages: aff.organization?.data?.images,
+            organizationData: aff.organization?.data ? toOrganizationCardData(aff.organization.data) : undefined,
+            role: aff.role,
+            department: aff.department,
+          }))}
+          pastAffiliations={pastAffiliations.map((aff) => ({
+            organizationId: aff.organizationId,
+            organizationName:
+              aff.organization?.data?.shortName || aff.organization?.data?.name,
+            organizationImages: aff.organization?.data?.images,
+            organizationData: aff.organization?.data ? toOrganizationCardData(aff.organization.data) : undefined,
+            role: aff.role,
+            department: aff.department,
+          }))}
+          relatedContent={{
+            research: relatedContent.research,
+            hardware: relatedContent.hardware,
+            software: relatedContent.software,
+            events: relatedContent.events,
+          }}
+          relatedPeople={relatedPeople}
+        />
+      </BaseUrlProvider>
     </SiteShell>
   </body>
 </html>

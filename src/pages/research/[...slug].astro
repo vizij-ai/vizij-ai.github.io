@@ -5,7 +5,7 @@ import BaseHead from "@/components/BaseHead.astro";
 import SiteShell from "@/layouts/SiteShell.astro";
 import { getRelatedResearch as fetchRelatedResearch } from "@/data/research";
 import { getPerson, getFormattedAuthors } from "@/data/people";
-import { toResearchAuthor } from "@semio-community/ecosystem-site-core";
+import { toResearchAuthor, BaseUrlProvider } from "@semio-community/ecosystem-site-core";
 import { ResearchDetail, type ResearchOrganizationLink } from "@semio-community/ecosystem-site-core";
 import type { ResearchAuthorModel } from "@semio-community/ecosystem-site-core";
 import { isDraftVisible } from "@/utils/drafts";
@@ -93,15 +93,17 @@ const validRelatedSoftware = relatedSoftwareItems.filter(
   </head>
   <body class="relative min-h-screen w-full bg-surface text-xl md:text-base">
     <SiteShell containerClassName="max-w-5xl">
-      <ResearchDetail
-        data={data}
-        authors={authorsWithData}
-        authorsSubtitle={authorsString}
-        organizationLinks={organizationLinks}
-        relatedHardware={validRelatedHardware}
-        relatedSoftware={validRelatedSoftware}
-        relatedResearch={relatedResearch}
-      />
+      <BaseUrlProvider baseUrl={import.meta.env.BASE_URL}>
+        <ResearchDetail
+          data={data}
+          authors={authorsWithData}
+          authorsSubtitle={authorsString}
+          organizationLinks={organizationLinks}
+          relatedHardware={validRelatedHardware}
+          relatedSoftware={validRelatedSoftware}
+          relatedResearch={relatedResearch}
+        />
+      </BaseUrlProvider>
     </SiteShell>
   </body>
 </html>

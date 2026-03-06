@@ -7,7 +7,10 @@ import {
   HardwareCard,
   SoftwareCard,
   ResearchCard,
+  BaseUrlProvider,
 } from "@semio-community/ecosystem-site-core";
+
+const BASE_URL = import.meta.env.BASE_URL;
 import type { ImageLike, ImagePolicy } from "@/utils/images";
 import { TestTube } from "@solar-icons/react-perf/LineDuotone";
 
@@ -108,6 +111,7 @@ export default function ProjectsPage({ projectsPayload }: ProjectsPageProps) {
   }, [projectsPayload]);
 
   return (
+    <BaseUrlProvider baseUrl={BASE_URL}>
     <div className="relative pt-16 md:pt-20 lg:pt-4 space-y-12">
       <HeroHeader
         fullBleed
@@ -172,6 +176,7 @@ export default function ProjectsPage({ projectsPayload }: ProjectsPageProps) {
 
       <ConnectSection />
     </div>
+    </BaseUrlProvider>
   );
 }
 

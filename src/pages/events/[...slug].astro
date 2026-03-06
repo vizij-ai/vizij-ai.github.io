@@ -9,7 +9,7 @@ import {
   SpecificationsList,
   ContentSection,
 } from "@/components/detail";
-import { RelatedItemsGrid } from "@semio-community/ecosystem-site-core";
+import { RelatedItemsGrid, BaseUrlProvider } from "@semio-community/ecosystem-site-core";
 import LinkSection from "@/components/detail/LinkSection";
 import MDXContent from "@/components/mdx/MDXContent.astro";
 import { getAllEvents } from "@/data/events";
@@ -389,42 +389,44 @@ const featuredState = data.featured
         <Fragment slot="related">
           {
             relatedEvents && relatedEvents.length > 0 && (
-              <RelatedItemsGrid
-                client:load
-                title="Related Events"
-                subtitle="Similar upcoming and past events"
-                items={
-                  relatedEvents.map((event) => ({
-                    id: event.id,
-                    data: {
-                      name: event.data.name,
-                      title: undefined,
-                      displayName: event.data.displayName,
-                      description: event.data.description,
-                      abstract: undefined,
-                      status: undefined,
-                      type: event.data.type,
-                      category: undefined,
-                      featured: event.data.featured,
-                      images: event.data.images,
-                      avatar: undefined,
-                      logo: undefined,
-                      thumbnail: undefined,
-                      banner: event.data.images?.hero,
-                      links: event.data.links,
-                      startDate: event.data.startDate,
-                      endDate: event.data.endDate,
-                      submissionDeadlineDate: event.data.submissionDeadlineDate,
-                      notificationDate: event.data.notificationDate,
-                      shortDescription: `${
-                        typeLabels[event.data.type] || event.data.type
-                      } • ${event.data.location.city}`,
-                    },
-                  })) as any
-                }
-                itemType="events"
-                columns={3}
-              />
+              <BaseUrlProvider baseUrl={import.meta.env.BASE_URL}>
+                <RelatedItemsGrid
+                  client:load
+                  title="Related Events"
+                  subtitle="Similar upcoming and past events"
+                  items={
+                    relatedEvents.map((event) => ({
+                      id: event.id,
+                      data: {
+                        name: event.data.name,
+                        title: undefined,
+                        displayName: event.data.displayName,
+                        description: event.data.description,
+                        abstract: undefined,
+                        status: undefined,
+                        type: event.data.type,
+                        category: undefined,
+                        featured: event.data.featured,
+                        images: event.data.images,
+                        avatar: undefined,
+                        logo: undefined,
+                        thumbnail: undefined,
+                        banner: event.data.images?.hero,
+                        links: event.data.links,
+                        startDate: event.data.startDate,
+                        endDate: event.data.endDate,
+                        submissionDeadlineDate: event.data.submissionDeadlineDate,
+                        notificationDate: event.data.notificationDate,
+                        shortDescription: `${
+                          typeLabels[event.data.type] || event.data.type
+                        } • ${event.data.location.city}`,
+                      },
+                    })) as any
+                  }
+                  itemType="events"
+                  columns={3}
+                />
+              </BaseUrlProvider>
             )
           }
         </Fragment>
