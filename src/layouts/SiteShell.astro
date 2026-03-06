@@ -12,12 +12,10 @@ import {
 import { isDraftVisible } from "@/utils/drafts";
 
 export interface Props {
-  noPaddingTop?: boolean;
   containerClassName?: string;
 }
 
 const {
-  noPaddingTop = false,
   containerClassName,
 } = Astro.props;
 
@@ -97,7 +95,7 @@ for (const [collection, ids] of idsByCollection) {
       class={`relative m-auto max-w-4xl grow w-full min-w-0 ${containerClassName || ""}`}
     >
       <div
-        class={`m-auto grid grid-cols-1 min-h-screen grid-rows-[1fr_auto] px-4 md:px-8 w-full min-w-0 ${noPaddingTop ? "" : "pt-18"}`}
+        class="m-auto grid grid-cols-1 min-h-screen grid-rows-[1fr_auto] px-4 md:px-8 w-full min-w-0 pt-18"
       >
         <main id="main" class="relative grow" data-pagefind-body>
           <slot />

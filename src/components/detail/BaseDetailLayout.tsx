@@ -38,8 +38,6 @@ export default function BaseDetailLayout({
   related,
   footer,
 }: BaseDetailLayoutProps) {
-  const paddingClass = "pt-18";
-
   const renderSection = (section?: SectionContent) => {
     if (section == null || section === "") return null;
     return <>{section}</>;
@@ -50,7 +48,6 @@ export default function BaseDetailLayout({
       <article
         className={clsx(
           "detail-layout w-full min-h-screen",
-          paddingClass,
           className,
         )}
       >
