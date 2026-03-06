@@ -147,7 +147,7 @@ export const DetailHero: React.FC<DetailHeroProps> = ({
 
   return (
     <div
-      className={`relative mb-8 -mx-4 md:-mx-8 rounded-none md:rounded-xl overflow-hidden ${className}`}
+      className={`relative mb-8 -mx-4 md:-mx-8 rounded-none md:rounded-b-xl overflow-hidden ${className}`}
     >
       <div className="aspect-4/3 sm:aspect-video md:aspect-21/9 overflow-hidden relative">
         {image ? (
