@@ -8,5 +8,5 @@ export { default as ChipsList } from "./ChipsList";
 export { default as FeaturesList } from "./FeaturesList";
 export { default as SpecificationsList } from "./SpecificationsList";
 
-export { RelatedItemsGrid } from "./RelatedItemsGrid";
-export type { RelatedItemsGridProps, RelatedItem } from "./RelatedItemsGrid";
+export { RelatedItemsGrid } from "@semio-community/ecosystem-site-core";
+export type { RelatedItemsGridProps, RelatedItem } from "@semio-community/ecosystem-site-core";

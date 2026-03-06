@@ -205,9 +205,6 @@ const PeoplePreview: React.FC<PreviewProps> = ({ entry, getAsset }) => {
         }
         fullName={name || "Person"}
         badges={badges}
-        links={links}
-        bio={bio}
-        expertise={expertise}
         currentAffiliations={currentAffiliations}
         pastAffiliations={pastAffiliations}
         relatedContent={undefined}
