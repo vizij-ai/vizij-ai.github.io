@@ -1,50 +1,24 @@
 import React from "react";
 import { clsx } from "clsx";
-import { getNavHighlightClasses } from "@/components/navigation/navVariant";
+import {
+  getNavHighlightClasses,
+  resolveNavHighlightVariant,
+} from "@semio-community/ecosystem-site-core";
+import { siteConfig } from "@/site.config";
 
 export interface MobileNavButtonProps
   extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "children"> {
-  /**
-   * Accessible label for screen readers. Applied to aria-label and defaults title to this value.
-   */
   label: string;
-  /**
-   * The icon or content to render inside the button (usually an SVG).
-   */
   children: React.ReactNode;
-  /**
-   * Visual size preset. 'md' matches 32px, 'lg' matches 36px.
-   */
   size?: "md" | "lg";
-  /**
-   * When true, applies the "active" visual state (e.g., for toggles).
-   */
   active?: boolean;
-  /**
-   * Optional additional classes to merge with the base styles.
-   */
   className?: string;
 }
 
-/**
- * MobileNavButton
- *
- * Standardized, accessible icon-only button for mobile navigation controls.
- * Reuse this for:
- * - Hamburger trigger (in the main header)
- * - Search, Theme, and Close buttons in the mobile dialog header
- *
- * Usage examples:
- *  <MobileNavButton label="Open navigation" className="md:hidden">
- *    <HamburgerIcon />
- *  </MobileNavButton>
- *
- *  <Dialog.Close asChild>
- *    <MobileNavButton label="Close navigation">
- *      <CloseIcon />
- *    </MobileNavButton>
- *  </Dialog.Close>
- */
+const navHighlight = getNavHighlightClasses(
+  resolveNavHighlightVariant(siteConfig.navigation?.highlightVariant),
+);
+
 export const MobileNavButton = React.forwardRef<
   HTMLButtonElement,
   MobileNavButtonProps
@@ -52,9 +26,7 @@ export const MobileNavButton = React.forwardRef<
   { label, children, size = "md", active = false, className, title, type, ...rest },
   ref,
 ) {
-  const sizeClasses =
-    size === "lg" ? "h-9 w-9" : "h-8 w-8"; // default md -> 32px, lg -> 36px
-  const navHighlight = getNavHighlightClasses();
+  const sizeClasses = size === "lg" ? "h-9 w-9" : "h-8 w-8";
 
   const baseClasses = clsx(
     "relative inline-flex items-center justify-center select-none",

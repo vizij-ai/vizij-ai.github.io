@@ -1,26 +1,16 @@
 import React from "react";
 import { SearchProvider, useSearch, SearchModal } from "@/components/search";
-import { MobileNavigation } from "@/components/navigation/MobileNavigation";
+import {
+  BoundMobileNavigation,
+  getNavHighlightClasses,
+  resolveNavCtaVariant,
+  resolveNavHighlightVariant,
+} from "@semio-community/ecosystem-site-core";
+import { navIconMap } from "@/components/navigation/navIcons";
 import { NavIconButton } from "@/components/navigation/NavIconButton";
+import { siteConfig } from "@/site.config";
+import { url as buildUrl } from "@/utils/url";
 import type { Section } from "@/site.config";
-
-/**
- * SearchApp.tsx
- *
- * React island that centralizes the search experience and mobile navigation:
- * - Hosts SearchProvider context (Pagefind-backed)
- * - Renders a desktop-only trigger button to open the React SearchModal
- * - Renders MobileNavigation (which reads search mode via useSearch to show SearchMobilePanel)
- * - Mounts a single instance of SearchModal for desktop search
- *
- * Usage (Astro):
- *   <SearchApp
- *     client:load
- *     menuLinks={menuLinks}
- *     currentPath={Astro.url.pathname}
- *     urlPrefix=""
- *   />
- */
 
 type MenuLink = {
   path: string;
@@ -34,23 +24,18 @@ export interface SearchAppProps {
   menuLinks: MenuLink[];
   currentPath: string;
   urlPrefix?: string;
-  /**
-   * Whether to show the desktop trigger button that opens the React SearchModal.
-   * Defaults to true.
-   */
   showDesktopTrigger?: boolean;
-  /**
-   * Optional className to apply to the outer wrapper.
-   */
   className?: string;
 }
 
-/**
- * DesktopSearchTrigger
- *
- * A desktop-only icon button that opens the React SearchModal via SearchProvider.
- * Hidden on small screens.
- */
+const navHighlight = getNavHighlightClasses(
+  resolveNavHighlightVariant(siteConfig.navigation?.highlightVariant),
+);
+const ctaVariant = resolveNavCtaVariant({
+  ctaVariant: siteConfig.navigation?.ctaVariant,
+  highlightVariant: siteConfig.navigation?.highlightVariant,
+});
+
 export const DesktopSearchTrigger: React.FC<
   React.ButtonHTMLAttributes<HTMLButtonElement>
 > = ({ className, ...rest }) => {
@@ -85,6 +70,27 @@ export const DesktopSearchTrigger: React.FC<
   );
 };
 
+const MobileNav: React.FC<{ menuLinks: MenuLink[]; currentPath: string; urlPrefix: string }> = ({
+  menuLinks,
+  currentPath,
+  urlPrefix,
+}) => {
+  const { query, setQuery, results, loading } = useSearch();
+  const resolveHref = (path: string) => buildUrl(path, urlPrefix || import.meta.env.BASE_URL);
+
+  return (
+    <BoundMobileNavigation
+      menuLinks={menuLinks}
+      currentPath={currentPath}
+      resolveHref={resolveHref}
+      navHighlight={navHighlight}
+      ctaVariant={ctaVariant}
+      iconMap={navIconMap}
+      search={{ query, setQuery, results, loading }}
+    />
+  );
+};
+
 export const SearchApp: React.FC<SearchAppProps> = ({
   menuLinks,
   currentPath,
@@ -106,9 +112,8 @@ export const SearchApp: React.FC<SearchAppProps> = ({
           </div>
         )}
 
-        {/* Mobile Navigation with Radix UI Dialog (hidden on desktop) */}
         <div className="md:hidden">
-          <MobileNavigation
+          <MobileNav
             menuLinks={menuLinks}
             currentPath={currentPath}
             urlPrefix={urlPrefix}
@@ -116,7 +121,6 @@ export const SearchApp: React.FC<SearchAppProps> = ({
         </div>
       </div>
 
-      {/* Desktop Search Modal (React + Radix) */}
       <SearchModal />
     </SearchProvider>
   );
