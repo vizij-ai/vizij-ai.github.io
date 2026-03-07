@@ -12,6 +12,7 @@ import type {
   ContributorsPageOrganizationItem,
   ContributorsPagePartnerSection,
 } from "@semio-community/ecosystem-site-core";
+import React from "react";
 import { UsersGroupTwoRounded } from "@solar-icons/react-perf/LineDuotone";
 
 const meta = {
@@ -126,6 +127,8 @@ const mappedGrantMakers: ContributorsPageOrganizationItem[] = grantMakers.map((o
   id: o.id,
   data: toOrganizationCardData(o.data),
 }));
+
+const heroIcon = React.createElement(UsersGroupTwoRounded, { className: "w-16 h-16 text-accent-two" });
 ---
 
 <html
@@ -150,7 +153,7 @@ const mappedGrantMakers: ContributorsPageOrganizationItem[] = grantMakers.map((o
         donorPeople={mappedDonorPeople}
         donorOrganizations={mappedDonorOrganizations}
         grantMakers={mappedGrantMakers}
-        heroIcon={<UsersGroupTwoRounded className="w-16 h-16 text-accent-two" />}
+        heroIcon={heroIcon}
         baseUrl={import.meta.env.BASE_URL}
       />
     </SiteShell>
