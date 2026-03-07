@@ -1,0 +1,43 @@
+name: Bump ecosystem-site-core
+
+on:
+  repository_dispatch:
+    types: [ecosystem-site-core-published]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://npm.pkg.github.com
+          scope: "@semio-community"
+
+      - name: Install new version
+        # Uses SEMIO_PACKAGES_READ_TOKEN because this repo is in a different
+        # GitHub org (vizij-ai) than the package registry (semio-community).
+        run: npm install @semio-community/ecosystem-site-core@${{ github.event.client_payload.version }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.SEMIO_PACKAGES_READ_TOKEN }}
+
+      - name: Open bump PR
+        uses: peter-evans/create-pull-request@v7
+        with:
+          title: "chore: bump ecosystem-site-core to v${{ github.event.client_payload.version }}"
+          body: |
+            Automated bump of `@semio-community/ecosystem-site-core` to **v${{ github.event.client_payload.version }}**.
+
+            Triggered by new package release on [semio-community/ecosystem-site-core](https://github.com/semio-community/ecosystem-site-core).
+          branch: chore/bump-ecosystem-site-core-${{ github.event.client_payload.version }}
+          commit-message: "chore: bump ecosystem-site-core to v${{ github.event.client_payload.version }}"
+          base: main
+          labels: dependencies
