@@ -8,15 +8,18 @@ import {
   DetailHero,
   SpecificationsList,
   ContentSection,
-} from "@/components/detail";
-import { RelatedItemsGrid } from "@/components/detail/RelatedItemsGrid";
+  RelatedItemsGrid,
+  type RelatedItem,
+  BasicChip,
+  resolveLogoAsset,
+  getLocationString,
+  getEventPreviewDescription,
+  parseDateLocal,
+  getFormattedDateRanges,
+} from "@semio-community/ecosystem-site-core";
 import LinkSection from "@/components/detail/LinkSection";
 import MDXContent from "@/components/mdx/MDXContent.astro";
 import { getAllEvents } from "@/data/events";
-import BasicChip from "@/components/ui/BasicChip";
-import { resolveLogoAsset } from "@/utils/images";
-import { getEventPreviewDescriptionText } from "@/utils/events";
-import { parseDateLocal } from "@/utils/date";
 import ActionsSection from "@/components/detail/ActionsSection";
 import { isDraftVisible } from "@/utils/drafts";
 
@@ -250,7 +253,9 @@ const roleEntries = (data.roles || []).map((role) => ({
   label: formatRoleLabel(role),
 }));
 
-const descriptionText = getEventPreviewDescriptionText(data);
+const locationString = getLocationString(data.location);
+const dateString = getFormattedDateRanges(startDate, endDate);
+const descriptionText = getEventPreviewDescription(dateString, data.description, locationString);
 const featuredState = data.featured
   ? eventStatus === "past"
     ? "previously-featured"
@@ -327,7 +332,7 @@ const featuredState = data.featured
             roleEntries.length > 0 && (
               <div class="bg-linear-to-br from-surface-lighter to-surface rounded-xl border border-accent-one/20 p-6">
                 <h3 class="text-xs font-semibold mb-3 text-accent-base uppercase tracking-wider">
-                  SEMIO COMMUNITY ROLES
+                  VIZIJ ROLES
                 </h3>
                 <div class="flex flex-wrap gap-2">
                   {roleEntries.map((role) => (
@@ -378,35 +383,10 @@ const featuredState = data.featured
                 client:load
                 title="Related Events"
                 subtitle="Similar upcoming and past events"
-                items={
-                  relatedEvents.map((event) => ({
-                    id: event.id,
-                    data: {
-                      name: event.data.name,
-                      title: undefined,
-                      displayName: event.data.displayName,
-                      description: event.data.description,
-                      abstract: undefined,
-                      status: undefined,
-                      type: event.data.type,
-                      category: undefined,
-                      featured: event.data.featured,
-                      images: event.data.images,
-                      avatar: undefined,
-                      logo: undefined,
-                      thumbnail: undefined,
-                      banner: event.data.images?.hero,
-                      links: event.data.links,
-                      startDate: event.data.startDate,
-                      endDate: event.data.endDate,
-                      shortDescription: `${
-                        typeLabels[event.data.type] || event.data.type
-                      } • ${event.data.location.city}`,
-                    },
-                  })) as any
-                }
+                items={relatedEvents as RelatedItem[]}
                 itemType="events"
                 columns={3}
+                baseUrl={import.meta.env.BASE_URL}
               />
             )
           }
