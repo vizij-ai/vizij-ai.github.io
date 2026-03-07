@@ -1511,20 +1511,20 @@ collections:
           - meetup
           - webinar
           - competition
-      - label: Start Date
-        name: startDate
-        widget: datetime
-      - label: End Date
-        name: endDate
-        widget: datetime
-      - label: Submission Deadline Date
-        name: submissionDeadlineDate
-        widget: datetime
-        required: false
-      - label: Notification Date
-        name: notificationDate
-        widget: datetime
-        required: false
+      - label: Dates
+        name: dates
+        widget: list
+        fields:
+          - label: Name
+            name: name
+            widget: string
+          - label: Date
+            name: date
+            widget: datetime
+          - label: Order
+            name: order
+            widget: number
+            required: false
       - label: Location
         name: location
         widget: object
