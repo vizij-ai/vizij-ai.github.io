@@ -9,11 +9,11 @@ import {
   SpecificationsList,
   ContentSection,
 } from "@/components/detail";
-import { RelatedItemsGrid } from "@semio-community/ecosystem-site-core";
+import { RelatedItemsGrid } from "@/components/detail/RelatedItemsGrid";
 import LinkSection from "@/components/detail/LinkSection";
 import MDXContent from "@/components/mdx/MDXContent.astro";
 import { getAllEvents } from "@/data/events";
-import { BasicChip } from "@semio-community/ecosystem-site-core";
+import BasicChip from "@/components/ui/BasicChip";
 import { resolveLogoAsset } from "@/utils/images";
 import { getEventPreviewDescriptionText } from "@/utils/events";
 import { parseDateLocal } from "@/utils/date";
@@ -116,12 +116,6 @@ const ogImage = `/og/events/${entry.id}.png`;
 const currentDate = new Date();
 const startDate = parseDateLocal(data.startDate);
 const endDate = parseDateLocal(data.endDate);
-const submissionDeadlineDate = data.submissionDeadlineDate
-  ? parseDateLocal(data.submissionDeadlineDate)
-  : undefined;
-const notificationDate = data.notificationDate
-  ? parseDateLocal(data.notificationDate)
-  : undefined;
 let eventStatus = "upcoming";
 if (currentDate > endDate) {
   eventStatus = "past";
@@ -181,9 +175,6 @@ if (eventStatus === "past") {
 }
 
 // Format dates for display
-const isValidDate = (date: Date | undefined): date is Date =>
-  Boolean(date && !Number.isNaN(date.getTime()));
-
 const formatDate = (date: Date) => {
   return date.toLocaleDateString("en-US", {
     weekday: "long",
@@ -193,32 +184,30 @@ const formatDate = (date: Date) => {
   });
 };
 
-// Prepare event details
-const eventDetailsItems = [];
-if (isValidDate(submissionDeadlineDate)) {
-  eventDetailsItems.push({
-    label: "Submission Deadline",
-    value: formatDate(submissionDeadlineDate as Date),
-    icon: "solar:calendar-mark-line-duotone",
-  });
-}
-if (isValidDate(notificationDate)) {
-  eventDetailsItems.push({
-    label: "Review Notification Date",
-    value: formatDate(notificationDate as Date),
-    icon: "solar:calendar-mark-line-duotone",
-  });
-}
-eventDetailsItems.push({
-  label: "Start Date",
-  value: formatDate(startDate),
-  icon: "solar:calendar-date-line-duotone",
-});
-eventDetailsItems.push({
-  label: "End Date",
-  value: formatDate(endDate),
-  icon: "solar:calendar-mark-line-duotone",
-});
+// Prepare event details from dates array
+const DATE_ICONS: Record<string, string> = {
+  "start date": "solar:calendar-date-line-duotone",
+  start: "solar:calendar-date-line-duotone",
+  "end date": "solar:calendar-mark-line-duotone",
+  end: "solar:calendar-mark-line-duotone",
+  "submission deadline": "solar:clipboard-check-line-duotone",
+  "paper submission deadline": "solar:clipboard-check-line-duotone",
+  "participant support request deadline":
+    "solar:users-group-rounded-line-duotone",
+  "notification date": "solar:bell-line-duotone",
+  "paper notification date": "solar:bell-line-duotone",
+  "early paper submission deadline": "solar:clipboard-add-line-duotone",
+  "early paper notification date": "solar:bell-bing-line-duotone",
+  "early bird conference registration deadline": "solar:ticket-line-duotone",
+};
+
+const eventDetailsItems = [...data.dates]
+  .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+  .map(({ name, date }) => ({
+    label: name,
+    value: formatDate(parseDateLocal(date)),
+    icon: DATE_ICONS[name.toLowerCase()] ?? "solar:calendar-line-duotone",
+  }));
 // Prepare location details
 const locationItems = [];
 if (data.location.venue) {
@@ -270,7 +259,7 @@ const featuredState = data.featured
 ---
 
 <html
-  class="overflow-x-hidden grid scroll-pt-18 scroll-smooth font-sans text-text antialiased"
+  class="overflow-x-hidden grid scroll-pt-18 scroll-smooth font-sans text-text text-xl md:text-base antialiased"
   lang="en"
 >
   <head>
@@ -280,8 +269,8 @@ const featuredState = data.featured
       ogImage={ogImage}
     />
   </head>
-  <body class="relative min-h-screen w-full bg-surface text-xl md:text-base">
-    <SiteShell containerClassName="max-w-5xl">
+  <body class="relative min-h-screen w-full bg-surface">
+    <SiteShell noPaddingTop containerClassName="max-w-5xl">
       <BaseDetailLayout>
         <Fragment slot="hero">
           <DetailHero
@@ -350,22 +339,18 @@ const featuredState = data.featured
           }
         </Fragment>
 
-        {
-          data.renderMarkdown && (
-            <Fragment slot="content">
-              <div
-                class="bg-linear-to-br from-surface-lighter to-surface rounded-xl border border-accent-one/20 p-6"
-              >
-                <h2
-                  class="text-xs font-semibold mb-3 text-accent-base uppercase tracking-wider"
-                >
-                  EVENT DETAILS
-                </h2>
-                <MDXContent entry={entry} />
-              </div>
-            </Fragment>
-          )
-        }
+        <Fragment slot="content">
+          <div
+            class="bg-linear-to-br from-surface-lighter to-surface rounded-xl border border-accent-one/20 p-6"
+          >
+            <h2
+              class="text-xs font-semibold mb-3 text-accent-base uppercase tracking-wider"
+            >
+              EVENT DETAILS
+            </h2>
+            <MDXContent entry={entry} />
+          </div>
+        </Fragment>
 
         <Fragment slot="tags">
           {
@@ -390,6 +375,7 @@ const featuredState = data.featured
           {
             relatedEvents && relatedEvents.length > 0 && (
               <RelatedItemsGrid
+                client:load
                 title="Related Events"
                 subtitle="Similar upcoming and past events"
                 items={
@@ -413,8 +399,6 @@ const featuredState = data.featured
                       links: event.data.links,
                       startDate: event.data.startDate,
                       endDate: event.data.endDate,
-                      submissionDeadlineDate: event.data.submissionDeadlineDate,
-                      notificationDate: event.data.notificationDate,
                       shortDescription: `${
                         typeLabels[event.data.type] || event.data.type
                       } • ${event.data.location.city}`,
@@ -423,7 +407,6 @@ const featuredState = data.featured
                 }
                 itemType="events"
                 columns={3}
-                baseUrl={import.meta.env.BASE_URL}
               />
             )
           }
