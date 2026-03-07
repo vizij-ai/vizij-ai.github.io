@@ -18,6 +18,7 @@ import { HERO_FACES } from "@/demo-lib/heroFaces";
 import { useSectionInView } from "@/demo-lib/useSectionInView";
 import type { SpeechStatus } from "@/demo-lib/speech";
 import ConnectSection from "@/react-pages/home/sections/ConnectSection";
+import { CallToActionButton } from "@semio-community/ecosystem-site-core";
 
 const PREVIEW_CARD_CLASS =
   "group flex h-full flex-col overflow-hidden rounded-lg bg-special-lighter backdrop-blur-lg";
@@ -440,13 +441,17 @@ export default function DemosPage() {
         id="community"
         title="Community"
         subtitle="Contribute rigs, behaviors, and tooling to the Vizij ecosystem."
-        donateText="Support Development"
-        volunteerText="Contribute Code"
-        mailingListText="Follow Updates"
-        donateHref="https://github.com/vizij-ai"
-        volunteerHref="https://github.com/vizij-ai"
-        mailingListHref="https://semio.community"
-      />
+      >
+        <CallToActionButton href="https://github.com/vizij-ai" size="large" variant="primary" fullWidth>
+          Support Development
+        </CallToActionButton>
+        <CallToActionButton href="https://github.com/vizij-ai" size="large" variant="secondary" fullWidth>
+          Contribute Code
+        </CallToActionButton>
+        <CallToActionButton href="https://semio.community" size="large" variant="tertiary" fullWidth>
+          Follow Updates
+        </CallToActionButton>
+      </ConnectSection>
     </OrchestratorProvider>
   );
 }
