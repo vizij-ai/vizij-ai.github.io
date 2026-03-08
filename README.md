@@ -64,7 +64,6 @@ src/
 │   ├── search/           SearchProvider, SearchModal, SearchApp
 │   ├── hero/             HeroHeader.tsx (Vizij-branded glyph animation)
 │   ├── background/       ParallaxHexBackground.tsx
-│   ├── people/           PersonPopover.tsx
 │   ├── demos/            Interactive runtime demo components
 │   └── mdx/              MDX component map for body content rendering
 └── utils/                url.ts, date.ts, images.ts, events.ts, etc.

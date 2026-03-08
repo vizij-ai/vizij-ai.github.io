@@ -171,7 +171,6 @@ npm run format       # Format code
 - `src/components/background/ParallaxHexBackground.tsx` — branded background
 - `src/components/demos/` — Vizij runtime interactive demos
 - `src/components/detail/ActionsSection.tsx` — event action buttons
-- `src/components/people/PersonPopover.tsx` — site-specific routing and data
 - `src/components/search/` — Pagefind search
 - `src/components/BaseHead.astro` — site-specific meta config
 - `src/components/navigation/navIcons.ts` — site-specific route→icon mapping
