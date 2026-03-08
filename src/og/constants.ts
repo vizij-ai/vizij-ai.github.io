@@ -1,15 +1,16 @@
 import type { StatusTone } from "./types";
 
 // Theme values mirrored from src/styles/global.css dark palette
-export const SPECIAL_LIGHTER = "hsla(220, 8%, 92%, 0.12)";
-export const SPECIAL = "hsla(220, 8%, 0%, 0.18)";
-export const PAGE_BACKGROUND = "hsl(220, 18%, 7%)";
-export const OG_BACKGROUND = "hsl(220, 16%, 12%)";
-export const CARD_BORDER = "hsla(220, 16%, 65%, 0.18)";
+// Use neutral (non-blue) backgrounds for OG assets.
+export const SPECIAL_LIGHTER = "hsla(0, 0%, 92%, 0.12)";
+export const SPECIAL = "hsla(0, 0%, 0%, 0.18)";
+export const PAGE_BACKGROUND = "hsl(0, 0%, 7%)";
+export const OG_BACKGROUND = "hsl(0, 0%, 12%)";
+export const CARD_BORDER = "hsla(0, 0%, 65%, 0.18)";
 export const TEXT_PRIMARY = "hsl(220, 15%, 88%)";
 export const TEXT_MUTED = "hsla(220, 15%, 88%, 0.82)";
 export const STAR_COLOR = "#FF9E00"; // theme-accent-one
-export const LIST_ICON_COLOR = "#EF6129"; // theme-accent-two
+export const LIST_ICON_COLOR = "#50C4B6"; // teal brand color
 export const HERO_GRADIENT = `linear-gradient(135deg, ${SPECIAL_LIGHTER}, ${SPECIAL})`;
 export const OG_HEIGHT = 630;
 export const OG_WIDTH = 1200;
