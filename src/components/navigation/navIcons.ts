@@ -2,6 +2,7 @@ import { mapSlugKeysToRouteKeys } from "@semio-community/ecosystem-site-core";
 import {
 	Calendar,
 	Document2,
+	EmojiFunnySquare,
 	TestTube,
 	UserHandUp,
 	UserPlusRounded,
@@ -12,6 +13,7 @@ import type { ComponentType, SVGProps } from "react";
 export type NavigationIcon = ComponentType<SVGProps<SVGSVGElement>>;
 
 const baseRouteIconMap: Record<string, NavigationIcon> = {
+	demos: EmojiFunnySquare,
 	projects: TestTube,
 	services: UserHandUp,
 	events: Calendar,
