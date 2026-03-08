@@ -27,9 +27,10 @@ const allPeople = await getAllPeople();
 const organizations = await getCollection("organizations", ({ data }) =>
   isDraftVisible(data.draft, data.sites),
 );
+const allOrganizationsUnfiltered = await getCollection("organizations");
 
 const orgNameById = Object.fromEntries(
-  allOrganizations.map((org) => [org.id, org.data.shortName || org.data.name]),
+  allOrganizationsUnfiltered.map((org) => [org.id, org.data.shortName || org.data.name]),
 );
 
 function affiliationLabel(person: (typeof allPeople)[number]): string | undefined {
