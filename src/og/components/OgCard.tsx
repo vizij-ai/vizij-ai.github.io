@@ -50,7 +50,7 @@ export const OgCard = ({
 	listColumns = 1,
 	logoMode = "cover",
 }: OgImageProps) => {
-	const fallbackInitial = avatarInitial || title?.charAt(0)?.toUpperCase() || "SC";
+	const fallbackInitial = avatarInitial || title?.charAt(0)?.toUpperCase() || "V";
 	const truncatedTitle = truncateText(title, 80) ?? title;
 	const truncatedDescription = truncateText(description, 80);
 	const showDescription = Boolean(truncatedDescription) && listItems.length === 0;
