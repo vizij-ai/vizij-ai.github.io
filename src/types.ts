@@ -15,6 +15,10 @@ export interface SiteConfig {
 		highlightVariant?: NavHighlightVariant;
 		ctaVariant?: NavCtaVariant;
 	};
+	og?: {
+		pageBackground?: string;
+		cardBackground?: string;
+	};
 }
 
 export interface PaginationLink {

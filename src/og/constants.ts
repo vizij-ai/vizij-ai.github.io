@@ -1,11 +1,12 @@
+import { siteConfig } from "@/site.config";
 import type { StatusTone } from "./types";
 
 // Theme values mirrored from src/styles/global.css dark palette
 // Use neutral (non-blue) backgrounds for OG assets.
 export const SPECIAL_LIGHTER = "hsla(0, 0%, 92%, 0.12)";
 export const SPECIAL = "hsla(0, 0%, 0%, 0.18)";
-export const PAGE_BACKGROUND = "hsl(0, 0%, 7%)";
-export const OG_BACKGROUND = "hsl(0, 0%, 12%)";
+export const PAGE_BACKGROUND = siteConfig.og?.pageBackground ?? "hsl(0, 0%, 7%)";
+export const OG_BACKGROUND = siteConfig.og?.cardBackground ?? "hsl(0, 0%, 12%)";
 export const CARD_BORDER = "hsla(0, 0%, 65%, 0.18)";
 export const TEXT_PRIMARY = "hsl(220, 15%, 88%)";
 export const TEXT_MUTED = "hsla(220, 15%, 88%, 0.82)";
