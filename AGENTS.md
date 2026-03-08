@@ -171,7 +171,7 @@ npm run format       # Format code
 - `src/components/background/ParallaxHexBackground.tsx` — branded background
 - `src/components/demos/` — Vizij runtime interactive demos
 - `src/components/detail/ActionsSection.tsx` — event action buttons
-- `src/components/search/` — Pagefind search
+- `src/components/search/` — Pagefind search integration (uses `SearchProvider`, `SearchModal`, `SearchMobilePanel` from package, but the `useSearch` hook and Pagefind wiring are site-specific)
 - `src/components/BaseHead.astro` — site-specific meta config
 - `src/components/navigation/navIcons.ts` — site-specific route→icon mapping
 - `src/components/mdx/mdxComponents.tsx` — MDX rendering component map
@@ -183,3 +183,5 @@ If you see logic that is identical across all three ecosystem sites, it belongs 
 - Layout primitives (`PageSection`, `SubsectionGrid`, `SectionBlock`)
 - Detail page components (`BaseDetailLayout`, `DetailHero`, `InfoCard`, `ContentSection`, etc.)
 - Events page (`EventsSections`), Header/Footer shells, SkipLink
+- Search UI (`SearchProvider`, `SearchModal`, `SearchMobilePanel`) — site wires `useSearch()` hook
+- Theme (`ThemeProvider`) — manages dark/light mode toggle
