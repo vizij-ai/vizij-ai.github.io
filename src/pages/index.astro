@@ -8,14 +8,14 @@ import "../assets/fonts/Gilroy.css";
 
 import { siteConfig } from "@/site.config";
 
-import { getAllHardware } from "@/data/hardware";
-import { getAllSoftware } from "@/data/software";
-import { getAllResearch } from "@/data/research";
 import {
   getCurrentEvents,
   getFeaturedEvents,
   getUpcomingEvents,
 } from "@/data/events";
+import { getAllHardware } from "@/data/hardware";
+import { getAllResearch } from "@/data/research";
+import { getAllSoftware } from "@/data/software";
 
 // Load data on the server (Astro)
 const allHardware = await getAllHardware();

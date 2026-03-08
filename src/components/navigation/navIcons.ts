@@ -1,23 +1,23 @@
-import {
-  TestTube,
-  UserHandUp,
-  Calendar,
-  UsersGroupTwoRounded,
-  UserPlusRounded,
-  Document2,
-} from "@solar-icons/react-perf/LineDuotone";
 import { mapSlugKeysToRouteKeys } from "@semio-community/ecosystem-site-core";
+import {
+	Calendar,
+	Document2,
+	TestTube,
+	UserHandUp,
+	UserPlusRounded,
+	UsersGroupTwoRounded,
+} from "@solar-icons/react-perf/LineDuotone";
 import type { ComponentType, SVGProps } from "react";
 
 export type NavigationIcon = ComponentType<SVGProps<SVGSVGElement>>;
 
 const baseRouteIconMap: Record<string, NavigationIcon> = {
-  projects: TestTube,
-  services: UserHandUp,
-  events: Calendar,
-  contributors: UsersGroupTwoRounded,
-  "get-involved": UserPlusRounded,
-  about: Document2,
+	projects: TestTube,
+	services: UserHandUp,
+	events: Calendar,
+	contributors: UsersGroupTwoRounded,
+	"get-involved": UserPlusRounded,
+	about: Document2,
 };
 
 export const navIconMap = mapSlugKeysToRouteKeys(baseRouteIconMap);

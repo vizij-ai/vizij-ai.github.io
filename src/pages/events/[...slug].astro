@@ -2,26 +2,26 @@
 import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
 import BaseHead from "@/components/BaseHead.astro";
-import SiteShell from "@/layouts/SiteShell.astro";
-import {
-  BaseDetailLayout,
-  DetailHero,
-  SpecificationsList,
-  ContentSection,
-  RelatedItemsGrid,
-  type RelatedItem,
-  BasicChip,
-  resolveLogoAsset,
-  getLocationString,
-  getEventPreviewDescription,
-  parseDateLocal,
-  getFormattedDateRanges,
-} from "@semio-community/ecosystem-site-core";
+import ActionsSection from "@/components/detail/ActionsSection";
 import LinkSection from "@/components/detail/LinkSection";
 import MDXContent from "@/components/mdx/MDXContent.astro";
 import { getAllEvents } from "@/data/events";
-import ActionsSection from "@/components/detail/ActionsSection";
+import SiteShell from "@/layouts/SiteShell.astro";
 import { isDraftVisible } from "@/utils/drafts";
+import {
+  BaseDetailLayout,
+  BasicChip,
+  ContentSection,
+  DetailHero,
+  type RelatedItem,
+  RelatedItemsGrid,
+  SpecificationsList,
+  getEventPreviewDescription,
+  getFormattedDateRanges,
+  getLocationString,
+  parseDateLocal,
+  resolveLogoAsset,
+} from "@semio-community/ecosystem-site-core";
 
 export async function getStaticPaths() {
   const events = await getCollection("events", ({ data }) => {
@@ -38,10 +38,7 @@ const { entry } = Astro.props as { entry: CollectionEntry<"events"> };
 const { data } = entry;
 
 // Get related events (by type or topics)
-async function getRelatedEvents(
-  event: CollectionEntry<"events">,
-  limit: number = 3,
-) {
+async function getRelatedEvents(event: CollectionEntry<"events">, limit = 3) {
   const allEvents = await getAllEvents();
 
   // Filter out the current event and past events (unless current is also past)
@@ -174,7 +171,7 @@ badges.push({
 
 const eventLinks = { ...(data.links || {}) };
 if (eventStatus === "past") {
-  delete eventLinks.registration;
+  eventLinks.registration = undefined;
 }
 
 // Format dates for display
@@ -255,7 +252,11 @@ const roleEntries = (data.roles || []).map((role) => ({
 
 const locationString = getLocationString(data.location);
 const dateString = getFormattedDateRanges(startDate, endDate);
-const descriptionText = getEventPreviewDescription(dateString, data.description, locationString);
+const descriptionText = getEventPreviewDescription(
+  dateString,
+  data.description,
+  locationString,
+);
 const featuredState = data.featured
   ? eventStatus === "past"
     ? "previously-featured"
@@ -275,7 +276,7 @@ const featuredState = data.featured
     />
   </head>
   <body class="relative min-h-screen w-full bg-surface">
-    <SiteShell noPaddingTop containerClassName="max-w-5xl">
+    <SiteShell containerClassName="max-w-5xl">
       <BaseDetailLayout>
         <Fragment slot="hero">
           <DetailHero

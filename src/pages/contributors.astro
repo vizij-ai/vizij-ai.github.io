@@ -1,19 +1,19 @@
 ---
+import { getCollection } from "astro:content";
 import BaseHead from "@/components/BaseHead.astro";
-import SiteShell from "@/layouts/SiteShell.astro";
-import ContributorsPage from "@/react-pages/contributors/ContributorsPage";
 import { getAllOrganizations } from "@/data/organizations";
 import { getAllPeople } from "@/data/people";
-import { getCollection } from "astro:content";
+import SiteShell from "@/layouts/SiteShell.astro";
+import ContributorsPage from "@/react-pages/contributors/ContributorsPage";
+import { toOrganizationCardData, toPersonCardData } from "@/utils/card-mappers";
 import { isDraftVisible } from "@/utils/drafts";
-import { toPersonCardData, toOrganizationCardData } from "@/utils/card-mappers";
 import type {
-  ContributorsPagePersonItem,
   ContributorsPageOrganizationItem,
   ContributorsPagePartnerSection,
+  ContributorsPagePersonItem,
 } from "@semio-community/ecosystem-site-core";
-import React from "react";
 import { UsersGroupTwoRounded } from "@solar-icons/react-perf/LineDuotone";
+import React from "react";
 
 const meta = {
   title: "Contributors",
@@ -84,7 +84,7 @@ for (const partner of allOrganizations) {
   if (!partnersByType[partner.data.type]) {
     partnersByType[partner.data.type] = [];
   }
-  partnersByType[partner.data.type]!.push(partner);
+  partnersByType[partner.data.type]?.push(partner);
 }
 
 const mappedBoardMembers: ContributorsPagePersonItem[] = boardMembers.map((p) => ({

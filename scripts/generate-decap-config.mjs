@@ -5,6 +5,6 @@ import { generateDecapConfig } from "@semio-community/ecosystem-content-schema";
 const result = generateDecapConfig({ rootDir: process.cwd() });
 
 console.log(
-  `Generated Decap config with ${result.collectionsCount} collections at ${result.outputGeneratedPath}`,
+	`Generated Decap config with ${result.collectionsCount} collections at ${result.outputGeneratedPath}`,
 );
 console.log(`Wrote updated config.yml at ${result.baseConfigPath}`);
