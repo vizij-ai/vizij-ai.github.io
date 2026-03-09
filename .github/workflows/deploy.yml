@@ -42,7 +42,7 @@ jobs:
           npx astro sync
           npx tsc --noEmit --pretty false
 
-      - name: Build site + admin + search
+      - name: Build site + search
         run: npm run build
 
       - name: Deploy to gh-pages branch (attempt 1)

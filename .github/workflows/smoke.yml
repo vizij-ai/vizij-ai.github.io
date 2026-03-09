@@ -96,10 +96,6 @@ jobs:
         working-directory: site
         run: npm run content:sync:hub
 
-      - name: Generate CMS config
-        working-directory: site
-        run: npm run cms:config
-
       - name: Build site
         working-directory: site
         run: npm run build:site
