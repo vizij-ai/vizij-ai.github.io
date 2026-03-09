@@ -20,238 +20,281 @@ import { remarkReadingTime } from "./src/plugins/remark-reading-time";
 import rehypeExternalLinks from "rehype-external-links";
 import rehypeUnwrapImages from "rehype-unwrap-images";
 
-import { transformerMetaHighlight, transformerNotationDiff } from "@shikijs/transformers";
+import {
+  transformerMetaHighlight,
+  transformerNotationDiff,
+} from "@shikijs/transformers";
 import rehypePrettyCode from "rehype-pretty-code";
 
 import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
-	image: {
-		domains: ["webmention.io"],
-	},
-	integrations: [
-		icon(),
-		react(),
-		// Tailwind v4 is handled via Vite plugin below
-		sitemap(),
-		mdx(),
-		robotsTxt(),
-		webmanifest({
-			// See: https://github.com/alextim/astro-lib/blob/main/packages/astro-webmanifest/README.md
-			/**
-			 * required
-			 **/
-			name: siteConfig.title,
-			/**
-			 * optional
-			 **/
-			// short_name: "Astro_Citrus",
-			description: siteConfig.description,
-			lang: siteConfig.lang,
-			icon: "public/icon.svg", // the source for generating favicon & icons
-			icons: [
-				{
-					src: "icons/apple-touch-icon.png", // used in src/components/BaseHead.astro L:26
-					sizes: "180x180",
-					type: "image/png",
-				},
-				{
-					src: "icons/icon-192.png",
-					sizes: "192x192",
-					type: "image/png",
-				},
-				{
-					src: "icons/icon-512.png",
-					sizes: "512x512",
-					type: "image/png",
-				},
-			],
-			start_url: "/",
-			background_color: "#1d1f21",
-			theme_color: "#2bbc8a",
-			display: "standalone",
-			config: {
-				insertFaviconLinks: false,
-				insertThemeColorMeta: false,
-				insertManifestLink: false,
-			},
-		}),
-	],
-	markdown: {
-		syntaxHighlight: false,
+  image: {
+    domains: ["webmention.io"],
+  },
+  integrations: [
+    icon(),
+    react(),
+    // Tailwind v4 is handled via Vite plugin below
+    sitemap(),
+    mdx(),
+    robotsTxt(),
+    webmanifest({
+      // See: https://github.com/alextim/astro-lib/blob/main/packages/astro-webmanifest/README.md
+      /**
+       * required
+       **/
+      name: siteConfig.title,
+      /**
+       * optional
+       **/
+      // short_name: "Astro_Citrus",
+      description: siteConfig.description,
+      lang: siteConfig.lang,
+      icon: "public/icon.svg", // the source for generating favicon & icons
+      icons: [
+        {
+          src: "icons/apple-touch-icon.png", // used in src/components/BaseHead.astro L:26
+          sizes: "180x180",
+          type: "image/png",
+        },
+        {
+          src: "icons/icon-192.png",
+          sizes: "192x192",
+          type: "image/png",
+        },
+        {
+          src: "icons/icon-512.png",
+          sizes: "512x512",
+          type: "image/png",
+        },
+      ],
+      start_url: "/",
+      background_color: "#1d1f21",
+      theme_color: "#2bbc8a",
+      display: "standalone",
+      config: {
+        insertFaviconLinks: false,
+        insertThemeColorMeta: false,
+        insertManifestLink: false,
+      },
+    }),
+  ],
+  markdown: {
+    syntaxHighlight: false,
 
-		remarkPlugins: [remarkReadingTime, remarkDirective, remarkAdmonitions],
-		remarkRehype: {
-			footnoteLabelProperties: {
-				className: [""],
-			},
-			footnoteBackContent: "⤴",
-		},
+    remarkPlugins: [remarkReadingTime, remarkDirective, remarkAdmonitions],
+    remarkRehype: {
+      footnoteLabelProperties: {
+        className: [""],
+      },
+      footnoteBackContent: "⤴",
+    },
 
-		rehypePlugins: [
-			[
-				rehypeExternalLinks,
-				{
-					rel: ["nofollow", "noreferrer"],
-					target: "_blank",
-				},
-			],
+    rehypePlugins: [
+      [
+        rehypeExternalLinks,
+        {
+          rel: ["nofollow", "noreferrer"],
+          target: "_blank",
+        },
+      ],
 
-			[
-				rehypePrettyCode,
-				{
-					theme: {
-						light: "rose-pine-dawn", // after changing the theme, the server needs to be restarted
-						dark: "rose-pine", // after changing the theme, the server needs to be restarted
-					},
+      [
+        rehypePrettyCode,
+        {
+          theme: {
+            light: "rose-pine-dawn", // after changing the theme, the server needs to be restarted
+            dark: "rose-pine", // after changing the theme, the server needs to be restarted
+          },
 
-					transformers: [transformerNotationDiff(), transformerMetaHighlight()],
-				},
-			],
-			rehypeUnwrapImages,
-		],
-	},
-	// https://docs.astro.build/en/guides/prefetch/
-	prefetch: true,
-	site: "https://vizij.ai/",
-	// Add dynamic base path for PR previews
-	base: process.env.PR_PREVIEW_PATH || "/",
-	vite: {
-		resolve: {
-			dedupe: ["react", "react-dom"],
-		},
-		ssr: {
-			noExternal: [
-				"@semio-community/ecosystem-site-core",
-				/^@radix-ui\/react-/,
-				/^motion(\/.*)?$/,
-				/^framer-motion(\/.*)?$/,
-			],
-		},
-		build: {
-			sourcemap: true, // Source maps generation
-		},
-		assetsInclude: ["**/*.wasm"],
-		optimizeDeps: {
-			exclude: [
-				"@resvg/resvg-js",
-				"@vizij/orchestrator-wasm",
-				"@vizij/node-graph-wasm",
-				"@vizij/animation-wasm",
-			],
-		},
-		// biome-ignore lint/suspicious/noExplicitAny: tailwindcss vite plugin type is not assignable without cast
-		plugins: [rawFonts([".ttf", "otf", ".woff"]), tailwindcss() as any, serveSrcImagesDev()],
-	},
-	env: {
-		schema: {
-			WEBMENTION_API_KEY: envField.string({
-				context: "server",
-				access: "secret",
-				optional: true,
-			}),
-			WEBMENTION_URL: envField.string({
-				context: "client",
-				access: "public",
-				optional: true,
-			}),
-			WEBMENTION_PINGBACK: envField.string({
-				context: "client",
-				access: "public",
-				optional: true,
-			}),
-		},
-	},
-	server: {
-		// port: 1234,
-		host: true,
-	},
+          transformers: [transformerNotationDiff(), transformerMetaHighlight()],
+        },
+      ],
+      rehypeUnwrapImages,
+    ],
+  },
+  // https://docs.astro.build/en/guides/prefetch/
+  prefetch: true,
+  site: "https://vizij.ai/",
+  // Add dynamic base path for PR previews
+  base: process.env.PR_PREVIEW_PATH || "/",
+  vite: {
+    resolve: {
+      // Deduplicate React across the client bundle and, together with noExternal
+      // above, across the SSR bundle — ensuring a single React instance even when
+      // ecosystem-site-core is npm-linked and has its own nested node_modules/react.
+      dedupe: ["react", "react-dom"],
+    },
+    ssr: {
+      // Process ecosystem-site-core (and all packages that live inside its
+      // node_modules) through Vite's SSR bundler rather than letting Node load
+      // them natively. This matters for two reasons:
+      //   1. ecosystem-site-core uses bare JSON imports (@iconify-json/*) that
+      //      require Vite's transform pipeline to handle correctly.
+      //   2. When ecosystem-site-core is npm-linked, its node_modules contains
+      //      its own copies of react, @radix-ui/react-*, motion, etc. If Node
+      //      loads those natively it finds the linked package's copies before
+      //      the project root's copies, causing the "Invalid hook call" / duplicate
+      //      React error. By marking them noExternal, Vite bundles them and
+      //      resolve.dedupe below enforces a single React instance across the
+      //      whole graph.
+      noExternal: [
+        "@semio-community/ecosystem-site-core",
+        /^@radix-ui\/react-/,
+        /^react-remove-scroll/,
+        /^react-style-singleton/,
+        /^react-remove-scroll-bar/,
+        /^use-callback-ref/,
+        /^use-sidecar/,
+        /^motion(\/.*)?$/,
+        /^framer-motion(\/.*)?$/,
+      ],
+    },
+    build: {
+      sourcemap: true, // Source maps generation
+    },
+    assetsInclude: ["**/*.wasm"],
+    optimizeDeps: {
+      exclude: [
+        "@resvg/resvg-js",
+        "@vizij/orchestrator-wasm",
+        "@vizij/node-graph-wasm",
+        "@vizij/animation-wasm",
+      ],
+    },
+    // biome-ignore lint/suspicious/noExplicitAny: tailwindcss vite plugin type is not assignable without cast
+    plugins: [
+      rawFonts([".ttf", "otf", ".woff"]),
+      tailwindcss() as any,
+      serveSrcImagesDev(),
+    ],
+  },
+  env: {
+    schema: {
+      WEBMENTION_API_KEY: envField.string({
+        context: "server",
+        access: "secret",
+        optional: true,
+      }),
+      WEBMENTION_URL: envField.string({
+        context: "client",
+        access: "public",
+        optional: true,
+      }),
+      WEBMENTION_PINGBACK: envField.string({
+        context: "client",
+        access: "public",
+        optional: true,
+      }),
+    },
+  },
+  server: {
+    // port: 1234,
+    host: true,
+  },
 });
 
 function rawFonts(ext: string[]) {
-	return {
-		name: "vite-plugin-raw-fonts",
-		// @ts-expect-error:next-line
-		transform(_, id) {
-			if (ext.some((e) => id.endsWith(e))) {
-				const buffer = fs.readFileSync(id);
-				return {
-					code: `export default ${JSON.stringify(buffer)}`,
-					map: null,
-				};
-			}
-		},
-	};
+  return {
+    name: "vite-plugin-raw-fonts",
+    // @ts-expect-error:next-line
+    transform(_, id) {
+      if (ext.some((e) => id.endsWith(e))) {
+        const buffer = fs.readFileSync(id);
+        return {
+          code: `export default ${JSON.stringify(buffer)}`,
+          map: null,
+        };
+      }
+    },
+  };
 }
 
 function serveSrcImagesDev(): PluginOption {
-	const contentTypeFor = (filePath: string) => {
-		const ext = path.extname(filePath).toLowerCase();
-		switch (ext) {
-			case ".jpg":
-			case ".jpeg":
-				return "image/jpeg";
-			case ".png":
-				return "image/png";
-			case ".svg":
-				return "image/svg+xml";
-			case ".webp":
-				return "image/webp";
-			default:
-				return "application/octet-stream";
-		}
-	};
+  const contentTypeFor = (filePath: string) => {
+    const ext = path.extname(filePath).toLowerCase();
+    switch (ext) {
+      case ".jpg":
+      case ".jpeg":
+        return "image/jpeg";
+      case ".png":
+        return "image/png";
+      case ".svg":
+        return "image/svg+xml";
+      case ".webp":
+        return "image/webp";
+      default:
+        return "application/octet-stream";
+    }
+  };
 
-	const rewriteLegacy = (url: string) => {
-		let p = url;
-		if (p.startsWith("/@/")) {
-			p = p.replace(/^\/@/, "/src");
-		}
-		// Map old collection-based buckets to use-based buckets.
-		if (p.startsWith("/src/assets/images/people/")) {
-			const file = path.posix.basename(p).toLowerCase();
-			const bucket = file.includes("hero") ? "heroes" : "avatars";
-			return p.replace("/src/assets/images/people/", `/src/assets/images/${bucket}/`);
-		}
-		if (p.startsWith("/src/assets/images/organizations/")) {
-			const file = path.posix.basename(p).toLowerCase();
-			const bucket = file.includes("hero") ? "heroes" : "logos";
-			return p.replace("/src/assets/images/organizations/", `/src/assets/images/${bucket}/`);
-		}
-		if (p.startsWith("/src/assets/images/events/")) {
-			return p.replace("/src/assets/images/events/", "/src/assets/images/logos/");
-		}
-		if (p.startsWith("/src/assets/images/hardware/")) {
-			const file = path.posix.basename(p).toLowerCase();
-			const bucket = file.includes("hero") ? "heroes" : "logos";
-			return p.replace("/src/assets/images/hardware/", `/src/assets/images/${bucket}/`);
-		}
-		if (p.startsWith("/src/assets/images/software/")) {
-			const file = path.posix.basename(p).toLowerCase();
-			const bucket = file.includes("hero") || file.includes("cover") ? "heroes" : "logos";
-			return p.replace("/src/assets/images/software/", `/src/assets/images/${bucket}/`);
-		}
-		return p;
-	};
+  const rewriteLegacy = (url: string) => {
+    let p = url;
+    if (p.startsWith("/@/")) {
+      p = p.replace(/^\/@/, "/src");
+    }
+    // Map old collection-based buckets to use-based buckets.
+    if (p.startsWith("/src/assets/images/people/")) {
+      const file = path.posix.basename(p).toLowerCase();
+      const bucket = file.includes("hero") ? "heroes" : "avatars";
+      return p.replace(
+        "/src/assets/images/people/",
+        `/src/assets/images/${bucket}/`,
+      );
+    }
+    if (p.startsWith("/src/assets/images/organizations/")) {
+      const file = path.posix.basename(p).toLowerCase();
+      const bucket = file.includes("hero") ? "heroes" : "logos";
+      return p.replace(
+        "/src/assets/images/organizations/",
+        `/src/assets/images/${bucket}/`,
+      );
+    }
+    if (p.startsWith("/src/assets/images/events/")) {
+      return p.replace(
+        "/src/assets/images/events/",
+        "/src/assets/images/logos/",
+      );
+    }
+    if (p.startsWith("/src/assets/images/hardware/")) {
+      const file = path.posix.basename(p).toLowerCase();
+      const bucket = file.includes("hero") ? "heroes" : "logos";
+      return p.replace(
+        "/src/assets/images/hardware/",
+        `/src/assets/images/${bucket}/`,
+      );
+    }
+    if (p.startsWith("/src/assets/images/software/")) {
+      const file = path.posix.basename(p).toLowerCase();
+      const bucket =
+        file.includes("hero") || file.includes("cover") ? "heroes" : "logos";
+      return p.replace(
+        "/src/assets/images/software/",
+        `/src/assets/images/${bucket}/`,
+      );
+    }
+    return p;
+  };
 
-	return {
-		name: "serve-src-images-dev",
-		apply: "serve" as const,
-		configureServer(server: import("vite").ViteDevServer) {
-			server.middlewares.use((req, res, next) => {
-				const rawUrl = (req.url || "").split("?")[0] || "";
-				const normalized = rewriteLegacy(rawUrl);
-				if (!normalized.startsWith("/src/assets/images/")) return next();
-				const filePath = path.resolve(normalized.slice(1)); // strip leading slash
-				if (!fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()) {
-					res.statusCode = 404;
-					res.end();
-					return;
-				}
-				res.setHeader("Content-Type", contentTypeFor(filePath));
-				fs.createReadStream(filePath).pipe(res);
-			});
-		},
-	};
+  return {
+    name: "serve-src-images-dev",
+    apply: "serve" as const,
+    configureServer(server: import("vite").ViteDevServer) {
+      server.middlewares.use((req, res, next) => {
+        const rawUrl = (req.url || "").split("?")[0] || "";
+        const normalized = rewriteLegacy(rawUrl);
+        if (!normalized.startsWith("/src/assets/images/")) return next();
+        const filePath = path.resolve(normalized.slice(1)); // strip leading slash
+        if (!fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()) {
+          res.statusCode = 404;
+          res.end();
+          return;
+        }
+        res.setHeader("Content-Type", contentTypeFor(filePath));
+        fs.createReadStream(filePath).pipe(res);
+      });
+    },
+  };
 }
