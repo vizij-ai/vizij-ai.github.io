@@ -39,6 +39,16 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.SEMIO_PACKAGES_READ_TOKEN }}
 
+      - name: Verify shared Tailwind wiring
+        if: github.event.action != 'closed'
+        run: npm run verify:shared-tailwind
+
+      - name: Run TypeScript typecheck
+        if: github.event.action != 'closed'
+        run: |
+          npx astro sync
+          npx tsc --noEmit --pretty false
+
       - name: Debug PR Preview Path
         if: github.event.action != 'closed'
         run: echo "PR_PREVIEW_PATH will be set to:/pr-preview/pr-${{ github.event.number }}/"
@@ -51,10 +61,40 @@ jobs:
           echo "Building with PR_PREVIEW_PATH: $PR_PREVIEW_PATH"
           npm run build
 
-      - name: Deploy PR Preview
+      - name: Deploy PR Preview (attempt 1)
+        id: preview_deploy_attempt_1
+        continue-on-error: true
         uses: rossjrw/pr-preview-action@v1
         with:
           source-dir: ./dist/
           preview-branch: gh-pages
           umbrella-dir: pr-preview
           action: auto
+
+      - name: Deploy PR Preview (attempt 2)
+        id: preview_deploy_attempt_2
+        if: steps.preview_deploy_attempt_1.outcome == 'failure'
+        continue-on-error: true
+        uses: rossjrw/pr-preview-action@v1
+        with:
+          source-dir: ./dist/
+          preview-branch: gh-pages
+          umbrella-dir: pr-preview
+          action: auto
+
+      - name: Deploy PR Preview (attempt 3)
+        id: preview_deploy_attempt_3
+        if: steps.preview_deploy_attempt_1.outcome == 'failure' && steps.preview_deploy_attempt_2.outcome == 'failure'
+        continue-on-error: true
+        uses: rossjrw/pr-preview-action@v1
+        with:
+          source-dir: ./dist/
+          preview-branch: gh-pages
+          umbrella-dir: pr-preview
+          action: auto
+
+      - name: Fail if all preview deploy attempts failed
+        if: steps.preview_deploy_attempt_1.outcome == 'failure' && steps.preview_deploy_attempt_2.outcome == 'failure' && steps.preview_deploy_attempt_3.outcome == 'failure'
+        run: |
+          echo "All PR preview deploy attempts failed."
+          exit 1

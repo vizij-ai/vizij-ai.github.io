@@ -1,20 +1,21 @@
 ---
-// NOTE: `client:only` islands do not reliably emit CSS in Astro production builds.
-// We link the showcase stylesheet explicitly until the page adopts shared site styles.
-import showcaseStylesUrl from "@/react-pages/showcase/styles.css?url";
-import ShowcasePage from "@/react-pages/showcase/ShowcasePage";
-import SiteLayout from "@/layouts/SiteLayout";
+import SiteShell from "@/layouts/SiteShell.astro";
+import DemosPage from "@/react-pages/demos/DemosPage";
+import { siteConfig } from "@/site.config";
 
-const metadata = {
+const meta = {
   title: "Vizij Demos",
-  description: "Interactive Vizij demos.",
+  description:
+    "Try Vizij's interactive runtime demos — rig controls, expressions, gaze, voice, and more for open source rendered robot faces.",
 };
 ---
 
-<head>
-  <link rel="stylesheet" href={showcaseStylesUrl} />
-</head>
-
-<SiteLayout metadata={metadata}>
-  <ShowcasePage client:only="react" />
-</SiteLayout>
+    <SiteShell
+  title={meta.title}
+  description={meta.description}
+  ogImage="/og/demos.png"
+>
+      <DemosPage client:only="react" />
+    </SiteShell>
+  </body>
+</html>

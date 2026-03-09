@@ -1,169 +1,169 @@
 /* Gilroy Thin */
 @font-face {
-  font-family: "Gilroy";
-  src: url("./Gilroy-Thin.otf") format("opentype");
-  font-weight: 100;
-  font-style: normal;
-  font-display: swap;
+	font-family: "Gilroy";
+	src: url("./Gilroy-Thin.otf") format("opentype");
+	font-weight: 100;
+	font-style: normal;
+	font-display: swap;
 }
 
 @font-face {
-  font-family: "Gilroy";
-  src: url("./Gilroy-ThinItalic.otf") format("opentype");
-  font-weight: 100;
-  font-style: italic;
-  font-display: swap;
+	font-family: "Gilroy";
+	src: url("./Gilroy-ThinItalic.otf") format("opentype");
+	font-weight: 100;
+	font-style: italic;
+	font-display: swap;
 }
 
 /* Gilroy UltraLight */
 @font-face {
-  font-family: "Gilroy";
-  src: url("./Gilroy-UltraLight.otf") format("opentype");
-  font-weight: 200;
-  font-style: normal;
-  font-display: swap;
+	font-family: "Gilroy";
+	src: url("./Gilroy-UltraLight.otf") format("opentype");
+	font-weight: 200;
+	font-style: normal;
+	font-display: swap;
 }
 
 @font-face {
-  font-family: "Gilroy";
-  src: url("./Gilroy-UltraLightItalic.otf") format("opentype");
-  font-weight: 200;
-  font-style: italic;
-  font-display: swap;
+	font-family: "Gilroy";
+	src: url("./Gilroy-UltraLightItalic.otf") format("opentype");
+	font-weight: 200;
+	font-style: italic;
+	font-display: swap;
 }
 
 /* Gilroy Light */
 @font-face {
-  font-family: "Gilroy";
-  src: url("./Gilroy-Light.otf") format("opentype");
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
+	font-family: "Gilroy";
+	src: url("./Gilroy-Light.otf") format("opentype");
+	font-weight: 300;
+	font-style: normal;
+	font-display: swap;
 }
 
 @font-face {
-  font-family: "Gilroy";
-  src: url("./Gilroy-LightItalic.otf") format("opentype");
-  font-weight: 300;
-  font-style: italic;
-  font-display: swap;
+	font-family: "Gilroy";
+	src: url("./Gilroy-LightItalic.otf") format("opentype");
+	font-weight: 300;
+	font-style: italic;
+	font-display: swap;
 }
 
 /* Gilroy Regular */
 @font-face {
-  font-family: "Gilroy";
-  src: url("./Gilroy-Regular.otf") format("opentype");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
+	font-family: "Gilroy";
+	src: url("./Gilroy-Regular.otf") format("opentype");
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
 }
 
 @font-face {
-  font-family: "Gilroy";
-  src: url("./Gilroy-RegularItalic.otf") format("opentype");
-  font-weight: 400;
-  font-style: italic;
-  font-display: swap;
+	font-family: "Gilroy";
+	src: url("./Gilroy-RegularItalic.otf") format("opentype");
+	font-weight: 400;
+	font-style: italic;
+	font-display: swap;
 }
 
 /* Gilroy Medium */
 @font-face {
-  font-family: "Gilroy";
-  src: url("./Gilroy-Medium.otf") format("opentype");
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
+	font-family: "Gilroy";
+	src: url("./Gilroy-Medium.otf") format("opentype");
+	font-weight: 500;
+	font-style: normal;
+	font-display: swap;
 }
 
 @font-face {
-  font-family: "Gilroy";
-  src: url("./Gilroy-MediumItalic.otf") format("opentype");
-  font-weight: 500;
-  font-style: italic;
-  font-display: swap;
+	font-family: "Gilroy";
+	src: url("./Gilroy-MediumItalic.otf") format("opentype");
+	font-weight: 500;
+	font-style: italic;
+	font-display: swap;
 }
 
 /* Gilroy SemiBold */
 @font-face {
-  font-family: "Gilroy";
-  src: url("./Gilroy-SemiBold.otf") format("opentype");
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
+	font-family: "Gilroy";
+	src: url("./Gilroy-SemiBold.otf") format("opentype");
+	font-weight: 600;
+	font-style: normal;
+	font-display: swap;
 }
 
 @font-face {
-  font-family: "Gilroy";
-  src: url("./Gilroy-SemiBoldItalic.otf") format("opentype");
-  font-weight: 600;
-  font-style: italic;
-  font-display: swap;
+	font-family: "Gilroy";
+	src: url("./Gilroy-SemiBoldItalic.otf") format("opentype");
+	font-weight: 600;
+	font-style: italic;
+	font-display: swap;
 }
 
 /* Gilroy Bold */
 @font-face {
-  font-family: "Gilroy";
-  src: url("./Gilroy-Bold.otf") format("opentype");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
+	font-family: "Gilroy";
+	src: url("./Gilroy-Bold.otf") format("opentype");
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
 }
 
 @font-face {
-  font-family: "Gilroy";
-  src: url("./Gilroy-BoldItalic.otf") format("opentype");
-  font-weight: 700;
-  font-style: italic;
-  font-display: swap;
+	font-family: "Gilroy";
+	src: url("./Gilroy-BoldItalic.otf") format("opentype");
+	font-weight: 700;
+	font-style: italic;
+	font-display: swap;
 }
 
 /* Gilroy ExtraBold */
 @font-face {
-  font-family: "Gilroy";
-  src: url("./Gilroy-ExtraBold.otf") format("opentype");
-  font-weight: 800;
-  font-style: normal;
-  font-display: swap;
+	font-family: "Gilroy";
+	src: url("./Gilroy-ExtraBold.otf") format("opentype");
+	font-weight: 800;
+	font-style: normal;
+	font-display: swap;
 }
 
 @font-face {
-  font-family: "Gilroy";
-  src: url("./Gilroy-ExtraBoldItalic.otf") format("opentype");
-  font-weight: 800;
-  font-style: italic;
-  font-display: swap;
+	font-family: "Gilroy";
+	src: url("./Gilroy-ExtraBoldItalic.otf") format("opentype");
+	font-weight: 800;
+	font-style: italic;
+	font-display: swap;
 }
 
 /* Gilroy Heavy */
 @font-face {
-  font-family: "Gilroy";
-  src: url("./Gilroy-Heavy.otf") format("opentype");
-  font-weight: 900;
-  font-style: normal;
-  font-display: swap;
+	font-family: "Gilroy";
+	src: url("./Gilroy-Heavy.otf") format("opentype");
+	font-weight: 900;
+	font-style: normal;
+	font-display: swap;
 }
 
 @font-face {
-  font-family: "Gilroy";
-  src: url("./Gilroy-HeavyItalic.otf") format("opentype");
-  font-weight: 900;
-  font-style: italic;
-  font-display: swap;
+	font-family: "Gilroy";
+	src: url("./Gilroy-HeavyItalic.otf") format("opentype");
+	font-weight: 900;
+	font-style: italic;
+	font-display: swap;
 }
 
 /* Gilroy Black */
 @font-face {
-  font-family: "Gilroy";
-  src: url("./Gilroy-Black.otf") format("opentype");
-  font-weight: 950;
-  font-style: normal;
-  font-display: swap;
+	font-family: "Gilroy";
+	src: url("./Gilroy-Black.otf") format("opentype");
+	font-weight: 950;
+	font-style: normal;
+	font-display: swap;
 }
 
 @font-face {
-  font-family: "Gilroy";
-  src: url("./Gilroy-BlackItalic.otf") format("opentype");
-  font-weight: 950;
-  font-style: italic;
-  font-display: swap;
+	font-family: "Gilroy";
+	src: url("./Gilroy-BlackItalic.otf") format("opentype");
+	font-weight: 950;
+	font-style: italic;
+	font-display: swap;
 }

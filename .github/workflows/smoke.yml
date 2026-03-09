@@ -56,6 +56,16 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.SEMIO_PACKAGES_READ_TOKEN }}
 
+      - name: Verify shared Tailwind wiring
+        working-directory: site
+        run: npm run verify:shared-tailwind
+
+      - name: Run TypeScript typecheck
+        working-directory: site
+        run: |
+          npx astro sync
+          npx tsc --noEmit --pretty false
+
       - name: Resolve hub owner
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.enable_hub_sync }}
         id: hub_owner
@@ -85,10 +95,6 @@ jobs:
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.enable_hub_sync }}
         working-directory: site
         run: npm run content:sync:hub
-
-      - name: Generate CMS config
-        working-directory: site
-        run: npm run cms:config
 
       - name: Build site
         working-directory: site

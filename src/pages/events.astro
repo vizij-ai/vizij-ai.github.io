@@ -1,9 +1,8 @@
 ---
-import BaseHead from "@/components/BaseHead.astro";
-import SiteShell from "@/layouts/SiteShell.astro";
-import EventsPage from "@/react-pages/events/EventsPage";
 import EventsSections from "@/components/events/EventsSections";
 import { getAllEvents } from "@/data/events";
+import SiteShell from "@/layouts/SiteShell.astro";
+import EventsPage from "@/react-pages/events/EventsPage";
 import { resolveImageLike } from "@/utils/images";
 
 const meta = {
@@ -44,19 +43,11 @@ const serializeEvents = allEvents.map((event) => ({
 const eventsPayload = JSON.stringify(serializeEvents);
 ---
 
-<html
-  class="overflow-x-hidden grid scroll-pt-[72px] scroll-smooth font-sans text-text text-xl md:text-base antialiased"
-  lang="en"
+    <SiteShell
+  title={meta.title}
+  description={meta.description}
+  ogImage={ogImage}
 >
-  <head>
-    <BaseHead
-      title={meta.title}
-      description={meta.description}
-      ogImage={ogImage}
-    />
-  </head>
-  <body class="relative min-h-screen w-full bg-surface">
-    <SiteShell noPaddingTop>
       <EventsPage>
         {
           serializeEvents.length > 0 && (
@@ -66,6 +57,7 @@ const eventsPayload = JSON.stringify(serializeEvents);
                 eventsPayload={eventsPayload}
                 initialFeaturedCount={6}
                 initialPastCount={6}
+                baseUrl={import.meta.env.BASE_URL}
               />
             </div>
           )

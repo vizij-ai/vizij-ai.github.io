@@ -1,5 +1,6 @@
 ---
 import { WEBMENTION_PINGBACK, WEBMENTION_URL } from "astro:env/client";
+import { resolveOgImageUrl } from "@semio-community/ecosystem-site-core";
 import { siteConfig } from "@/site.config";
 import type { SiteMeta } from "@/types";
 import { url } from "@/utils/url";
@@ -12,10 +13,7 @@ const { articleDate, description, ogImage, title } = Astro.props;
 const titleSeparator = "•";
 const siteTitle = `${title} ${titleSeparator} ${siteConfig.title}`;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-const socialImageURL = new URL(
-  ogImage ? ogImage : "/social-card.png",
-  Astro.url,
-).href;
+const socialImageURL = resolveOgImageUrl(ogImage, Astro.site?.href ?? "/");
 ---
 
 <meta charset="utf-8" />

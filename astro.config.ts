@@ -8,8 +8,8 @@ import icon from "astro-icon";
 import robotsTxt from "astro-robots-txt";
 import webmanifest from "astro-webmanifest";
 import { defineConfig, envField } from "astro/config";
-import { siteConfig } from "./src/site.config";
 import type { PluginOption } from "vite";
+import { siteConfig } from "./src/site.config";
 
 // Remark plugins
 import remarkDirective from "remark-directive"; /* handle ::: directives as nodes */
@@ -20,11 +20,11 @@ import { remarkReadingTime } from "./src/plugins/remark-reading-time";
 import rehypeExternalLinks from "rehype-external-links";
 import rehypeUnwrapImages from "rehype-unwrap-images";
 
-import rehypePrettyCode from "rehype-pretty-code";
 import {
   transformerMetaHighlight,
   transformerNotationDiff,
 } from "@shikijs/transformers";
+import rehypePrettyCode from "rehype-pretty-code";
 
 import tailwindcss from "@tailwindcss/vite";
 
@@ -117,11 +117,41 @@ export default defineConfig({
   },
   // https://docs.astro.build/en/guides/prefetch/
   prefetch: true,
-  // ! Please remember to replace the following site property with your own domain
-  site: "https://semio.community/",
+  site: "https://vizij.ai/",
   // Add dynamic base path for PR previews
   base: process.env.PR_PREVIEW_PATH || "/",
   vite: {
+    resolve: {
+      // Deduplicate React across the client bundle and, together with noExternal
+      // above, across the SSR bundle — ensuring a single React instance even when
+      // ecosystem-site-core is npm-linked and has its own nested node_modules/react.
+      dedupe: ["react", "react-dom"],
+    },
+    ssr: {
+      // Process ecosystem-site-core (and all packages that live inside its
+      // node_modules) through Vite's SSR bundler rather than letting Node load
+      // them natively. This matters for two reasons:
+      //   1. ecosystem-site-core uses bare JSON imports (@iconify-json/*) that
+      //      require Vite's transform pipeline to handle correctly.
+      //   2. When ecosystem-site-core is npm-linked, its node_modules contains
+      //      its own copies of react, @radix-ui/react-*, motion, etc. If Node
+      //      loads those natively it finds the linked package's copies before
+      //      the project root's copies, causing the "Invalid hook call" / duplicate
+      //      React error. By marking them noExternal, Vite bundles them and
+      //      resolve.dedupe below enforces a single React instance across the
+      //      whole graph.
+      noExternal: [
+        "@semio-community/ecosystem-site-core",
+        /^@radix-ui\/react-/,
+        /^react-remove-scroll/,
+        /^react-style-singleton/,
+        /^react-remove-scroll-bar/,
+        /^use-callback-ref/,
+        /^use-sidecar/,
+        /^motion(\/.*)?$/,
+        /^framer-motion(\/.*)?$/,
+      ],
+    },
     build: {
       sourcemap: true, // Source maps generation
     },
@@ -134,6 +164,7 @@ export default defineConfig({
         "@vizij/animation-wasm",
       ],
     },
+    // biome-ignore lint/suspicious/noExplicitAny: tailwindcss vite plugin type is not assignable without cast
     plugins: [
       rawFonts([".ttf", "otf", ".woff"]),
       tailwindcss() as any,

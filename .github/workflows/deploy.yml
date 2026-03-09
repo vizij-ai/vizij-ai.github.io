@@ -34,13 +34,51 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.SEMIO_PACKAGES_READ_TOKEN }}
 
-      - name: Build site + admin + search
+      - name: Verify shared Tailwind wiring
+        run: npm run verify:shared-tailwind
+
+      - name: Run TypeScript typecheck
+        run: |
+          npx astro sync
+          npx tsc --noEmit --pretty false
+
+      - name: Build site + search
         run: npm run build
 
-      - name: Deploy to gh-pages branch
+      - name: Deploy to gh-pages branch (attempt 1)
+        id: deploy_attempt_1
+        continue-on-error: true
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
           publish_dir: ./dist
           keep_files: true
+
+      - name: Deploy to gh-pages branch (attempt 2)
+        id: deploy_attempt_2
+        if: steps.deploy_attempt_1.outcome == 'failure'
+        continue-on-error: true
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./dist
+          keep_files: true
+
+      - name: Deploy to gh-pages branch (attempt 3)
+        id: deploy_attempt_3
+        if: steps.deploy_attempt_1.outcome == 'failure' && steps.deploy_attempt_2.outcome == 'failure'
+        continue-on-error: true
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./dist
+          keep_files: true
+
+      - name: Fail if all deploy attempts failed
+        if: steps.deploy_attempt_1.outcome == 'failure' && steps.deploy_attempt_2.outcome == 'failure' && steps.deploy_attempt_3.outcome == 'failure'
+        run: |
+          echo "All deploy attempts to gh-pages failed."
+          exit 1

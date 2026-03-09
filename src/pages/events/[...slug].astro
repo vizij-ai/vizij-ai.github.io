@@ -1,24 +1,26 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
-import BaseHead from "@/components/BaseHead.astro";
-import SiteShell from "@/layouts/SiteShell.astro";
-import {
-  BaseDetailLayout,
-  DetailHero,
-  SpecificationsList,
-  ContentSection,
-} from "@/components/detail";
-import { RelatedItemsGrid } from "@/components/detail/RelatedItemsGrid";
+import ActionsSection from "@/components/detail/ActionsSection";
 import LinkSection from "@/components/detail/LinkSection";
 import MDXContent from "@/components/mdx/MDXContent.astro";
 import { getAllEvents } from "@/data/events";
-import BasicChip from "@/components/ui/BasicChip";
-import { resolveLogoAsset } from "@/utils/images";
-import { getEventPreviewDescriptionText } from "@/utils/events";
-import { parseDateLocal } from "@/utils/date";
-import ActionsSection from "@/components/detail/ActionsSection";
+import SiteShell from "@/layouts/SiteShell.astro";
 import { isDraftVisible } from "@/utils/drafts";
+import {
+  BaseDetailLayout,
+  BasicChip,
+  ContentSection,
+  DetailHero,
+  type RelatedItem,
+  RelatedItemsGrid,
+  SpecificationsList,
+  getEventPreviewDescription,
+  getFormattedDateRanges,
+  getLocationString,
+  parseDateLocal,
+  resolveLogoAsset,
+} from "@semio-community/ecosystem-site-core";
 
 export async function getStaticPaths() {
   const events = await getCollection("events", ({ data }) => {
@@ -35,10 +37,7 @@ const { entry } = Astro.props as { entry: CollectionEntry<"events"> };
 const { data } = entry;
 
 // Get related events (by type or topics)
-async function getRelatedEvents(
-  event: CollectionEntry<"events">,
-  limit: number = 3,
-) {
+async function getRelatedEvents(event: CollectionEntry<"events">, limit = 3) {
   const allEvents = await getAllEvents();
 
   // Filter out the current event and past events (unless current is also past)
@@ -171,7 +170,7 @@ badges.push({
 
 const eventLinks = { ...(data.links || {}) };
 if (eventStatus === "past") {
-  delete eventLinks.registration;
+  eventLinks.registration = undefined;
 }
 
 // Format dates for display
@@ -250,7 +249,13 @@ const roleEntries = (data.roles || []).map((role) => ({
   label: formatRoleLabel(role),
 }));
 
-const descriptionText = getEventPreviewDescriptionText(data);
+const locationString = getLocationString(data.location);
+const dateString = getFormattedDateRanges(startDate, endDate);
+const descriptionText = getEventPreviewDescription(
+  dateString,
+  data.description,
+  locationString,
+);
 const featuredState = data.featured
   ? eventStatus === "past"
     ? "previously-featured"
@@ -258,19 +263,12 @@ const featuredState = data.featured
   : undefined;
 ---
 
-<html
-  class="overflow-x-hidden grid scroll-pt-18 scroll-smooth font-sans text-text text-xl md:text-base antialiased"
-  lang="en"
+    <SiteShell
+  title={meta.title}
+  description={meta.description}
+  ogImage={ogImage}
+  containerClassName="max-w-5xl"
 >
-  <head>
-    <BaseHead
-      title={meta.title}
-      description={meta.description}
-      ogImage={ogImage}
-    />
-  </head>
-  <body class="relative min-h-screen w-full bg-surface">
-    <SiteShell noPaddingTop containerClassName="max-w-5xl">
       <BaseDetailLayout>
         <Fragment slot="hero">
           <DetailHero
@@ -327,7 +325,7 @@ const featuredState = data.featured
             roleEntries.length > 0 && (
               <div class="bg-linear-to-br from-surface-lighter to-surface rounded-xl border border-accent-one/20 p-6">
                 <h3 class="text-xs font-semibold mb-3 text-accent-base uppercase tracking-wider">
-                  SEMIO COMMUNITY ROLES
+                  VIZIJ ROLES
                 </h3>
                 <div class="flex flex-wrap gap-2">
                   {roleEntries.map((role) => (
@@ -378,35 +376,10 @@ const featuredState = data.featured
                 client:load
                 title="Related Events"
                 subtitle="Similar upcoming and past events"
-                items={
-                  relatedEvents.map((event) => ({
-                    id: event.id,
-                    data: {
-                      name: event.data.name,
-                      title: undefined,
-                      displayName: event.data.displayName,
-                      description: event.data.description,
-                      abstract: undefined,
-                      status: undefined,
-                      type: event.data.type,
-                      category: undefined,
-                      featured: event.data.featured,
-                      images: event.data.images,
-                      avatar: undefined,
-                      logo: undefined,
-                      thumbnail: undefined,
-                      banner: event.data.images?.hero,
-                      links: event.data.links,
-                      startDate: event.data.startDate,
-                      endDate: event.data.endDate,
-                      shortDescription: `${
-                        typeLabels[event.data.type] || event.data.type
-                      } • ${event.data.location.city}`,
-                    },
-                  })) as any
-                }
+                items={relatedEvents as RelatedItem[]}
                 itemType="events"
                 columns={3}
+                baseUrl={import.meta.env.BASE_URL}
               />
             )
           }

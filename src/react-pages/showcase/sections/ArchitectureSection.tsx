@@ -2,50 +2,44 @@ import { SectionIntro } from "@/components/demos/SectionIntro";
 import type { SectionCopy } from "./SectionCopy";
 
 const LAYERS = [
-  {
-    icon: "🧠",
-    title: "Core libraries",
-    description:
-      "Rust animation, node graph, and behavior crates that compile to WASM.",
-  },
-  {
-    icon: "🌐",
-    title: "Web tooling",
-    description: "React-based Studio, Rig Editor, Renderer, and Graph UI.",
-  },
-  {
-    icon: "🤝",
-    title: "Bridges",
-    description:
-      "ROS, WebSocket adapters, or custom implementations for live deployments.",
-  },
+	{
+		icon: "🧠",
+		title: "Core libraries",
+		description: "Rust animation, node graph, and behavior crates that compile to WASM.",
+	},
+	{
+		icon: "🌐",
+		title: "Web tooling",
+		description: "React-based Studio, Rig Editor, Renderer, and Graph UI.",
+	},
+	{
+		icon: "🤝",
+		title: "Bridges",
+		description: "ROS, WebSocket adapters, or custom implementations for live deployments.",
+	},
 ];
 
 export function ArchitectureSection({ copy }: { copy?: SectionCopy }) {
-  const eyebrow = copy?.eyebrow ?? "Architecture";
-  const title = copy?.title ?? "A multi-layer stack for rendered robot faces.";
-  const description =
-    copy?.description ??
-    "Swap individual modules without rewriting the entire infrastructure. Vizij stays modular end to end.";
+	const eyebrow = copy?.eyebrow ?? "Architecture";
+	const title = copy?.title ?? "A multi-layer stack for rendered robot faces.";
+	const description =
+		copy?.description ??
+		"Swap individual modules without rewriting the entire infrastructure. Vizij stays modular end to end.";
 
-  return (
-    <section id="architecture" className="showcase-section">
-      <SectionIntro
-        eyebrow={eyebrow}
-        title={title}
-        description={description}
-      />
-      <div className="architecture-grid">
-        {LAYERS.map((layer) => (
-          <article className="architecture-card" key={layer.title}>
-            <span className="architecture-card__icon" aria-hidden>
-              {layer.icon}
-            </span>
-            <p className="architecture-card__title">{layer.title}</p>
-            <p className="architecture-card__body">{layer.description}</p>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
+	return (
+		<section id="architecture" className="showcase-section">
+			<SectionIntro eyebrow={eyebrow} title={title} description={description} />
+			<div className="architecture-grid">
+				{LAYERS.map((layer) => (
+					<article className="architecture-card" key={layer.title}>
+						<span className="architecture-card__icon" aria-hidden>
+							{layer.icon}
+						</span>
+						<p className="architecture-card__title">{layer.title}</p>
+						<p className="architecture-card__body">{layer.description}</p>
+					</article>
+				))}
+			</div>
+		</section>
+	);
 }

@@ -1,14 +1,14 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { getCollection, getEntry } from "astro:content";
-import BaseHead from "@/components/BaseHead.astro";
 import SiteShell from "@/layouts/SiteShell.astro";
 import { getPeopleByExpertise, getPeopleByOrganization } from "@/data/people";
 import { getAllResearch } from "@/data/research";
 import { getAllHardware } from "@/data/hardware";
 import { getAllSoftware } from "@/data/software";
-import { PersonDetail } from "@/components/detail/views/PersonDetail";
+import { PersonDetail } from "@semio-community/ecosystem-site-core";
 import { isDraftVisible } from "@/utils/drafts";
+import { toOrganizationCardData } from "@/utils/card-mappers";
 
 export async function getStaticPaths() {
   const people = await getCollection("people", ({ data }) => {
@@ -266,32 +266,22 @@ if (data.links?.mastodon) {
   });
 }---
 
-<html
-  class="overflow-x-hidden grid scroll-pt-[72px] scroll-smooth font-sans text-text text-xl md:text-base antialiased"
-  lang="en"
+    <SiteShell
+  title={meta.title}
+  description={meta.description}
+  ogImage={ogImage}
+  containerClassName="max-w-5xl"
 >
-  <head>
-    <BaseHead
-      title={meta.title}
-      description={meta.description}
-      ogImage={ogImage}
-    />
-  </head>
-  <body class="relative min-h-screen w-full bg-surface">
-    <SiteShell noPaddingTop containerClassName="max-w-5xl">
       <PersonDetail
         data={data}
         fullName={fullName}
         badges={badges}
-        links={data.links}
-        bio={data.bio}
-        expertise={data.expertise || []}
         currentAffiliations={currentAffiliations.map((aff) => ({
           organizationId: aff.organizationId,
           organizationName:
             aff.organization?.data?.shortName || aff.organization?.data?.name,
           organizationImages: aff.organization?.data?.images,
-          organizationData: aff.organization?.data,
+          organizationData: aff.organization?.data ? toOrganizationCardData(aff.organization.data) : undefined,
           role: aff.role,
           department: aff.department,
         }))}
@@ -300,7 +290,7 @@ if (data.links?.mastodon) {
           organizationName:
             aff.organization?.data?.shortName || aff.organization?.data?.name,
           organizationImages: aff.organization?.data?.images,
-          organizationData: aff.organization?.data,
+          organizationData: aff.organization?.data ? toOrganizationCardData(aff.organization.data) : undefined,
           role: aff.role,
           department: aff.department,
         }))}
@@ -311,6 +301,7 @@ if (data.links?.mastodon) {
           events: relatedContent.events,
         }}
         relatedPeople={relatedPeople}
+        baseUrl={import.meta.env.BASE_URL}
       />
     </SiteShell>
   </body>

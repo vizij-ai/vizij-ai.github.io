@@ -1,5 +1,4 @@
 ---
-import BaseHead from "@/components/BaseHead.astro";
 import SiteShell from "@/layouts/SiteShell.astro";
 import HomePage from "@/react-pages/home/HomePage";
 
@@ -8,14 +7,14 @@ import "../assets/fonts/Gilroy.css";
 
 import { siteConfig } from "@/site.config";
 
-import { getAllHardware } from "@/data/hardware";
-import { getAllSoftware } from "@/data/software";
-import { getAllResearch } from "@/data/research";
 import {
   getCurrentEvents,
   getFeaturedEvents,
   getUpcomingEvents,
 } from "@/data/events";
+import { getAllHardware } from "@/data/hardware";
+import { getAllResearch } from "@/data/research";
+import { getAllSoftware } from "@/data/software";
 
 // Load data on the server (Astro)
 const allHardware = await getAllHardware();
@@ -35,20 +34,16 @@ const featuredEventCount = [
   ...featuredOnly.filter((f) => f.data.startDate > now),
 ].length;
 
-const pageTitle = "Home";
+const pageTitle = siteConfig.title;
 const description = siteConfig.description;
 const ogImage = "/og/home.png";
 ---
 
-<html
-  class="overflow-x-hidden grid scroll-pt-[72px] scroll-smooth font-sans text-text text-xl md:text-base antialiased"
-  lang={siteConfig.lang}
+    <SiteShell
+  title={pageTitle}
+  description={description}
+  ogImage={ogImage}
 >
-  <head>
-    <BaseHead title={pageTitle} description={description} ogImage={ogImage} />
-  </head>
-  <body class="relative min-h-screen w-full bg-surface">
-    <SiteShell noPaddingTop>
       <HomePage
         projectCount={projectCount}
         featuredEventCount={featuredEventCount}

@@ -1,22 +1,22 @@
 {
-  "extends": "astro/tsconfigs/strictest",
-  "compilerOptions": {
-    "exactOptionalPropertyTypes": false,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "strictBindCallApply": true,
-    "strictPropertyInitialization": true,
-    "noImplicitAny": true,
-    "noImplicitThis": true,
-    "baseUrl": ".",
-    "resolveJsonModule": true,
-    "lib": ["es2022", "dom", "dom.iterable"],
-    "paths": {
-      "@/*": ["src/*"]
-    }
-  },
-  "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["node_modules", "**/node_modules/*", ".vscode", "dist"]
+	"extends": "astro/tsconfigs/strictest",
+	"compilerOptions": {
+		"exactOptionalPropertyTypes": false,
+		"noUnusedLocals": false,
+		"noUnusedParameters": false,
+		"strictNullChecks": true,
+		"strictFunctionTypes": true,
+		"strictBindCallApply": true,
+		"strictPropertyInitialization": true,
+		"noImplicitAny": true,
+		"noImplicitThis": true,
+		"baseUrl": ".",
+		"resolveJsonModule": true,
+		"lib": ["es2022", "dom", "dom.iterable"],
+		"paths": {
+			"@/*": ["src/*"]
+		}
+	},
+	"include": [".astro/types.d.ts", "**/*"],
+	"exclude": ["node_modules", "**/node_modules/*", ".vscode", "dist"]
 }

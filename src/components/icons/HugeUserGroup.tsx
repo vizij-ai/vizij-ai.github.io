@@ -1,6 +1,6 @@
-import React from "react";
-import { HugeiconsIcon } from "@hugeicons/react";
 import { UserGroupIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+import type React from "react";
 
 /**
  * HugeUserGroup
@@ -18,27 +18,27 @@ import { UserGroupIcon } from "@hugeicons/core-free-icons";
  * - Defaults to aria-hidden for decorative use; pass role/title if used as a semantic icon.
  */
 export type HugeUserGroupProps = {
-  className?: string;
-  ariaLabel?: string;
-  role?: React.AriaRole;
-  title?: string;
+	className?: string;
+	ariaLabel?: string;
+	role?: React.AriaRole;
+	title?: string;
 };
 
 export const HugeUserGroup: React.FC<HugeUserGroupProps> = ({
-  className,
-  ariaLabel,
-  role,
-  title,
+	className,
+	ariaLabel,
+	role,
+	title,
 }) => {
-  return (
-    <HugeiconsIcon
-      icon={UserGroupIcon}
-      className={className}
-      aria-label={ariaLabel}
-      role={role}
-      aria-hidden={ariaLabel || role === "img" ? undefined : true}
-    />
-  );
+	return (
+		<HugeiconsIcon
+			icon={UserGroupIcon}
+			className={className}
+			aria-label={ariaLabel}
+			role={role}
+			aria-hidden={ariaLabel || role === "img" ? undefined : true}
+		/>
+	);
 };
 
 export default HugeUserGroup;

@@ -1,8 +1,9 @@
 ---
+import { render as renderContent } from "astro:content";
 import type { MDXComponentMap } from "./mdxComponents";
 import { mergeMDXComponents } from "./mdxComponents";
-import { render as renderContent } from "astro:content";
 
+// biome-ignore lint/suspicious/noExplicitAny: Astro content render result is untyped
 type RenderedContent = { Content: any };
 type RenderableEntry = { render: () => Promise<RenderedContent> };
 
@@ -22,6 +23,7 @@ const { entry, components } = Astro.props as Props;
 // Prefer the entry's render method (MDX); fall back to astro:content render helper.
 const { Content } =
   (await (entry as RenderableEntry)?.render?.()) ??
+  // biome-ignore lint/suspicious/noExplicitAny: entry type from getEntry/getCollection is not statically typed here
   (await renderContent(entry as any));
 const componentMap = mergeMDXComponents(components);
 ---

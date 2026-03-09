@@ -2,213 +2,213 @@
 
 /* Fix for Radix Navigation Menu positioning */
 [data-radix-navigation-menu-viewport] {
-  position: relative !important;
-  transform-origin: top center;
-  margin-top: 0 !important;
-  width: 100%;
-  overflow: visible !important;
-  z-index: 50;
+	position: relative !important;
+	transform-origin: top center;
+	margin-top: 0 !important;
+	width: 100%;
+	overflow: visible !important;
+	z-index: 50;
 }
 
 [data-radix-navigation-menu-content] {
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  animation-duration: 250ms;
-  animation-timing-function: ease;
-  width: auto !important;
+	position: absolute !important;
+	top: 0 !important;
+	left: 0 !important;
+	animation-duration: 250ms;
+	animation-timing-function: ease;
+	width: auto !important;
 }
 
 /* Ensure proper z-index stacking */
 [data-radix-navigation-menu-root] {
-  position: relative;
+	position: relative;
 }
 
 /* Position indicator properly */
 [data-radix-navigation-menu-indicator] {
-  z-index: 1;
-  display: none !important; /* Hide for now to avoid line issue */
+	z-index: 1;
+	display: none !important; /* Hide for now to avoid line issue */
 }
 
 [data-radix-navigation-menu-list] {
-  display: flex;
-  justify-content: center;
-  list-style: none;
-  padding: 0;
-  margin: 0;
+	display: flex;
+	justify-content: center;
+	list-style: none;
+	padding: 0;
+	margin: 0;
 }
 
 [data-radix-navigation-menu-trigger] {
-  all: unset;
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 4px;
-  padding: 8px 12px;
-  outline: none;
-  user-select: none;
-  font-weight: 500;
-  line-height: 1;
-  border-radius: 8px;
-  font-size: 14px;
-  cursor: pointer;
+	all: unset;
+	display: inline-flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 4px;
+	padding: 8px 12px;
+	outline: none;
+	user-select: none;
+	font-weight: 500;
+	line-height: 1;
+	border-radius: 8px;
+	font-size: 14px;
+	cursor: pointer;
 }
 
 [data-radix-navigation-menu-trigger]:focus {
-  position: relative;
-  box-shadow: 0 0 0 2px var(--accent-base);
+	position: relative;
+	box-shadow: 0 0 0 2px var(--accent-base);
 }
 
 [data-radix-navigation-menu-trigger][data-state="open"] {
-  color: var(--accent-base);
+	color: var(--accent-base);
 }
 
 /* Remove any focus outlines on the viewport and content */
 [data-radix-navigation-menu-viewport]:focus,
 [data-radix-navigation-menu-content]:focus {
-  outline: none !important;
-  box-shadow: none !important;
+	outline: none !important;
+	box-shadow: none !important;
 }
 
 [data-radix-navigation-menu-link] {
-  all: unset;
-  display: block;
-  text-decoration: none;
-  font-size: 14px;
-  line-height: 1;
-  cursor: pointer;
+	all: unset;
+	display: block;
+	text-decoration: none;
+	font-size: 14px;
+	line-height: 1;
+	cursor: pointer;
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
 }
 
 @keyframes fadeOut {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
+	from {
+		opacity: 1;
+	}
+	to {
+		opacity: 0;
+	}
 }
 
 @keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: rotateX(-30deg) scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: rotateX(0deg) scale(1);
-  }
+	from {
+		opacity: 0;
+		transform: rotateX(-30deg) scale(0.9);
+	}
+	to {
+		opacity: 1;
+		transform: rotateX(0deg) scale(1);
+	}
 }
 
 @keyframes scaleOut {
-  from {
-    opacity: 1;
-    transform: rotateX(0deg) scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: rotateX(-10deg) scale(0.95);
-  }
+	from {
+		opacity: 1;
+		transform: rotateX(0deg) scale(1);
+	}
+	to {
+		opacity: 0;
+		transform: rotateX(-10deg) scale(0.95);
+	}
 }
 
 @keyframes enterFromRight {
-  from {
-    opacity: 0;
-    transform: translateX(200px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+	from {
+		opacity: 0;
+		transform: translateX(200px);
+	}
+	to {
+		opacity: 1;
+		transform: translateX(0);
+	}
 }
 
 @keyframes enterFromLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-200px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+	from {
+		opacity: 0;
+		transform: translateX(-200px);
+	}
+	to {
+		opacity: 1;
+		transform: translateX(0);
+	}
 }
 
 @keyframes exitToRight {
-  from {
-    opacity: 1;
-    transform: translateX(0);
-  }
-  to {
-    opacity: 0;
-    transform: translateX(200px);
-  }
+	from {
+		opacity: 1;
+		transform: translateX(0);
+	}
+	to {
+		opacity: 0;
+		transform: translateX(200px);
+	}
 }
 
 @keyframes exitToLeft {
-  from {
-    opacity: 1;
-    transform: translateX(0);
-  }
-  to {
-    opacity: 0;
-    transform: translateX(-200px);
-  }
+	from {
+		opacity: 1;
+		transform: translateX(0);
+	}
+	to {
+		opacity: 0;
+		transform: translateX(-200px);
+	}
 }
 
 /* Animation utility classes */
 .animate-fadeIn {
-  animation: fadeIn 200ms ease;
+	animation: fadeIn 200ms ease;
 }
 
 .animate-fadeOut {
-  animation: fadeOut 200ms ease;
+	animation: fadeOut 200ms ease;
 }
 
 .animate-scaleIn {
-  animation: scaleIn 200ms ease;
+	animation: scaleIn 200ms ease;
 }
 
 .animate-scaleOut {
-  animation: scaleOut 200ms ease;
+	animation: scaleOut 200ms ease;
 }
 
 .animate-enterFromRight {
-  animation: enterFromRight 250ms ease;
+	animation: enterFromRight 250ms ease;
 }
 
 .animate-enterFromLeft {
-  animation: enterFromLeft 250ms ease;
+	animation: enterFromLeft 250ms ease;
 }
 
 .animate-exitToRight {
-  animation: exitToRight 250ms ease;
+	animation: exitToRight 250ms ease;
 }
 
 .animate-exitToLeft {
-  animation: exitToLeft 250ms ease;
+	animation: exitToLeft 250ms ease;
 }
 
 /* Navigation content animations based on direction */
 [data-motion="from-start"] {
-  animation: enterFromLeft 250ms ease;
+	animation: enterFromLeft 250ms ease;
 }
 
 [data-motion="from-end"] {
-  animation: enterFromRight 250ms ease;
+	animation: enterFromRight 250ms ease;
 }
 
 [data-motion="to-start"] {
-  animation: exitToLeft 250ms ease;
+	animation: exitToLeft 250ms ease;
 }
 
 [data-motion="to-end"] {
-  animation: exitToRight 250ms ease;
+	animation: exitToRight 250ms ease;
 }

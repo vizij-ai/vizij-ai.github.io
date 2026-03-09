@@ -1,202 +1,266 @@
-# Semio Community Website
+# Vizij Website
 
 [![Built with Astro](https://astro.badg.es/v2/built-with-astro/small.svg)](https://astro.build)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-This repository contains the website for [Semio Community](https://semio.community), a 501(c)(3) nonprofit organization facilitating community-driven robotics hardware, software, and research to foster repeatable, reproducible, and replicable science within human-robot interaction (HRI).
+Website for [Vizij](https://vizij.ai) — an open source ecosystem for designing, animating, and deploying rendered robot faces.
 
-## 🤖 About Semio Community
+## Ecosystem Architecture
 
-Semio Community is dedicated to advancing **reproducible robot science** by:
-- Supporting open-source robotics hardware and software development
-- Facilitating community-driven research and collaboration
-- Promoting reusable systems in human-robot interaction
-- Fostering scientific reproducibility in robotics and AI
-
-## 🚀 Tech Stack
-
-- **Framework**: [Astro v5](https://astro.build/) with React integration
-- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/) with custom design system
-- **Content**: MDX for rich content authoring
-- **Search**: [Pagefind](https://pagefind.app/) for static search
-- **Code Quality**: [Biome](https://biomejs.dev/) for linting and formatting
-- **Icons**: Solar Icons and Astro Icon
-- **Deployment**: GitHub Pages with automated CI/CD
-
-## 📦 Project Structure
+This repo is one of four repositories that together form the Semio ecosystem platform:
 
 ```
-/
-├── public/           # Static assets (favicon, robots.txt, etc.)
-├── src/
-│   ├── assets/       # Images and media files
-│   ├── components/   # Reusable React and Astro components
-│   ├── config/       # Configuration files
-│   ├── content/      # Content collections (blog posts, projects, etc.)
-│   ├── data/         # Static data files
-│   ├── layouts/      # Page layouts
-│   ├── pages/        # File-based routing
-│   ├── plugins/      # Remark/Rehype plugins
-│   ├── styles/       # Global styles and CSS
-│   └── utils/        # Utility functions
-├── test/             # Test files
-└── docs/             # Documentation
+ecosystem-content-hub          Canonical MDX content files (all sites)
+ecosystem-content-schema       Shared Zod schemas & TypeScript types
+ecosystem-site-core            Shared React UI components & layout
+vizij-ai.github.io             This repo — Astro site
 ```
 
-## 🛠️ Development
+Content is authored in `ecosystem-content-hub` and synced to each site repo's `src/content/` directory. Schemas come from `@semio-community/ecosystem-content-schema`. UI components come from `@semio-community/ecosystem-site-core`.
+
+## Tech Stack
+
+- **Framework**: [Astro v5](https://astro.build/) with React islands (`client:load`)
+- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/) with custom design tokens
+- **Content**: MDX content collections via `createEcosystemCollections`
+- **Search**: [Pagefind](https://pagefind.app/) static search
+- **Code Quality**: [Biome](https://biomejs.dev/)
+- **Deployment**: GitHub Pages via GitHub Actions
+
+## Project Structure
+
+```
+src/
+├── site.config.ts        Site metadata, menu links, nav styling variant
+├── content.config.ts     Content collection definitions (ecosystem schema)
+├── content/              MDX content files (synced from content hub)
+│   ├── events/           Some events have rich MDX body content
+│   ├── hardware/
+│   ├── software/         Includes Vizij itself
+│   ├── research/
+│   ├── people/
+│   └── organizations/
+├── pages/                Astro file-based routing
+│   ├── index.astro
+│   ├── demos.astro       Interactive runtime demos
+│   ├── events.astro
+│   ├── events/[...slug].astro   Event detail (supports MDX body content)
+│   └── ...
+├── react-pages/          React page components (used as Astro islands)
+│   ├── home/
+│   │   ├── HomePage.tsx
+│   │   └── sections/
+│   └── demos/            Demos page React component
+├── layouts/
+│   └── SiteShell.astro   Root HTML layout
+├── components/
+│   ├── BaseHead.astro    Meta tags, OG, favicons
+│   ├── layout/           Header.tsx, Footer.tsx, SkipLink.tsx
+│   ├── navigation/       NavIconButton.tsx, MobileNavButton.tsx, navIcons.ts
+│   ├── sections/         Thin re-exports of PageSection, SubsectionGrid
+│   ├── detail/           DetailHero.tsx adapter, LinkSection.tsx, ActionsSection.tsx
+│   ├── cards/            Thin re-exports of shared card components
+│   ├── events/           Thin re-export of EventsSections
+│   ├── search/           SearchProvider, SearchModal, SearchApp
+│   ├── hero/             HeroHeader.tsx (Vizij-branded glyph animation)
+│   ├── background/       ParallaxHexBackground.tsx
+│   ├── demos/            Interactive runtime demo components
+│   └── mdx/              MDX component map for body content rendering
+└── utils/                url.ts, date.ts, images.ts, events.ts, etc.
+```
+
+## Development
 
 ### Prerequisites
 
-- Node.js 18+
-- npm (or pnpm/yarn)
+Node.js 18+ and npm.
 
-### Getting Started
+### Setup
 
 ```bash
-# Clone the repository
-git clone https://github.com/semio-community/semio-community.github.io.git
-cd semio-community.github.io
-
-# Install dependencies
 npm install
+npm run dev        # dev server at http://localhost:4321
+```
 
-# Start development server
+### Commands
+
+| Command | Action |
+|---------|--------|
+| `npm run dev` | Start dev server (Astro + CMS preview) |
+| `npm run dev:site` | Astro dev server only |
+| `npm run build` | Full build: CMS config + Astro + Pagefind index |
+| `npm run build:site` | Astro build only |
+| `npm run build:search` | Regenerate Pagefind index |
+| `npm run preview` | Preview production build locally |
+| `npm run check` | Astro type check |
+| `npm run lint` | Biome lint |
+| `npm run format` | Format code |
+
+## Adding and Modifying Content
+
+### Content flow
+
+The canonical source for all content is [`ecosystem-content-hub`](https://github.com/semio-community/ecosystem-content-hub). The `src/content/` directory in this repo is a **generated output** — files are copied here by the sync script and committed to the repo. **Do not hand-edit files in `src/content/`**; changes will be overwritten on the next sync.
+
+`src/content/` is committed (not gitignored) so that CI builds are self-contained and don't depend on the hub being reachable at build time. Content changes arrive as automated sync PRs, providing a review gate before they go live.
+
+### Syncing content locally
+
+Pull the latest content from the hub (the hub repo must be checked out as a sibling directory):
+
+```bash
+npm run content:sync:hub   # sync all collections from the hub
+```
+
+The sync script filters entries by the `sites` field in each MDX file — only entries tagged `vizij` are copied here. Asset paths that don't exist locally are stripped.
+
+### Authoring content
+
+Edit or add MDX files in `ecosystem-content-hub/content/<type>/`, then run the sync. Key frontmatter fields:
+
+- `name` / `title` — display name
+- `sites: [semio, quori, vizij]` — controls which sites include this entry
+- `draft: true` — hides from production builds (still synced; filtered at query time)
+
+For event entries with rich body content (tutorials, workshops), add MDX body content after the frontmatter. The event detail page renders it automatically.
+
+See `@semio-community/ecosystem-content-schema` for the full schema per collection.
+
+## Adding Pages
+
+**Static page**: Add `src/pages/my-page.astro`, import `SiteShell`, render content.
+
+**React page**: Create `src/react-pages/my-page/MyPage.tsx`, then reference from a `.astro` page with `client:load`.
+
+**Detail route**: Already handled by `src/pages/<type>/[...slug].astro` for each content collection.
+
+## Adding Demos
+
+The demos page showcases interactive Vizij runtime functionality:
+
+1. Create a demo component in `src/components/demos/` using `@vizij/runtime-react`
+2. Add it to the demos page layout in `src/react-pages/demos/`
+3. Add a section link entry to the `Demos` menu item in `src/site.config.ts`
+
+## Modifying Navigation
+
+Edit `menuLinks` in `src/site.config.ts`. To add a top-level link:
+```ts
+{
+  path: "/my-page/",
+  title: "My Page",
+  inHeader: true,
+  sections: [
+    { kind: "link", title: "Section", href: "/my-page/#section" },
+  ],
+}
+```
+
+Set `callToAction: true` to render as a CTA button.
+
+## Vizij-Specific Features
+
+- **Demos page** (`src/pages/demos.astro`): Live interactive runtime demos
+- **Demo components** (`src/components/demos/`): Vizij runtime showcase (gaze, pose, speech, expressions)
+- **MDX event detail**: Events can include rich tutorial body content rendered via `<MDXContent />`
+- **ActionsSection** (`src/components/detail/ActionsSection.tsx`): CTA buttons on event detail pages
+
+## Local Development with the Shared Package
+
+To iterate on `ecosystem-site-core` locally while running this site:
+
+### Option A — use the published package (normal workflow)
+
+```bash
+npm install
 npm run dev
 ```
 
-Visit `http://localhost:4321` to view the site.
+### Option B — link the local build for live iteration
 
-### Available Commands
+In `ecosystem-site-core`, start the TypeScript compiler in watch mode:
 
-| Command                | Action                                           |
-|:----------------------|:--------------------------------------------------|
-| `npm run dev`         | Start site + CMS preview dev servers together    |
-| `npm run dev:site`    | Start only the Astro dev server                  |
-| `npm run dev:cms`     | Start only the Decap CMS preview dev server      |
-| `npm run build`       | Build Decap bundle/config, Astro site, and search index |
-| `npm run build:site`  | Build only the Astro site to `./dist/`           |
-| `npm run build:cms`   | Regenerate Decap config and preview bundle       |
-| `npm run build:search`| Generate Pagefind search index                   |
-| `npm run preview`     | Preview production build locally                |
-| `npm run format`      | Format code with Biome and Prettier            |
-| `npm run format:code` | Format code files                              |
-| `npm run format:imports` | Organize imports with Biome                 |
-| `npm run lint`        | Run Biome linter                               |
-| `npm run check`       | Run Astro type checking                        |
-| `npm run verify:drafts` | Verify draft content status                  |
-| `npm run cms:config`  | Regenerate Decap CMS config from `src/content.config.ts` |
-| `npm run cms:preview` | Build Decap CMS preview bundle/styles (outputs to `public/admin`, all gitignored) |
+```bash
+cd ../ecosystem-site-core
+npx tsc -p tsconfig.json --watch
+```
 
-### Build Pipeline
+In a separate terminal, link the package and start the dev server:
 
-`npm run build` runs, in order:
-1) `build:cms` (Decap config + preview bundle into `public/admin/`)
-2) `build:site` (Astro to `dist/`)
-3) `build:search` (Pagefind index)
+```bash
+cd vizij-ai.github.io
+npm link @semio-community/ecosystem-site-core
+npm run dev
+```
 
-### CMS / Admin Regeneration
+When you are done, unlink and restore the published version:
 
-- Run `npm run build` after changing content schemas or preview components/styles to refresh `public/admin/config.yml` and rebuild the Decap preview bundle (`preview.bundle.js` / `preview.css`).
-- `npm run cms:config` rewrites `public/admin/config.yml` from the Astro content schemas.
-- `npm run cms:preview` rebuilds the Decap preview assets (Tailwind v4 + Vite).
+```bash
+npm unlink --no-save @semio-community/ecosystem-site-core
+npm install
+```
 
-## ⚙️ Configuration
+> **Why linking is safe:** `astro.config.ts` sets `vite.ssr.noExternal` to include `@semio-community/ecosystem-site-core` and related Radix/motion packages, and `vite.resolve.dedupe: ["react", "react-dom"]`. This forces Vite to bundle the linked package through its own resolver, preventing Node from picking up a nested React copy inside the linked `node_modules` and causing an "Invalid hook call" error.
 
-### Site Configuration
+## Updating the Shared Package
 
-Edit `src/site.config.ts` to update:
-- Site metadata (title, description, author)
-- Navigation menu items
-- Locale and date formatting
+When a new version of `@semio-community/ecosystem-site-core` is published, update this repo with:
 
-### Content Management
+```bash
+# 1. Wait for the Build & Publish Package workflow in ecosystem-site-core to complete
+#    (check Actions — the vX.Y.Z tag must be green before proceeding)
 
-- **Pages**: Add `.astro` or `.mdx` files to `src/pages/`
-- **Content Collections**: Manage content in `src/content/`
-  - `events/` - Community events and symposiums
-  - `hardware/` - Robotics hardware projects
-  - `partners/` - Partner organizations
-  - `people/` - Team and community members
-  - `software/` - Software projects and tools
-  - `research/` - Research publications and papers
-- **Components**: Create reusable components in `src/components/`
+# 2. Install the new version — this updates BOTH package.json and package-lock.json
+npm install @semio-community/ecosystem-site-core@^X.Y.Z
 
-### Styling
+# 3. Verify nothing is broken
+npx tsc --noEmit
+npm run build:site
 
-- **Global Styles**: `src/styles/global.css`
-- **Tailwind Config**: Uses Tailwind CSS v4 with `@tailwindcss/vite`
-- **Theme**: Automatic dark/light mode support
-- **Components**: Use Tailwind utility classes
-- **Showcase Styles**: `/demos` currently links its React island stylesheet via `?url` in `src/pages/demos.astro` because Astro production builds can omit CSS imported only inside `client:only` islands. Long-term goal: align the demos to the shared site styles and remove the bespoke stylesheet.
-- **React 19 overrides (temporary)**: `package.json` pins `@react-three/*` and `zustand` via `overrides` so the React 19 preview works with `@vizij/render@0.0.7`. Remove these overrides after the React 19 `vizij-web` packages are published.
-- **Showcase Copy (CMS)**: `/demos` section copy is sourced from `src/content/showcase/sections.mdx` to keep text editable via Astro content collections/Decap CMS without touching TSX.
+# 4. Commit BOTH files together
+git add package.json package-lock.json
+git commit -m "chore: bump ecosystem-site-core to vX.Y.Z"
+git push
+```
 
-## 🌟 Key Features
+> **Critical:** always commit `package.json` and `package-lock.json` together. A `package.json` bump without a matching lockfile causes `npm ci` to fail in CI with a lockfile-mismatch error. Never use `sed` to edit the version in `package.json` without also running `npm install` to regenerate the lockfile.
 
-- **🎨 Modern Design**: Clean, accessible interface with dark/light mode
-- **📱 Responsive**: Mobile-first design approach
-- **⚡ Performance**: Optimized builds with Astro's partial hydration
-- **🔍 Search**: Built-in search with Pagefind
-- **♿ Accessibility**: WCAG compliant with semantic HTML
-- **🔧 Developer Experience**: TypeScript, hot reload, and modern tooling
-- **📝 MDX Support**: Rich content authoring with components
-- **🎯 SEO Optimized**: Meta tags, sitemap, RSS feed, and Open Graph support
+## Troubleshooting
 
-## 📄 Content Sections
+### "Invalid hook call" / useRef is null at runtime
 
-The website includes the following main sections:
+Two copies of React are loaded simultaneously. Checklist:
 
-- **Home**: Introduction to Semio Community and mission
-- **Projects**: Community-driven robotics projects
-- **Services**: Resources and support offered
-- **Events**: Workshops, symposiums, and community gatherings
-- **Partners**: Collaborating organizations and institutions
-- **About**: Organization details and team
-- **Get Involved**: Ways to contribute and participate
+1. Run `find node_modules -path "*/react/index.js"` — you should see only one entry. A path through `ecosystem-site-core/node_modules/react` means a nested copy is present; delete it (`rm -rf node_modules/@semio-community/ecosystem-site-core/node_modules/react`).
+2. Confirm `astro.config.ts` has both `vite.ssr.noExternal` (including `@semio-community/ecosystem-site-core` and Radix/motion packages) and `vite.resolve.dedupe: ["react", "react-dom"]`.
 
-## 🚢 Deployment
+### `npm ci` fails with lockfile mismatch
 
-The site is automatically deployed to GitHub Pages when changes are pushed to the `main` branch:
+`package.json` was bumped without running `npm install` to regenerate the lockfile. Fix:
 
-1. Push commits to `main` branch
-2. GitHub Actions workflow builds the site
-3. Built files are deployed to GitHub Pages
-4. Site is available at [https://semio.community](https://semio.community)
+```bash
+npm install
+git add package.json package-lock.json
+git commit -m "fix: sync lockfile after version bump"
+git push
+```
 
-## 🤝 Contributing
+### `npm ci` fails with `No matching version found` / `ETARGET`
 
-We welcome contributions from the community! Please:
+CI ran before the publish workflow in `ecosystem-site-core` finished. Wait for **Actions → Build & Publish Package** to complete there, then re-run the failing CI job here.
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+## Deployment
 
-### Development Guidelines
+Merging to `main` triggers the GitHub Actions workflow, which builds and deploys to GitHub Pages at [https://vizij.ai](https://vizij.ai).
 
-- Follow the existing code style (enforced by Biome)
-- Write descriptive commit messages
-- Update documentation as needed
-- Test your changes locally before submitting
-- Ensure the build passes (`npm run build`)
+## Contributing
 
-## 📬 Contact
+1. Fork the repository and create a feature branch
+2. Make changes; run `npm run check` and `npm run build` to verify
+3. Open a pull request with a clear description
 
-- **Website**: [semio-community.github.io](https://semio.community)
-- **GitHub**: [@semio-community](https://github.com/semio-community)
+For guidance on the AI-assisted development workflow, see [AGENTS.md](AGENTS.md).
 
-## 📜 License
+## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- Built with [Astro](https://astro.build/)
-- Icons from [Solar Icons](https://www.figma.com/community/file/1166831539721848736)
-- Search powered by [Pagefind](https://pagefind.app/)
-- Inspired by best practices in open-source robotics communities
-
----
-
-*Semio Community - Advancing Reproducible Robot Science*
+MIT — see [LICENSE](LICENSE).

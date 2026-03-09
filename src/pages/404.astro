@@ -1,5 +1,4 @@
 ---
-import BaseHead from "@/components/BaseHead.astro";
 import SiteShell from "@/layouts/SiteShell.astro";
 import NotFoundPage from "@/react-pages/not-found/NotFoundPage";
 
@@ -9,15 +8,10 @@ const meta = {
 };
 ---
 
-<html
-  class="overflow-x-hidden grid scroll-pt-[72px] scroll-smooth font-sans text-text text-xl md:text-base antialiased"
-  lang="en"
+    <SiteShell
+  title={meta.title}
+  description={meta.description}
 >
-  <head>
-    <BaseHead title={meta.title} description={meta.description} />
-  </head>
-  <body class="relative min-h-screen w-full bg-surface">
-    <SiteShell>
       <NotFoundPage />
     </SiteShell>
   </body>
