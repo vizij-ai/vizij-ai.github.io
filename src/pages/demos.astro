@@ -1,5 +1,4 @@
 ---
-import BaseHead from "@/components/BaseHead.astro";
 import SiteShell from "@/layouts/SiteShell.astro";
 import DemosPage from "@/react-pages/demos/DemosPage";
 import { siteConfig } from "@/site.config";
@@ -11,19 +10,11 @@ const meta = {
 };
 ---
 
-<html
-  class="overflow-x-hidden grid scroll-pt-18 scroll-smooth font-sans text-text text-xl md:text-base antialiased"
-  lang={siteConfig.lang}
+    <SiteShell
+  title={meta.title}
+  description={meta.description}
+  ogImage="/og/demos.png"
 >
-  <head>
-    <BaseHead
-      title={meta.title}
-      description={meta.description}
-      ogImage="/og/demos.png"
-    />
-  </head>
-  <body class="relative min-h-screen w-full bg-surface">
-    <SiteShell>
       <DemosPage client:only="react" />
     </SiteShell>
   </body>

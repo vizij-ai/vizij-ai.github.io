@@ -1,6 +1,5 @@
 ---
 import { getCollection } from "astro:content";
-import BaseHead from "@/components/BaseHead.astro";
 import { getAllOrganizations } from "@/data/organizations";
 import { getAllPeople } from "@/data/people";
 import SiteShell from "@/layouts/SiteShell.astro";
@@ -132,19 +131,12 @@ const mappedGrantMakers: ContributorsPageOrganizationItem[] = grantMakers.map((o
 const heroIcon = React.createElement(UsersGroupTwoRounded, { className: "w-16 h-16 text-accent-two" });
 ---
 
-<html
-  class="overflow-x-hidden grid scroll-pt-18 scroll-smooth font-sans text-text text-xl md:text-base antialiased"
-  lang="en"
+    <SiteShell
+  title={meta.title}
+  description={meta.description}
+  ogImage={ogImage}
+  containerClassName="max-w-6xl"
 >
-  <head>
-    <BaseHead
-      title={meta.title}
-      description={meta.description}
-      ogImage={ogImage}
-    />
-  </head>
-  <body class="relative min-h-screen w-full bg-surface">
-    <SiteShell containerClassName="max-w-6xl">
       <ContributorsPage
         meta={meta}
         hideBoardMembers={HIDE_BOARD_MEMBERS}

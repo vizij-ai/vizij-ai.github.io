@@ -1,5 +1,4 @@
 ---
-import BaseHead from "@/components/BaseHead.astro";
 import { getAllHardware } from "@/data/hardware";
 import { getAllResearch } from "@/data/research";
 import { getAllSoftware } from "@/data/software";
@@ -84,19 +83,11 @@ const projectsPayload = JSON.stringify({
 });
 ---
 
-<html
-  class="overflow-x-hidden grid scroll-pt-18 scroll-smooth font-sans text-text text-xl md:text-base antialiased"
-  lang="en"
+    <SiteShell
+  title={meta.title}
+  description={meta.description}
+  ogImage={ogImage}
 >
-  <head>
-    <BaseHead
-      title={meta.title}
-      description={meta.description}
-      ogImage={ogImage}
-    />
-  </head>
-  <body class="relative min-h-screen w-full bg-surface">
-    <SiteShell>
       <ProjectsPage client:load projectsPayload={projectsPayload} />
     </SiteShell>
   </body>

@@ -1,5 +1,4 @@
 ---
-import BaseHead from "@/components/BaseHead.astro";
 import SiteShell from "@/layouts/SiteShell.astro";
 import GetInvolvedPage from "@/react-pages/get-involved/GetInvolvedPage";
 
@@ -17,19 +16,11 @@ const ogImage = "/og/get-involved.png";
 // Membership benefits section removed per specification.
 ---
 
-<html
-  class="overflow-x-hidden grid scroll-pt-18 scroll-smooth font-sans text-text text-xl md:text-base antialiased"
-  lang="en"
+    <SiteShell
+  title={meta.title}
+  description={meta.description}
+  ogImage={ogImage}
 >
-  <head>
-    <BaseHead
-      title={meta.title}
-      description={meta.description}
-      ogImage={ogImage}
-    />
-  </head>
-  <body class="relative min-h-screen w-full bg-surface">
-    <SiteShell>
       <GetInvolvedPage />
     </SiteShell>
   </body>

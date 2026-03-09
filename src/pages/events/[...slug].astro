@@ -1,7 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
-import BaseHead from "@/components/BaseHead.astro";
 import ActionsSection from "@/components/detail/ActionsSection";
 import LinkSection from "@/components/detail/LinkSection";
 import MDXContent from "@/components/mdx/MDXContent.astro";
@@ -264,19 +263,12 @@ const featuredState = data.featured
   : undefined;
 ---
 
-<html
-  class="overflow-x-hidden grid scroll-pt-18 scroll-smooth font-sans text-text text-xl md:text-base antialiased"
-  lang="en"
+    <SiteShell
+  title={meta.title}
+  description={meta.description}
+  ogImage={ogImage}
+  containerClassName="max-w-5xl"
 >
-  <head>
-    <BaseHead
-      title={meta.title}
-      description={meta.description}
-      ogImage={ogImage}
-    />
-  </head>
-  <body class="relative min-h-screen w-full bg-surface">
-    <SiteShell containerClassName="max-w-5xl">
       <BaseDetailLayout>
         <Fragment slot="hero">
           <DetailHero

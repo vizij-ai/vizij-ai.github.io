@@ -1,5 +1,4 @@
 ---
-import BaseHead from "@/components/BaseHead.astro";
 import EventsSections from "@/components/events/EventsSections";
 import { getAllEvents } from "@/data/events";
 import SiteShell from "@/layouts/SiteShell.astro";
@@ -44,19 +43,11 @@ const serializeEvents = allEvents.map((event) => ({
 const eventsPayload = JSON.stringify(serializeEvents);
 ---
 
-<html
-  class="overflow-x-hidden grid scroll-pt-18 scroll-smooth font-sans text-text text-xl md:text-base antialiased"
-  lang="en"
+    <SiteShell
+  title={meta.title}
+  description={meta.description}
+  ogImage={ogImage}
 >
-  <head>
-    <BaseHead
-      title={meta.title}
-      description={meta.description}
-      ogImage={ogImage}
-    />
-  </head>
-  <body class="relative min-h-screen w-full bg-surface">
-    <SiteShell>
       <EventsPage>
         {
           serializeEvents.length > 0 && (
