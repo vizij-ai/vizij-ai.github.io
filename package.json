@@ -19,6 +19,7 @@
     "format:imports": "biome check --formatter-enabled=false --write",
     "check": "astro check",
     "verify:drafts": "node test/verify-drafts.mjs",
+    "verify:shared-tailwind": "node scripts/verify-shared-tailwind-wiring.mjs",
     "render:modules": "node scripts/render-configurator-modules.mjs",
     "cms:preview": "vite build --config vite.cms.config.mjs",
     "cms:copy-assets": "node scripts/copy-admin-assets.mjs",
