@@ -2,16 +2,18 @@
 import BaseHead from "@/components/BaseHead.astro";
 import SiteShell from "@/layouts/SiteShell.astro";
 import DemosPage from "@/react-pages/demos/DemosPage";
+import { siteConfig } from "@/site.config";
 
 const meta = {
   title: "Vizij Demos",
-  description: "Interactive Vizij demos.",
+  description:
+    "Try Vizij's interactive runtime demos — rig controls, expressions, gaze, voice, and more for open source rendered robot faces.",
 };
 ---
 
 <html
   class="overflow-x-hidden grid scroll-pt-18 scroll-smooth font-sans text-text text-xl md:text-base antialiased"
-  lang="en"
+  lang={siteConfig.lang}
 >
   <head>
     <BaseHead
