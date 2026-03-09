@@ -44,7 +44,7 @@
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.5.0",
     "@semio-community/ecosystem-content-schema": "^0.3.2",
-    "@semio-community/ecosystem-site-core": "^0.3.27",
+    "@semio-community/ecosystem-site-core": "^0.3.41",
     "@shikijs/transformers": "^1.25.1",
     "@solar-icons/react-perf": "^1.0.0",
     "@tailwindcss/vite": "^4.1.11",
