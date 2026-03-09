@@ -126,9 +126,112 @@ If the component is site-specific (e.g. uses Vizij runtime library), add it to `
 If it would benefit all three ecosystem sites, add it to `ecosystem-site-core` instead.
 
 ### Update the shared package
-1. Make changes in `ecosystem-site-core`, bump the version, build, and publish
-2. Run `npm install @semio-community/ecosystem-site-core@^X.Y.Z` in this repo
-3. Update any site files that use the changed API
+
+When a new version of `@semio-community/ecosystem-site-core` is published:
+
+1. **Wait** for the Build & Publish Package workflow in `ecosystem-site-core` to complete (check Actions — the `vX.Y.Z` tag must be green before proceeding).
+2. Run `npm install @semio-community/ecosystem-site-core@^X.Y.Z` — this updates **both** `package.json` and `package-lock.json`.
+3. Update any site files that use a changed API.
+4. Commit **both** `package.json` and `package-lock.json` together:
+   ```
+   git add package.json package-lock.json
+   git commit -m "chore: bump ecosystem-site-core to vX.Y.Z"
+   ```
+
+> **Critical:** never bump the version in `package.json` (e.g. via `sed`) without also running `npm install` to regenerate the lockfile. A mismatched lockfile causes `npm ci` to fail in CI.
+
+## Local Development with the Shared Package
+
+To iterate on `ecosystem-site-core` locally while running this site:
+
+### Option A — use the published package (normal workflow)
+
+```bash
+npm install
+npm run dev
+```
+
+### Option B — link the local build for live iteration
+
+In `ecosystem-site-core`, start the TypeScript compiler in watch mode:
+
+```bash
+cd ../ecosystem-site-core
+npx tsc -p tsconfig.json --watch
+```
+
+In a separate terminal, link the package and start the dev server:
+
+```bash
+cd vizij-ai.github.io
+npm link @semio-community/ecosystem-site-core
+npm run dev
+```
+
+When you are done, unlink and restore the published version:
+
+```bash
+npm unlink --no-save @semio-community/ecosystem-site-core
+npm install
+```
+
+> **Why linking is safe:** `astro.config.ts` sets `vite.ssr.noExternal` to include `@semio-community/ecosystem-site-core` and related Radix/motion packages, and `vite.resolve.dedupe: ["react", "react-dom"]`. This forces Vite to bundle the linked package through its own resolver, preventing Node from picking up a nested React copy inside the linked `node_modules` and causing an "Invalid hook call" error.
+
+## Vite / Astro Configuration
+
+`astro.config.ts` must keep the following to avoid duplicate-React errors when the shared package is npm-linked or when its transitive dependencies carry their own React-using packages:
+
+```ts
+vite: {
+  ssr: {
+    noExternal: [
+      "@semio-community/ecosystem-site-core",
+      /^@radix-ui\/react-/,
+      /^react-remove-scroll/,
+      /^react-style-singleton/,
+      /^react-remove-scroll-bar/,
+      /^use-callback-ref/,
+      /^use-sidecar/,
+      /^motion(\/.*)?$/,
+      /^framer-motion(\/.*)?$/,
+    ],
+  },
+  resolve: {
+    dedupe: ["react", "react-dom"],
+  },
+},
+```
+
+**`noExternal`** forces Vite to bundle the shared package and its React-using transitive deps through its own resolver rather than letting Node load them natively (which would find a nested React copy first).
+
+**`dedupe`** ensures a single React instance across the client-side bundle.
+
+**Do not use directory-level aliases** (e.g. `resolve.alias` pointing at the package source directory) — that bypasses the package's `exports` map and breaks CJS/ESM interop.
+
+## Troubleshooting
+
+### "Invalid hook call" / useRef is null at runtime
+
+Two copies of React are loaded simultaneously. Checklist:
+
+1. Run `find node_modules -path "*/react/index.js"` — you should see only one entry. A path through `ecosystem-site-core/node_modules/react` means a nested copy is present; delete it with `rm -rf node_modules/@semio-community/ecosystem-site-core/node_modules/react`.
+2. Confirm `astro.config.ts` has both `vite.ssr.noExternal` (including `@semio-community/ecosystem-site-core` and Radix/motion packages) and `vite.resolve.dedupe: ["react", "react-dom"]`.
+3. Confirm `react` and `react-dom` are `peerDependencies` (not `dependencies`) in `ecosystem-site-core/package.json`.
+
+### `npm ci` fails with lockfile mismatch
+
+`package.json` was bumped without running `npm install` to regenerate the lockfile. Fix:
+
+```bash
+npm install
+git add package.json package-lock.json
+git commit -m "fix: sync lockfile after version bump"
+git push
+```
+
+### `npm ci` fails with `No matching version found` / `ETARGET`
+
+CI ran before the publish workflow in `ecosystem-site-core` finished. Wait for **Actions → Build & Publish Package** to complete there, then re-run the failing CI job here.
 
 ## Content Schema
 

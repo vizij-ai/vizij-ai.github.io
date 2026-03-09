@@ -165,15 +165,89 @@ Set `callToAction: true` to render as a CTA button.
 - **MDX event detail**: Events can include rich tutorial body content rendered via `<MDXContent />`
 - **ActionsSection** (`src/components/detail/ActionsSection.tsx`): CTA buttons on event detail pages
 
-## Updating the Shared Package
+## Local Development with the Shared Package
 
-When `@semio-community/ecosystem-site-core` is updated:
+To iterate on `ecosystem-site-core` locally while running this site:
+
+### Option A — use the published package (normal workflow)
 
 ```bash
-npm install @semio-community/ecosystem-site-core@^X.Y.Z
-npx tsc --noEmit    # verify no type errors
-npm run build       # verify build succeeds
+npm install
+npm run dev
 ```
+
+### Option B — link the local build for live iteration
+
+In `ecosystem-site-core`, start the TypeScript compiler in watch mode:
+
+```bash
+cd ../ecosystem-site-core
+npx tsc -p tsconfig.json --watch
+```
+
+In a separate terminal, link the package and start the dev server:
+
+```bash
+cd vizij-ai.github.io
+npm link @semio-community/ecosystem-site-core
+npm run dev
+```
+
+When you are done, unlink and restore the published version:
+
+```bash
+npm unlink --no-save @semio-community/ecosystem-site-core
+npm install
+```
+
+> **Why linking is safe:** `astro.config.ts` sets `vite.ssr.noExternal` to include `@semio-community/ecosystem-site-core` and related Radix/motion packages, and `vite.resolve.dedupe: ["react", "react-dom"]`. This forces Vite to bundle the linked package through its own resolver, preventing Node from picking up a nested React copy inside the linked `node_modules` and causing an "Invalid hook call" error.
+
+## Updating the Shared Package
+
+When a new version of `@semio-community/ecosystem-site-core` is published, update this repo with:
+
+```bash
+# 1. Wait for the Build & Publish Package workflow in ecosystem-site-core to complete
+#    (check Actions — the vX.Y.Z tag must be green before proceeding)
+
+# 2. Install the new version — this updates BOTH package.json and package-lock.json
+npm install @semio-community/ecosystem-site-core@^X.Y.Z
+
+# 3. Verify nothing is broken
+npx tsc --noEmit
+npm run build:site
+
+# 4. Commit BOTH files together
+git add package.json package-lock.json
+git commit -m "chore: bump ecosystem-site-core to vX.Y.Z"
+git push
+```
+
+> **Critical:** always commit `package.json` and `package-lock.json` together. A `package.json` bump without a matching lockfile causes `npm ci` to fail in CI with a lockfile-mismatch error. Never use `sed` to edit the version in `package.json` without also running `npm install` to regenerate the lockfile.
+
+## Troubleshooting
+
+### "Invalid hook call" / useRef is null at runtime
+
+Two copies of React are loaded simultaneously. Checklist:
+
+1. Run `find node_modules -path "*/react/index.js"` — you should see only one entry. A path through `ecosystem-site-core/node_modules/react` means a nested copy is present; delete it (`rm -rf node_modules/@semio-community/ecosystem-site-core/node_modules/react`).
+2. Confirm `astro.config.ts` has both `vite.ssr.noExternal` (including `@semio-community/ecosystem-site-core` and Radix/motion packages) and `vite.resolve.dedupe: ["react", "react-dom"]`.
+
+### `npm ci` fails with lockfile mismatch
+
+`package.json` was bumped without running `npm install` to regenerate the lockfile. Fix:
+
+```bash
+npm install
+git add package.json package-lock.json
+git commit -m "fix: sync lockfile after version bump"
+git push
+```
+
+### `npm ci` fails with `No matching version found` / `ETARGET`
+
+CI ran before the publish workflow in `ecosystem-site-core` finished. Wait for **Actions → Build & Publish Package** to complete there, then re-run the failing CI job here.
 
 ## Deployment
 
