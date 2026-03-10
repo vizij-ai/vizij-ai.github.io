@@ -9,10 +9,12 @@ function ActionButton({
 	href,
 	label,
 	variant,
+	as = "a",
 }: {
 	href: string;
 	label: string;
 	variant: "primary" | "secondary" | "tertiary";
+	as?: "a" | "span";
 }) {
 	const classes =
 		variant === "primary"
@@ -20,6 +22,17 @@ function ActionButton({
 			: variant === "secondary"
 				? "border border-accent-two/35 bg-surface/70 text-foreground hover:border-accent-two/60 hover:bg-accent-two/10"
 				: "border border-accent-base/25 bg-transparent text-foreground hover:border-accent-base/45 hover:bg-accent-base/10";
+
+	if (as === "span") {
+		return (
+			<span
+				className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors ${classes}`}
+			>
+				{label}
+				<ArrowRight className="h-4 w-4" />
+			</span>
+		);
+	}
 
 	return (
 		<a
@@ -86,7 +99,7 @@ export default function HubPage({ content }: { content: HubPageContent }) {
 										<p className="text-sm leading-6 text-color-500">{card.description}</p>
 									</div>
 									<div className="mt-auto pt-2">
-										<ActionButton href={card.href} label="Open page" variant="tertiary" />
+										<ActionButton href={card.href} label="Open page" variant="tertiary" as="span" />
 									</div>
 								</a>
 							))}

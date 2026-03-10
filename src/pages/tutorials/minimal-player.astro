@@ -1,0 +1,12 @@
+---
+import SiteShell from "@/layouts/SiteShell.astro";
+import TutorialGuidePage from "@/react-pages/tutorials/TutorialGuidePage";
+import { tutorialGuidePages } from "@/site-content/vizij/guides";
+
+const entry = tutorialGuidePages["minimal-player"];
+const meta = { title: `Vizij Tutorial: ${entry.title}`, description: entry.description };
+---
+
+<SiteShell title={meta.title} description={meta.description} ogImage="/og/home.png">
+	<TutorialGuidePage client:load slug="minimal-player" />
+</SiteShell>

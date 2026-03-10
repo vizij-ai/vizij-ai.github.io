@@ -1,0 +1,12 @@
+---
+import SiteShell from "@/layouts/SiteShell.astro";
+import DocsGuidePage from "@/react-pages/docs/DocsGuidePage";
+import { docsGuidePages } from "@/site-content/vizij/guides";
+
+const entry = docsGuidePages["deployment-model"];
+const meta = { title: `Vizij Docs: ${entry.title}`, description: entry.description };
+---
+
+<SiteShell title={meta.title} description={meta.description} ogImage="/og/home.png">
+	<DocsGuidePage client:load slug="deployment-model" />
+</SiteShell>
