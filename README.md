@@ -73,24 +73,46 @@ src/
 
 ### Prerequisites
 
-Node.js 18+ and npm.
+- **Node.js 20** and npm
+- **A GitHub account** with access to the `semio-community` organisation (or a PAT with `read:packages` scope — see below)
 
-### Setup
+### First-Time Setup: GitHub Packages Authentication
+
+The shared packages (`@semio-community/ecosystem-site-core` and `@semio-community/ecosystem-content-schema`) are published to **GitHub Packages**, not the public npm registry. GitHub Packages requires authentication for all installs, even for public packages.
+
+**Step 1 — Create a Personal Access Token (PAT)**
+
+1. Go to [github.com → Settings → Developer settings → Personal access tokens → Tokens (classic)](https://github.com/settings/tokens/new)
+2. Give it a descriptive name, e.g. `semio-packages-read`
+3. Select the **`read:packages`** scope (no other scopes needed for local dev)
+4. Click **Generate token** and copy it — you won't see it again
+
+**Step 2 — Add the token to your global npm config**
+
+```bash
+npm config set //npm.pkg.github.com/:_authToken YOUR_TOKEN_HERE
+```
+
+This writes to `~/.npmrc` and applies to all projects on your machine. You only need to do this once.
+
+**Step 3 — Install and run**
 
 ```bash
 npm install
 npm run dev        # dev server at http://localhost:4321
 ```
 
+> **Why is this needed?** The `.npmrc` in this repo routes `@semio-community/*` packages to `https://npm.pkg.github.com`. GitHub Packages does not support unauthenticated reads, so `npm install` will fail with a 401 without the token. The token only needs `read:packages` — it cannot write or modify anything.
+
 ### Commands
 
 | Command | Action |
 |---------|--------|
-| `npm run dev` | Start dev server (Astro + CMS preview) |
-| `npm run dev:site` | Astro dev server only |
-| `npm run build` | Full build: CMS config + Astro + Pagefind index |
+| `npm run dev` | Start dev server at localhost:4321 |
+| `npm run dev:site` | Astro dev server only (alias for `dev`) |
+| `npm run build` | Full build: Astro site + Pagefind search index |
 | `npm run build:site` | Astro build only |
-| `npm run build:search` | Regenerate Pagefind index |
+| `npm run build:search` | Regenerate Pagefind search index |
 | `npm run preview` | Preview production build locally |
 | `npm run check` | Astro type check |
 | `npm run lint` | Biome lint |
