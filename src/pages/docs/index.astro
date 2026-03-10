@@ -1,0 +1,14 @@
+---
+import SiteShell from "@/layouts/SiteShell.astro";
+import DocsHubPage from "@/react-pages/docs/DocsHubPage";
+
+const meta = {
+	title: "Vizij Docs",
+	description:
+		"Understand the core concepts, architecture, runtime data model, rigging model, animation model, and deployment model behind Vizij.",
+};
+---
+
+<SiteShell title={meta.title} description={meta.description} ogImage="/og/home.png">
+	<DocsHubPage client:only="react" />
+</SiteShell>

@@ -1,0 +1,14 @@
+---
+import SiteShell from "@/layouts/SiteShell.astro";
+import TutorialsHubPage from "@/react-pages/tutorials/TutorialsHubPage";
+
+const meta = {
+	title: "Vizij Tutorials",
+	description:
+		"Follow the concept-first Vizij tutorial spine from Hello Face through authoring, runtime behavior, and deployment.",
+};
+---
+
+<SiteShell title={meta.title} description={meta.description} ogImage="/og/home.png">
+	<TutorialsHubPage client:only="react" />
+</SiteShell>
