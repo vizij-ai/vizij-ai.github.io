@@ -73,15 +73,15 @@ export default function DemosPage() {
         showGlyphField={false}
         icon={<EmojiFunnySquare className="h-16 w-16 text-accent-two" />}
         title="Demos"
-        description="Explore the Vizij runtime and tools for expressive behavior, gaze interactions, and voice lip-sync."
+        description="Explore the Vizij runtime and tools for expressive behavior, gaze interactions, and voice lip-sync. These demos are the experiential surface; use the docs and tutorials for the clean conceptual and walkthrough path."
         actions={[
-          { label: "Overview", href: "#hero", indicatorText: "2" },
+          { label: "Docs", href: "/docs/", indicatorText: "2" },
           {
-            label: "Rig Controls",
-            href: "#controls",
+            label: "Tutorials",
+            href: "/tutorials/",
             variant: "secondary",
           },
-          { label: "Voice", href: "#voice", variant: "tertiary" },
+          { label: "Architecture", href: "/docs/architecture/", variant: "tertiary" },
         ]}
       />
 
@@ -450,6 +450,22 @@ export default function DemosPage() {
             description="Idle, pose, gaze, and voice logic are composed as reusable hooks."
             variant="default"
           />
+        </div>
+        <div className="mx-auto mt-8 grid max-w-5xl grid-cols-1 gap-4 md:grid-cols-3">
+          <CallToActionButton href="/docs/architecture/" size="large" variant="secondary" fullWidth>
+            Read Architecture
+          </CallToActionButton>
+          <CallToActionButton
+            href="/docs/renderer-data-model/"
+            size="large"
+            variant="tertiary"
+            fullWidth
+          >
+            Learn the Data Model
+          </CallToActionButton>
+          <CallToActionButton href="/tutorials/hello-face/" size="large" variant="primary" fullWidth>
+            Start the Tutorial Path
+          </CallToActionButton>
         </div>
       </Section>
 

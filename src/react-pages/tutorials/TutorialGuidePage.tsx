@@ -1,7 +1,7 @@
 import GuidePage from "@/components/guides/GuidePage";
 import { TutorialLabPlaceholder } from "@/components/tutorial-labs/TutorialLabPlaceholder";
 import { tutorialGuidePages } from "@/site-content/vizij/guides";
-import { Suspense, lazy, useMemo } from "react";
+import { Suspense, lazy, useEffect, useMemo, useState } from "react";
 
 const tutorialLabMap = {
 	"hello-face": {
@@ -62,6 +62,7 @@ const tutorialLabMap = {
 function TutorialLabSlot({ slug }: { slug: keyof typeof tutorialLabMap }) {
 	const labEntry = tutorialLabMap[slug];
 	const LazyLab = useMemo(() => lazy(labEntry.load), [labEntry]);
+	const [hydrated, setHydrated] = useState(false);
 	const placeholder = (
 		<TutorialLabPlaceholder
 			id={labEntry.id}
@@ -72,7 +73,11 @@ function TutorialLabSlot({ slug }: { slug: keyof typeof tutorialLabMap }) {
 		/>
 	);
 
-	if (typeof window === "undefined") {
+	useEffect(() => {
+		setHydrated(true);
+	}, []);
+
+	if (!hydrated) {
 		return placeholder;
 	}
 
