@@ -5,6 +5,8 @@ import { useVizijRuntime } from "@vizij/runtime-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { RuntimeFaceFrame } from "./RuntimeFaceFrame";
 
+const GAZE_REACTION_POSE_WEIGHT = 0.75;
+
 export function GazeInteractiveFace({
 	enabled = true,
 	mode = "panel",
@@ -70,7 +72,7 @@ export function GazeInteractiveFace({
 			}
 			setPoseWeight(binding, 0);
 		}
-		setPoseWeight(randomBinding, 1);
+		setPoseWeight(randomBinding, GAZE_REACTION_POSE_WEIGHT);
 		setPrompt(`Reacting with ${randomBinding.pose.name ?? randomBinding.pose.id}.`);
 		if (resetTimer.current) {
 			window.clearTimeout(resetTimer.current);
@@ -83,7 +85,7 @@ export function GazeInteractiveFace({
 	}, [bindings, ready, setPoseWeight]);
 
 	const overlay = overlayVisible ? (
-		<div className="absolute bottom-4 left-4 right-4 rounded-lg border border-accent-base/20 bg-surface/85 p-3 text-xs text-color-500 backdrop-blur-md">
+		<div className="absolute bottom-4 left-4 right-4 rounded-lg border border-[#ead7c3] bg-white/78 p-3 text-xs text-color-500 backdrop-blur-md dark:border-white/10 dark:bg-[#171b22]/84 dark:text-[#c8c0b4]">
 			<p className="text-[11px] font-semibold uppercase tracking-wider text-accent-base/80">
 				Live Demo
 			</p>

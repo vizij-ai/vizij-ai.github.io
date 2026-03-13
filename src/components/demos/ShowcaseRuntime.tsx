@@ -1,109 +1,116 @@
-import { type ShowcaseFaceAssetKey, createShowcaseBundle } from "@/demo-lib/faceAssets";
+import {
+  type ShowcaseFaceAssetKey,
+  createShowcaseBundle,
+} from "@/demo-lib/faceAssets";
 import { broadcastRuntimeStatus } from "@/demo-lib/runtimeDebug";
 import { VizijRuntimeProvider, useVizijRuntime } from "@vizij/runtime-react";
-import { type ReactNode, useEffect, useMemo, useState } from "react";
+import { type ReactNode, useEffect, useMemo } from "react";
 
 type ShowcaseRuntimeProps = {
-	namespace: string;
-	asset?: ShowcaseFaceAssetKey;
-	children: ReactNode;
-	active?: boolean;
-	fallback?: ReactNode;
-	autostart?: boolean;
-	driveOrchestrator?: boolean;
-	visible?: boolean;
-	hiddenStepHz?: number;
-	label?: string;
+  namespace: string;
+  asset?: ShowcaseFaceAssetKey;
+  children: ReactNode;
+  active?: boolean;
+  fallback?: ReactNode;
+  autostart?: boolean;
+  driveOrchestrator?: boolean;
+  visible?: boolean;
+  hiddenStepHz?: number;
+  label?: string;
 };
 
 export function ShowcaseRuntime({
-	namespace,
-	asset = "hugoLatest",
-	children,
-	active = true,
-	fallback = null,
-	autostart = true,
-	driveOrchestrator = false,
-	visible = true,
-	hiddenStepHz = 1,
-	label,
+  namespace,
+  asset = "hugoCurrentExtended",
+  children,
+  active = true,
+  fallback = null,
+  autostart = true,
+  driveOrchestrator = false,
+  visible = true,
+  hiddenStepHz = 1,
+  label,
 }: ShowcaseRuntimeProps) {
-	const bundle = useMemo(() => createShowcaseBundle(namespace, asset), [namespace, asset]);
-	const [ready, setReady] = useState(false);
+  const bundle = useMemo(
+    () => createShowcaseBundle(namespace, asset),
+    [namespace, asset],
+  );
 
-	useEffect(() => {
-		setReady(true);
-	}, []);
+  if (!active) {
+    return <>{fallback}</>;
+  }
 
-	if (!active) {
-		return <>{fallback}</>;
-	}
-	if (!ready) {
-		return <>{fallback}</>;
-	}
+  const shouldAutostart = autostart && visible;
+  const shouldDriveVisible = driveOrchestrator && visible;
+  const shouldDriveHidden = driveOrchestrator && !visible && hiddenStepHz > 0;
 
-	const shouldAutostart = autostart && visible;
-	const shouldDriveHidden = driveOrchestrator && !visible && hiddenStepHz > 0;
-
-	return (
-		<VizijRuntimeProvider assetBundle={bundle} autostart={shouldAutostart}>
-			<HiddenStepController enabled={shouldDriveHidden} hz={hiddenStepHz} />
-			<RuntimeDebugBeacon
-				namespace={namespace}
-				label={label}
-				visible={visible}
-				driver={driveOrchestrator}
-				autostart={shouldAutostart}
-				hiddenStepHz={hiddenStepHz}
-			/>
-			{children}
-		</VizijRuntimeProvider>
-	);
+  return (
+    <VizijRuntimeProvider
+      assetBundle={bundle}
+      autostart={shouldAutostart}
+      driveOrchestrator={shouldDriveVisible}
+      orchestratorScope="shared"
+    >
+      <HiddenStepController enabled={shouldDriveHidden} hz={hiddenStepHz} />
+      <RuntimeDebugBeacon
+        namespace={namespace}
+        label={label}
+        visible={visible}
+        driver={driveOrchestrator}
+        autostart={shouldAutostart}
+        hiddenStepHz={hiddenStepHz}
+      />
+      {children}
+    </VizijRuntimeProvider>
+  );
 }
 
 function HiddenStepController({
-	enabled,
-	hz,
+  enabled,
+  hz,
 }: {
-	enabled: boolean;
-	hz: number;
+  enabled: boolean;
+  hz: number;
 }) {
-	const { step, ready } = useVizijRuntime();
+  const { step, ready } = useVizijRuntime();
 
-	useEffect(() => {
-		if (!enabled || !ready || hz <= 0) {
-			return;
-		}
-		const intervalMs = 1000 / hz;
-		const id = window.setInterval(() => {
-			step(1 / hz);
-		}, intervalMs);
-		return () => window.clearInterval(id);
-	}, [enabled, hz, ready, step]);
+  useEffect(() => {
+    if (!enabled || !ready || hz <= 0) {
+      return;
+    }
+    const intervalMs = 1000 / hz;
+    const id = window.setInterval(() => {
+      step(1 / hz, { forceRuntime: true });
+    }, intervalMs);
+    return () => window.clearInterval(id);
+  }, [enabled, hz, ready, step]);
 
-	return null;
+  return null;
 }
 
 function RuntimeDebugBeacon(props: {
-	namespace: string;
-	label?: string;
-	visible: boolean;
-	driver: boolean;
-	autostart: boolean;
-	hiddenStepHz: number;
+  namespace: string;
+  label?: string;
+  visible: boolean;
+  driver: boolean;
+  autostart: boolean;
+  hiddenStepHz: number;
 }) {
-	const { namespace, label, visible, driver, autostart, hiddenStepHz } = props;
-	useEffect(() => {
-		broadcastRuntimeStatus({
-			namespace,
-			label,
-			visible,
-			driver,
-			autostart,
-			hiddenStepHz,
-			timestamp: Date.now(),
-		});
-	}, [autostart, driver, hiddenStepHz, label, namespace, visible]);
+  const { namespace, label, visible, driver, autostart, hiddenStepHz } = props;
+  const { stepHz } = useVizijRuntime();
 
-	return null;
+  useEffect(() => {
+    broadcastRuntimeStatus({
+      namespace,
+      label,
+      visible,
+      driver,
+      autostart,
+      hiddenStepHz,
+      stepHz,
+      timestamp: Date.now(),
+    });
+  }, [autostart, driver, hiddenStepHz, label, namespace, stepHz, visible]);
+
+  return null;
 }

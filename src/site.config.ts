@@ -1,5 +1,6 @@
 import guidebookHubsData from "./generated/guidebook/hubs.json";
 import type { GuidebookHubMap } from "./lib/guidebook-content";
+import { DEMO_PAGES, getDemoPageHref } from "./react-pages/demos/demoPages";
 import type { SiteConfig } from "./types";
 
 const guidebookHubs = guidebookHubsData as GuidebookHubMap;
@@ -88,13 +89,14 @@ export const menuLinks: {
 		path: "/demos/",
 		title: "Demos",
 		inHeader: true,
-		dropdownSubtitle: "Interactive runtime demos and section shortcuts",
+		dropdownSubtitle: "Interactive runtime demos and focused route-by-route previews",
 		sections: [
-			{ kind: "link", title: "Overview", href: "/demos/#hero" },
-			{ kind: "link", title: "Rig Controls", href: "/demos/#controls" },
-			{ kind: "link", title: "Expressions", href: "/demos/#expressions" },
-			{ kind: "link", title: "Gaze", href: "/demos/#gaze" },
-			{ kind: "link", title: "Voice", href: "/demos/#voice" },
+			{ kind: "link", title: "Overview", href: "/demos/" },
+			...DEMO_PAGES.map((demo) => ({
+				kind: "link" as const,
+				title: demo.label,
+				href: getDemoPageHref(demo),
+			})),
 			{ kind: "link", title: "Architecture", href: "/demos/#architecture" },
 			{ kind: "link", title: "Community", href: "/demos/#community" },
 		],

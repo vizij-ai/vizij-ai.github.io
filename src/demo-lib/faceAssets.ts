@@ -2,43 +2,45 @@ import { FACE_ROOT_BOUNDS } from "@/demo-lib/runtimeFace";
 import type { VizijAssetBundle } from "@vizij/runtime-react";
 
 const FACE_ASSET_PATHS = {
-	hugoLatest: "/demos/assets/Hugo_Latest_Rigged.glb",
-	quoriLatest: "/demos/assets/Quori_Latest_Rigged.glb",
+  hugoCurrentExtended: "/demos/assets/Hugo_Current_Extended.glb",
+  quoriCurrentExtended: "/demos/assets/Quori_Current_Extended.glb",
+  hugoLatest: "/demos/assets/Hugo_Current_Extended.glb",
+  quoriLatest: "/demos/assets/Quori_Current_Extended.glb",
 } as const;
 
 export type ShowcaseFaceAssetKey = keyof typeof FACE_ASSET_PATHS;
 
 const FACE_ASSET_GLB_BASE = {
-	kind: "url" as const,
-	aggressiveImport: true,
-	rootBounds: FACE_ROOT_BOUNDS,
+  kind: "url" as const,
+  aggressiveImport: true,
+  rootBounds: FACE_ROOT_BOUNDS,
 };
 
 export const faceAssetBundleTemplate: VizijAssetBundle = {
-	namespace: "vizij-showcase",
-	glb: {
-		...FACE_ASSET_GLB_BASE,
-		src: FACE_ASSET_PATHS.hugoLatest,
-	},
-	pose: {
-		stageNeutralFilter: (_id, path) => !path.includes("/color/"),
-	},
+  namespace: "vizij-showcase",
+  glb: {
+    ...FACE_ASSET_GLB_BASE,
+    src: FACE_ASSET_PATHS.hugoCurrentExtended,
+  },
+  pose: {
+    stageNeutralFilter: (_id, path) => !path.includes("/color/"),
+  },
 };
 
 function createGlbConfig(asset: ShowcaseFaceAssetKey): VizijAssetBundle["glb"] {
-	return {
-		...FACE_ASSET_GLB_BASE,
-		src: FACE_ASSET_PATHS[asset],
-	};
+  return {
+    ...FACE_ASSET_GLB_BASE,
+    src: FACE_ASSET_PATHS[asset],
+  };
 }
 
 export function createShowcaseBundle(
-	key: string,
-	asset: ShowcaseFaceAssetKey = "hugoLatest",
+  key: string,
+  asset: ShowcaseFaceAssetKey = "hugoCurrentExtended",
 ): VizijAssetBundle {
-	return {
-		...faceAssetBundleTemplate,
-		namespace: `${faceAssetBundleTemplate.namespace}-${key}`,
-		glb: createGlbConfig(asset),
-	};
+  return {
+    ...faceAssetBundleTemplate,
+    namespace: `${faceAssetBundleTemplate.namespace}-${key}`,
+    glb: createGlbConfig(asset),
+  };
 }

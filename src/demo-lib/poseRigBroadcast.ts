@@ -1,7 +1,8 @@
 type PoseTriggerEventDetail = {
-	poseId?: string;
-	relativePath?: string;
-	weight: number;
+  poseId?: string;
+  relativePath?: string;
+  semanticKey?: string | null;
+  weight: number;
 };
 
 const POSE_TRIGGER_EVENT = "vizij:pose-trigger";
@@ -9,28 +10,31 @@ const POSE_TRIGGER_EVENT = "vizij:pose-trigger";
 type PoseTriggerHandler = (detail: PoseTriggerEventDetail) => void;
 
 export function broadcastPoseTrigger(detail: PoseTriggerEventDetail) {
-	if (typeof window === "undefined") {
-		return;
-	}
-	const event = new CustomEvent<PoseTriggerEventDetail>(POSE_TRIGGER_EVENT, {
-		detail,
-	});
-	window.dispatchEvent(event);
+  if (typeof window === "undefined") {
+    return;
+  }
+  if ((window as typeof window & { __VIZIJ_RUNTIME_DEBUG__?: boolean }).__VIZIJ_RUNTIME_DEBUG__) {
+    console.log("[showcase] pose trigger", detail);
+  }
+  const event = new CustomEvent<PoseTriggerEventDetail>(POSE_TRIGGER_EVENT, {
+    detail,
+  });
+  window.dispatchEvent(event);
 }
 
 export function addPoseTriggerListener(handler: PoseTriggerHandler) {
-	if (typeof window === "undefined") {
-		return () => {};
-	}
-	const listener = (event: Event) => {
-		const customEvent = event as CustomEvent<PoseTriggerEventDetail>;
-		if (!customEvent.detail) {
-			return;
-		}
-		handler(customEvent.detail);
-	};
-	window.addEventListener(POSE_TRIGGER_EVENT, listener as EventListener);
-	return () => {
-		window.removeEventListener(POSE_TRIGGER_EVENT, listener as EventListener);
-	};
+  if (typeof window === "undefined") {
+    return () => {};
+  }
+  const listener = (event: Event) => {
+    const customEvent = event as CustomEvent<PoseTriggerEventDetail>;
+    if (!customEvent.detail) {
+      return;
+    }
+    handler(customEvent.detail);
+  };
+  window.addEventListener(POSE_TRIGGER_EVENT, listener as EventListener);
+  return () => {
+    window.removeEventListener(POSE_TRIGGER_EVENT, listener as EventListener);
+  };
 }

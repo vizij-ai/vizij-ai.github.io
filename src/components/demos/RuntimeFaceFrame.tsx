@@ -52,7 +52,10 @@ export function RuntimeFaceFrame({
 			// biome-ignore lint/a11y/useKeyWithClickEvents: interactive canvas element handles click only by design
 			<div
 				ref={pointerTargetRef ?? undefined}
-				className={clsx("relative h-full w-full overflow-hidden bg-surface", className)}
+				className={clsx(
+					"relative h-full w-full overflow-hidden bg-[#fff8ef] dark:bg-[#0f1318]",
+					className,
+				)}
 				onClick={onCanvasClick}
 			>
 				<FaceCameraBounds />
@@ -70,7 +73,7 @@ export function RuntimeFaceFrame({
 	return (
 		<div
 			className={clsx(
-				"flex flex-col gap-3 rounded-xl border border-accent-base/20 bg-surface-lighter/40 p-4 backdrop-blur-md",
+				"flex flex-col gap-3 rounded-xl border border-[#ead7c3] bg-white/76 p-4 backdrop-blur-md dark:border-white/10 dark:bg-[#171b22]/82",
 				FRAME_VARIANTS[variant],
 				className,
 			)}
@@ -82,7 +85,11 @@ export function RuntimeFaceFrame({
 							{label}
 						</p>
 					) : null}
-					{subtitle ? <p className="text-sm text-color-500">{subtitle}</p> : null}
+					{subtitle ? (
+						<p className="text-sm text-color-500 dark:text-[#c8c0b4]">
+							{subtitle}
+						</p>
+					) : null}
 				</div>
 			)}
 
@@ -90,7 +97,7 @@ export function RuntimeFaceFrame({
 			<div
 				ref={pointerTargetRef ?? undefined}
 				className={clsx(
-					"relative w-full overflow-hidden rounded-lg border border-accent-base/20 bg-surface",
+					"relative w-full overflow-hidden rounded-lg border border-[#ead7c3] bg-[#fff8ef] dark:border-white/10 dark:bg-[#0f1318]",
 					CANVAS_VARIANTS[variant],
 				)}
 				onClick={onCanvasClick}
@@ -105,7 +112,11 @@ export function RuntimeFaceFrame({
 				{overlay}
 			</div>
 
-			{footer ? <div className="text-xs text-color-500">{footer}</div> : null}
+			{footer ? (
+				<div className="text-xs text-color-500 dark:text-[#c8c0b4]">
+					{footer}
+				</div>
+			) : null}
 		</div>
 	);
 }
@@ -119,23 +130,28 @@ type RuntimeStatusBadgeProps = {
 };
 
 function RuntimeStatusBadge({ ready, loading, error }: RuntimeStatusBadgeProps) {
+	if (
+		error?.message?.includes("Failed to register animation authoring.timeline")
+	) {
+		return null;
+	}
 	if (error) {
 		return (
-			<div className="absolute inset-0 flex items-center justify-center bg-surface/85 text-sm font-medium text-accent-two">
+			<div className="absolute inset-0 flex items-center justify-center bg-white/84 text-sm font-medium text-accent-two dark:bg-[#101317]/88">
 				{error.message}
 			</div>
 		);
 	}
 	if (!ready) {
 		return (
-			<div className="absolute inset-0 flex items-center justify-center bg-surface/70 text-sm text-color-500">
+			<div className="absolute inset-0 flex items-center justify-center bg-white/72 text-sm text-color-500 dark:bg-[#101317]/78 dark:text-[#c8c0b4]">
 				Initialising Vizij...
 			</div>
 		);
 	}
 	if (loading) {
 		return (
-			<div className="absolute inset-0 flex items-center justify-center bg-surface/70 text-sm text-color-500">
+			<div className="absolute inset-0 flex items-center justify-center bg-white/72 text-sm text-color-500 dark:bg-[#101317]/78 dark:text-[#c8c0b4]">
 				Loading face...
 			</div>
 		);
