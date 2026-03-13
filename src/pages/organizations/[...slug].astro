@@ -9,6 +9,7 @@ import { getAllSoftware } from "@/data/software";
 import { toOrganizationKeyContact } from "@semio-community/ecosystem-site-core";
 import { OrganizationDetail } from "@semio-community/ecosystem-site-core";
 import { isDraftVisible } from "@/utils/drafts";
+import { withResolvedLinks } from "@/utils/content-links";
 
 type PartnerEntry = CollectionEntry<"organizations">;
 
@@ -29,6 +30,7 @@ interface Props {
 
 const { entry } = Astro.props as Props;
 const { data } = entry;
+const detailData = withResolvedLinks(data);
 
 async function getRelatedOrganizations(partner: PartnerEntry, limit = 3) {
   const allOrganizations = await getAllOrganizations();
@@ -103,7 +105,7 @@ const keyContacts = affiliatedPeople
   containerClassName="max-w-5xl"
 >
       <OrganizationDetail
-        data={data}
+        data={detailData}
         relatedContent={relatedContent}
         relatedOrganizations={relatedOrganizations}
         keyContacts={keyContacts}

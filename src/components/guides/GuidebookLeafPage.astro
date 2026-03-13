@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import MDXContent from "@/components/mdx/MDXContent.astro";
+import { resolveSitePath } from "@/utils/url";
 
 interface Props {
 	entry: CollectionEntry<"guidebookPages">;
@@ -31,6 +32,7 @@ const serifStack =
 	'"Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif';
 const sansStack =
 	'"Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif';
+const hubHref = resolveSitePath(`/${surface}/`);
 ---
 
 <section id="hero" class="mx-auto max-w-7xl scroll-mt-28 px-4 pt-20 sm:px-6 sm:pt-24 lg:px-8">
@@ -84,23 +86,23 @@ const sansStack =
 					<p class="mt-3 text-lg leading-tight text-foreground" style={`font-family:${serifStack}`}>{depth}</p>
 				</div>
 				<div class="rounded-[1.7rem] border border-accent-base/15 bg-[#16171a] p-5 text-white shadow-[0_18px_52px_-30px_rgba(24,24,27,0.42)]">
-					<p class="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#f8c46d]" style={`font-family:${sansStack}`}>Route role</p>
+					<p class="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#f8c46d]" style={`font-family:${sansStack}`}>Page role</p>
 					<p class="mt-3 text-lg leading-tight" style={`font-family:${serifStack}`}>{entry.data.routeRoleLabel || entry.data.routeRole}</p>
 				</div>
 			</div>
 
 			<div class="flex flex-wrap gap-3">
-				<a href={`/${surface}/`} class="inline-flex items-center gap-2 rounded-full bg-accent-two px-4 py-2 text-sm font-medium text-surface transition-colors hover:bg-accent-two/90">
+				<a href={hubHref} class="inline-flex items-center gap-2 rounded-full bg-accent-two px-4 py-2 text-sm font-medium text-surface transition-colors hover:bg-accent-two/90">
 					Back To {surface === "docs" ? "Docs Hub" : "Tutorials Hub"}
 				</a>
 				{prev ? (
-					<a href={prev.href} class="inline-flex items-center gap-2 rounded-full border border-accent-two/35 bg-surface/70 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-accent-two/60 hover:bg-accent-two/10">
-						Previous Route
+					<a href={resolveSitePath(prev.href)} class="inline-flex items-center gap-2 rounded-full border border-accent-two/35 bg-surface/70 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-accent-two/60 hover:bg-accent-two/10">
+						Previous Page
 					</a>
 				) : null}
 				{next ? (
-					<a href={next.href} class="inline-flex items-center gap-2 rounded-full border border-accent-base/25 bg-transparent px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-accent-base/45 hover:bg-accent-base/10">
-						Next Route
+					<a href={resolveSitePath(next.href)} class="inline-flex items-center gap-2 rounded-full border border-accent-base/25 bg-transparent px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-accent-base/45 hover:bg-accent-base/10">
+						Next Page
 					</a>
 				) : null}
 			</div>
@@ -127,18 +129,18 @@ const sansStack =
 
 			{context?.bucketChain || context?.depthLadder || context?.modulePosition ? (
 				<div class="rounded-[2rem] border border-accent-base/15 bg-surface/90 p-6 shadow-[0_24px_80px_-28px_rgba(24,24,27,0.28)]">
-					<p class="text-[11px] font-semibold uppercase tracking-[0.22em] text-accent-two" style={`font-family:${sansStack}`}>Guidebook Position</p>
+					<p class="text-[11px] font-semibold uppercase tracking-[0.22em] text-accent-two" style={`font-family:${sansStack}`}>Page Context</p>
 					<div class="mt-4 space-y-4 text-sm leading-6 text-color-500" style={`font-family:${sansStack}`}>
 						{context?.bucketChain ? <p><strong class="text-foreground">Bucket chain:</strong> {context.bucketChain}</p> : null}
 						{context?.depthLadder ? <p><strong class="text-foreground">Depth ladder:</strong> {context.depthLadder}</p> : null}
 						{context?.modulePosition ? <p><strong class="text-foreground">Module position:</strong> {context.modulePosition}</p> : null}
 						{context?.bucketOverview ? (
 							<p>
-								<strong class="text-foreground">Bucket overview:</strong>
-								{" "}
-								<a href={context.bucketOverview.href} class="text-accent-three underline decoration-2 underline-offset-4">{context.bucketOverview.label}</a>
-							</p>
-						) : null}
+									<strong class="text-foreground">Bucket overview:</strong>
+									{" "}
+									<a href={resolveSitePath(context.bucketOverview.href)} class="text-accent-three underline decoration-2 underline-offset-4">{context.bucketOverview.label}</a>
+								</p>
+							) : null}
 					</div>
 				</div>
 			) : null}
@@ -154,7 +156,7 @@ const sansStack =
 					<p class="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#f8c46d]" style={`font-family:${sansStack}`}>Interactive Reference</p>
 					<h2 class="mt-4 text-3xl leading-tight" style={`font-family:${serifStack}`}>Read, run, inspect, then continue.</h2>
 					<p class="mt-4 text-sm leading-7 text-white/78" style={`font-family:${sansStack}`}>
-						The guidebook remains the canonical lesson. The public site can layer in a runnable reference surface when the interaction strengthens the page instead of distracting from it.
+						The source docs remain the canonical lesson. The public site can layer in a runnable reference surface when the interaction strengthens the page instead of distracting from it.
 					</p>
 				</div>
 				<div class="bg-surface-lighter/65 p-4 sm:p-6">
@@ -186,13 +188,13 @@ const sansStack =
 
 			{implementationAnchors.length ? (
 				<div class="rounded-[1.8rem] border border-accent-base/15 bg-surface/80 p-5 shadow-[0_16px_40px_-28px_rgba(24,24,27,0.32)]">
-					<p class="text-[11px] font-semibold uppercase tracking-[0.22em] text-accent-two" style={`font-family:${sansStack}`}>Implementation Anchors</p>
-					<div class="mt-4 space-y-3">
-						{implementationAnchors.map((anchor) => (
-							<a href={anchor.href} class="block rounded-2xl border border-accent-base/10 bg-accent-base/5 px-4 py-3 text-sm text-color-500 transition-colors hover:border-accent-two/30 hover:bg-accent-two/10 hover:text-foreground" style={`font-family:${sansStack}`}>
-								<div class="font-semibold text-foreground">{anchor.label}</div>
-								{anchor.description ? <div class="mt-1 text-color-500">{anchor.description}</div> : null}
-							</a>
+						<p class="text-[11px] font-semibold uppercase tracking-[0.22em] text-accent-two" style={`font-family:${sansStack}`}>Implementation Anchors</p>
+						<div class="mt-4 space-y-3">
+							{implementationAnchors.map((anchor) => (
+								<a href={resolveSitePath(anchor.href)} class="block rounded-2xl border border-accent-base/10 bg-accent-base/5 px-4 py-3 text-sm text-color-500 transition-colors hover:border-accent-two/30 hover:bg-accent-two/10 hover:text-foreground" style={`font-family:${sansStack}`}>
+									<div class="font-semibold text-foreground">{anchor.label}</div>
+									{anchor.description ? <div class="mt-1 text-color-500">{anchor.description}</div> : null}
+								</a>
 						))}
 					</div>
 				</div>
@@ -200,13 +202,13 @@ const sansStack =
 
 			{context?.referenceBridges?.length ? (
 				<div class="rounded-[1.8rem] border border-accent-base/15 bg-[#16171a] p-5 text-white shadow-[0_16px_40px_-28px_rgba(24,24,27,0.42)]">
-					<p class="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#f8c46d]" style={`font-family:${sansStack}`}>Reference Bridges</p>
-					<div class="mt-4 space-y-3">
-						{context.referenceBridges.map((anchor) => (
-							<a href={anchor.href} class="block rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/78 transition-colors hover:border-white/20 hover:bg-white/8" style={`font-family:${sansStack}`}>
-								<div class="font-semibold text-white">{anchor.label}</div>
-								{anchor.description ? <div class="mt-1">{anchor.description}</div> : null}
-							</a>
+						<p class="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#f8c46d]" style={`font-family:${sansStack}`}>Reference Bridges</p>
+						<div class="mt-4 space-y-3">
+							{context.referenceBridges.map((anchor) => (
+								<a href={resolveSitePath(anchor.href)} class="block rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/78 transition-colors hover:border-white/20 hover:bg-white/8" style={`font-family:${sansStack}`}>
+									<div class="font-semibold text-white">{anchor.label}</div>
+									{anchor.description ? <div class="mt-1">{anchor.description}</div> : null}
+								</a>
 						))}
 					</div>
 				</div>
@@ -284,14 +286,14 @@ const sansStack =
 			{demoLinks.length || prev || next ? (
 				<div class="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
 					{prev ? (
-						<a href={prev.href} class="rounded-[1.8rem] border border-accent-base/15 bg-surface/92 p-5 shadow-[0_18px_48px_-30px_rgba(24,24,27,0.24)]">
+						<a href={resolveSitePath(prev.href)} class="rounded-[1.8rem] border border-accent-base/15 bg-surface/92 p-5 shadow-[0_18px_48px_-30px_rgba(24,24,27,0.24)]">
 							<p class="text-[11px] font-semibold uppercase tracking-[0.22em] text-accent-two" style={`font-family:${sansStack}`}>Previous Route</p>
 							<p class="mt-3 text-xl leading-tight text-foreground" style={`font-family:${serifStack}`}>{prev.label}</p>
 							{prev.description ? <p class="mt-2 text-sm leading-6 text-color-500" style={`font-family:${sansStack}`}>{prev.description}</p> : null}
 						</a>
 					) : null}
 					{next ? (
-						<a href={next.href} class="rounded-[1.8rem] border border-accent-base/15 bg-surface/92 p-5 shadow-[0_18px_48px_-30px_rgba(24,24,27,0.24)]">
+						<a href={resolveSitePath(next.href)} class="rounded-[1.8rem] border border-accent-base/15 bg-surface/92 p-5 shadow-[0_18px_48px_-30px_rgba(24,24,27,0.24)]">
 							<p class="text-[11px] font-semibold uppercase tracking-[0.22em] text-accent-two" style={`font-family:${sansStack}`}>Next Route</p>
 							<p class="mt-3 text-xl leading-tight text-foreground" style={`font-family:${serifStack}`}>{next.label}</p>
 							{next.description ? <p class="mt-2 text-sm leading-6 text-color-500" style={`font-family:${sansStack}`}>{next.description}</p> : null}
@@ -299,13 +301,13 @@ const sansStack =
 					) : null}
 					{demoLinks.length ? (
 						<div class="rounded-[1.8rem] border border-accent-base/15 bg-[#16171a] p-5 text-white shadow-[0_18px_48px_-30px_rgba(24,24,27,0.32)]">
-							<p class="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#f8c46d]" style={`font-family:${sansStack}`}>Demo Cross-Links</p>
-							<div class="mt-4 space-y-3">
-								{demoLinks.map((link) => (
-									<a href={link.href} class="block rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/78 transition-colors hover:border-white/20 hover:bg-white/8" style={`font-family:${sansStack}`}>
-										<div class="font-semibold text-white">{link.label}</div>
-										{link.description ? <div class="mt-1">{link.description}</div> : null}
-									</a>
+						<p class="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#f8c46d]" style={`font-family:${sansStack}`}>Demo Cross-Links</p>
+						<div class="mt-4 space-y-3">
+							{demoLinks.map((link) => (
+								<a href={resolveSitePath(link.href)} class="block rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/78 transition-colors hover:border-white/20 hover:bg-white/8" style={`font-family:${sansStack}`}>
+									<div class="font-semibold text-white">{link.label}</div>
+									{link.description ? <div class="mt-1">{link.description}</div> : null}
+								</a>
 								))}
 							</div>
 						</div>

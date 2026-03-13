@@ -11,7 +11,7 @@ routeRole: operations
 routeRoleLabel: Deployment framing
 title: Deployment Model
 summary: Compare browser and standalone delivery, operator expectations, and the
-  downstream deployment choices the guidebook makes explicit.
+  deployment tradeoffs behind the maintained tutorials.
 moduleType: concept page
 bucket: Deploy
 depth: Fundamentals
@@ -100,7 +100,7 @@ prev:
 next:
   label: Hello Face
   href: /tutorials/hello-face/
-  description: Switch back into the maintained build spine.
+  description: Switch back into the main tutorial pathway.
 implementationAnchors:
   - label: Standalone app
     href: https://github.com/vizij-ai/vizij-web/tree/main/apps/vizij-standalone

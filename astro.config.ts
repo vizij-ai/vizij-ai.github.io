@@ -20,6 +20,7 @@ import { remarkReadingTime } from "./src/plugins/remark-reading-time";
 // Rehype plugins
 import rehypeExternalLinks from "rehype-external-links";
 import rehypeUnwrapImages from "rehype-unwrap-images";
+import { rehypeBasePathContent } from "./src/plugins/rehype-base-path-content";
 
 import {
   transformerMetaHighlight,
@@ -106,6 +107,7 @@ export default defineConfig({
           target: "_blank",
         },
       ],
+      [rehypeBasePathContent, { basePath: process.env.PR_PREVIEW_PATH || "/" }],
 
       [
         rehypePrettyCode,

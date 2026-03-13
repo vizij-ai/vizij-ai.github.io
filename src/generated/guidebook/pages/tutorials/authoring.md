@@ -11,7 +11,8 @@ routeRole: walkthrough
 routeRoleLabel: Authoring basics
 title: Authoring
 summary: "Take the lowest-friction authoring path first: tweak a maintained
-  face, validate the visible change, and stay on the guidebook route."
+  face, validate the visible change, and carry that proof into the next tutorial
+  step."
 moduleType: walkthrough
 bucket: Customize
 depth: Surface

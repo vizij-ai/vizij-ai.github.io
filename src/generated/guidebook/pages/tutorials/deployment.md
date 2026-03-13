@@ -11,7 +11,7 @@ routeRole: walkthrough
 routeRoleLabel: Operator delivery
 title: Deployment
 summary: Launch the cleanest maintained standalone deployment path and treat
-  operator handoff as part of the route, not an afterthought.
+  operator handoff as part of the tutorial pathway, not an afterthought.
 moduleType: walkthrough
 bucket: Deploy
 depth: Surface

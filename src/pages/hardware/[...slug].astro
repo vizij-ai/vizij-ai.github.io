@@ -6,6 +6,7 @@ import { getPerson } from "@/data/people";
 import { HardwareDetail } from "@semio-community/ecosystem-site-core";
 import { isDraftVisible } from "@/utils/drafts";
 import { toOrganizationCardData } from "@/utils/card-mappers";
+import { withResolvedLinks } from "@/utils/content-links";
 
 export async function getStaticPaths() {
   const hardware = await getCollection("hardware", ({ data }) => {
@@ -19,6 +20,7 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { data } = entry;
+const detailData = withResolvedLinks(data);
 
 const relatedHardware = await getRelatedHardware(entry, 3);
 
@@ -88,7 +90,7 @@ const orgContributors = await Promise.all(
   containerClassName="max-w-5xl"
 >
       <HardwareDetail
-        data={data}
+        data={detailData}
         organizationContributors={orgContributors}
         peopleContributors={validPeopleContributors}
         relatedHardware={relatedHardware}

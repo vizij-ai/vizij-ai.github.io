@@ -1,6 +1,7 @@
 ---
 import BaseHead from "@/components/BaseHead.astro";
 import { siteConfig } from "@/site.config";
+import { resolveSitePath } from "@/utils/url";
 
 interface Props {
   to: string;
@@ -16,8 +17,8 @@ const {
   delay = 0,
 } = Astro.props as Props;
 
-const redirectHref = to;
-const canonicalUrl = new URL(to, Astro.site ?? Astro.url).href;
+const redirectHref = resolveSitePath(to);
+const canonicalUrl = new URL(redirectHref, Astro.site ?? Astro.url).href;
 const refreshContent = `${delay};url=${redirectHref}`;
 ---
 

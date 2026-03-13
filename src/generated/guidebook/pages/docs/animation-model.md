@@ -10,8 +10,8 @@ canonicalPath: /docs/animation-model/
 routeRole: model
 routeRoleLabel: Motion system
 title: Animation Model
-summary: Understand how animation authoring fits the guidebook route before you
-  move into runtime playback and richer motion behavior.
+summary: Understand how animation authoring fits the broader Vizij workflow
+  before you move into runtime playback and richer motion behavior.
 moduleType: concept page
 bucket: Customize
 depth: Fundamentals

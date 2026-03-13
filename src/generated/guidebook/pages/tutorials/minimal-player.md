@@ -91,7 +91,7 @@ next:
   href: /tutorials/animations/
   description: Continue into authored motion and richer runtime behavior.
 implementationAnchors:
-  - label: Minimal web player guidebook module
+  - label: Minimal web player walkthrough
     href: https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/integrate/minimal-web-player.md
     description: Canonical runtime-shell walkthrough.
 demoLinks:

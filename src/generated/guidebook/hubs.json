@@ -1,15 +1,9 @@
 {
   "docs": {
     "eyebrow": "Vizij Docs",
-    "title": "Core concepts, contracts, and route decisions for the Vizij learning system.",
-    "description": "Use docs when you need the system framing behind the workflows. These pages stay downstream from the guidebook and keep the bucket, depth, and adjacent route context visible instead of flattening everything into isolated articles.",
+    "title": "Get oriented, choose a learning path, and understand the core Vizij models.",
+    "description": "Use docs when you want the concepts behind the workflows: what the main parts are, how they connect, and which page to open next.",
     "presentationStyle": "atlas",
-    "heroFigure": {
-      "src": "/guidebook-assets/screenshots/player-demo-details.png",
-      "alt": "Vizij player details screenshot used as a visual anchor for the docs hub",
-      "title": "Guidebook context, projected publicly",
-      "caption": "The public docs hub stays job-oriented for readers, but every page still exposes where it sits inside the guidebook buckets and depth ladder."
-    },
     "actions": [
       {
         "label": "Open Getting Started",
@@ -29,42 +23,42 @@
     ],
     "decisionPanels": [
       {
-        "title": "Need the system map?",
-        "description": "Use docs when the question is conceptual: what this artifact is, how the buckets connect, and where implementation truth lives.",
-        "label": "Mental model",
+        "title": "Need the overview first?",
+        "description": "Start here when you want the big picture: what Vizij is, how the concepts connect, and where to begin.",
+        "label": "Orientation",
         "href": "/docs/getting-started/"
       },
       {
-        "title": "Need the runnable path?",
-        "description": "The tutorials hub is the maintained build spine when you want concrete commands, checkpoints, and a visible artifact.",
-        "label": "Build workflow",
+        "title": "Need the hands-on path?",
+        "description": "Open tutorials when you want concrete steps, checkpoints, and a visible result you can verify.",
+        "label": "Tutorial path",
         "href": "/tutorials/"
       },
       {
-        "title": "Need to inspect behavior first?",
+        "title": "Need to watch behavior first?",
         "description": "The demos page stays experiential. Use it to watch the runtime, then come back here to understand what you saw.",
         "label": "Behavior first",
         "href": "/demos/"
       }
     ],
     "progressSteps": [
-      "Start with Getting Started to choose the right public route and the next maintained page.",
-      "Use architecture and control-model pages to build the mental model before you overfit to app-local details.",
-      "Use deployment and integration pages when the question shifts from understanding to ownership and delivery."
+      "Start with Getting Started if you need help choosing a learning path or deciding what to open next.",
+      "Use architecture and control-model pages when you need the mental model behind the demos and tutorials.",
+      "Move to animation and deployment pages when the question shifts from concepts to motion, runtime ownership, and delivery."
     ],
     "routeStages": [
       {
         "eyebrow": "Stage 1",
         "title": "Getting Started",
-        "description": "Choose the right Vizij learning route, understand the maintained public path, and know when to stay in the guidebook versus switch to implementation references.",
+        "description": "Get oriented, choose a learning path, and know when to switch from overview pages to implementation references.",
         "href": "/docs/getting-started/",
-        "implementation": "Guidebook README",
-        "outcome": "After this page, you should be able to choose the right Vizij learning route for your goal, pick the right depth, and know when to leave the guidebook for repo-local implementation docs."
+        "implementation": "Docs source overview",
+        "outcome": "After this page, you should be able to choose the right learning path for your goal, pick the right depth, and know when to switch from overview pages to repo-local implementation docs."
       },
       {
         "eyebrow": "Stage 2",
         "title": "Architecture",
-        "description": "Connect the public learning model to the real Vizij repos, packages, apps, assets, and deployment surfaces.",
+        "description": "Connect the docs overview to the real Vizij repos, packages, apps, assets, and deployment surfaces.",
         "href": "/docs/architecture/",
         "implementation": "Cross-repo architecture",
         "outcome": "After this page, you should be able to explain:"
@@ -88,7 +82,7 @@
       {
         "eyebrow": "Stage 5",
         "title": "Animation Model",
-        "description": "Understand how animation authoring fits the guidebook route before you move into runtime playback and richer motion behavior.",
+        "description": "Understand how animation authoring fits the broader Vizij workflow before you move into runtime playback and richer motion behavior.",
         "href": "/docs/animation-model/",
         "implementation": "Animation, integration, and deployment reference",
         "outcome": "After this page, you should be able to explain what an animation is in Vizij, what a clip, track, and keyframe mean in the current authoring model, and how playback state and transport help you preview authored motion before export."
@@ -96,7 +90,7 @@
       {
         "eyebrow": "Stage 6",
         "title": "Deployment Model",
-        "description": "Compare browser and standalone delivery, operator expectations, and the downstream deployment choices the guidebook makes explicit.",
+        "description": "Compare browser and standalone delivery, operator expectations, and the deployment tradeoffs behind the maintained tutorials.",
         "href": "/docs/deployment-model/",
         "implementation": "Standalone app",
         "outcome": "After this page, you should be able to explain the operational shape of the first Vizij deployment endpoint: what is running, who controls it, what signals move through it, and what counts as a healthy operator path."
@@ -106,14 +100,14 @@
       {
         "id": "orientation",
         "title": "Foundations",
-        "subtitle": "Use these pages when you are choosing or starting the maintained public route.",
+        "subtitle": "Use these pages when you are getting oriented or choosing where to start.",
         "cards": [
           {
             "id": "docs-getting-started",
             "title": "Getting Started",
-            "description": "Choose the right Vizij learning route, understand the maintained public path, and know when to stay in the guidebook versus switch to implementation references.",
+            "description": "Get oriented, choose a learning path, and know when to switch from overview pages to implementation references.",
             "href": "/docs/getting-started/",
-            "meta": "Route chooser",
+            "meta": "Path chooser",
             "badge": "Decision Guide",
             "detailRows": [
               {
@@ -129,7 +123,7 @@
           {
             "id": "docs-architecture",
             "title": "Architecture",
-            "description": "Connect the public learning model to the real Vizij repos, packages, apps, assets, and deployment surfaces.",
+            "description": "Connect the docs overview to the real Vizij repos, packages, apps, assets, and deployment surfaces.",
             "href": "/docs/architecture/",
             "meta": "Architecture bridge",
             "badge": "Reference Bridge",
@@ -197,7 +191,7 @@
           {
             "id": "docs-animation-model",
             "title": "Animation Model",
-            "description": "Understand how animation authoring fits the guidebook route before you move into runtime playback and richer motion behavior.",
+            "description": "Understand how animation authoring fits the broader Vizij workflow before you move into runtime playback and richer motion behavior.",
             "href": "/docs/animation-model/",
             "meta": "Motion system",
             "badge": "Concept Page",
@@ -215,7 +209,7 @@
           {
             "id": "docs-deployment-model",
             "title": "Deployment Model",
-            "description": "Compare browser and standalone delivery, operator expectations, and the downstream deployment choices the guidebook makes explicit.",
+            "description": "Compare browser and standalone delivery, operator expectations, and the deployment tradeoffs behind the maintained tutorials.",
             "href": "/docs/deployment-model/",
             "meta": "Deployment framing",
             "badge": "Concept Page",
@@ -236,14 +230,14 @@
   },
   "tutorials": {
     "eyebrow": "Vizij Tutorials",
-    "title": "One maintained build spine, projected from the guidebook’s executable route.",
-    "description": "Use tutorials when you want to run something, validate it, and know the next maintained move. These pages stay downstream from the guidebook instead of re-encoding the workflow in site-local copy.",
+    "title": "A maintained tutorial pathway from first proof to runtime delivery.",
+    "description": "Use tutorials when you want to build something in sequence, validate each step, and know exactly what to do next.",
     "presentationStyle": "spine",
     "heroFigure": {
       "src": "/guidebook-assets/gifs/fullscreen-demo.gif",
       "alt": "Animated Vizij fullscreen demo used as the tutorial hub hero",
       "title": "Start with a visible win",
-      "caption": "The tutorial spine is a staged build path: prove the runtime, understand the first interactions, then move into authoring, integration, and delivery."
+      "caption": "The tutorial pathway is staged: prove the runtime, understand the first interactions, then move into authoring, integration, and delivery."
     },
     "actions": [
       {
@@ -266,13 +260,13 @@
       {
         "title": "Need the first visible win?",
         "description": "Start with Hello Face when you want the smallest maintained proof that Vizij is actually alive.",
-        "label": "First build",
+        "label": "First step",
         "href": "/tutorials/hello-face/"
       },
       {
-        "title": "Need concept support?",
-        "description": "If the workflow feels unclear, jump into docs rather than building on top of a weak mental model.",
-        "label": "Concept check",
+        "title": "Need orientation first?",
+        "description": "Open docs if you want the concepts and page map before you keep building.",
+        "label": "Get oriented",
         "href": "/docs/"
       },
       {
@@ -284,8 +278,8 @@
     ],
     "progressSteps": [
       "Start with Hello Face and do not leave until you can prove the runtime is alive.",
-      "Use the next tutorial card only when the previous page’s artifact or proof state is complete.",
-      "Treat customization and advanced integration as branches off the maintained fast path, not mandatory first steps."
+      "Only move on when the previous page's artifact or proof state is complete.",
+      "Treat authoring and advanced integration as branches off the main tutorial pathway, not mandatory first steps."
     ],
     "routeStages": [
       {
@@ -307,7 +301,7 @@
       {
         "eyebrow": "Stage 3",
         "title": "Authoring",
-        "description": "Take the lowest-friction authoring path first: tweak a maintained face, validate the visible change, and stay on the guidebook route.",
+        "description": "Take the lowest-friction authoring path first: tweak a maintained face, validate the visible change, and carry that proof into the next tutorial step.",
         "href": "/tutorials/authoring/",
         "implementation": "vizij-authoring",
         "outcome": "After this page, you should be able to open a maintained preset face in vizij-authoring, make one small visible change to the loaded face, and explain why that already counts as real customization work."
@@ -315,7 +309,7 @@
       {
         "eyebrow": "Stage 4",
         "title": "Rigging And Control",
-        "description": "Follow the deeper customization route through authoring, control structure, export discipline, and validation against a real runtime surface.",
+        "description": "Follow the deeper customization pathway through authoring, control structure, export discipline, and validation against a real runtime surface.",
         "href": "/tutorials/rigging-and-control/",
         "implementation": "Authoring docs",
         "outcome": "After this page, you should be able to carry one believable face package through a full advanced customization pass:"
@@ -325,7 +319,7 @@
         "title": "Minimal Player",
         "description": "Load the authored face into the smallest useful player shell and keep the runtime surface honest.",
         "href": "/tutorials/minimal-player/",
-        "implementation": "Minimal web player guidebook module",
+        "implementation": "Minimal web player walkthrough",
         "outcome": "After this page, you should be able to launch the maintained player-stage app, explain what makes it a trustworthy runtime shell instead of just another demo, and identify the code shape you would reuse in your own first player."
       },
       {
@@ -347,7 +341,7 @@
       {
         "eyebrow": "Stage 8",
         "title": "Deployment",
-        "description": "Launch the cleanest maintained standalone deployment path and treat operator handoff as part of the route, not an afterthought.",
+        "description": "Launch the cleanest maintained standalone deployment path and treat operator handoff as part of the tutorial pathway, not an afterthought.",
         "href": "/tutorials/deployment/",
         "implementation": "vizij-standalone",
         "outcome": "After this page, you should be able to launch the maintained standalone runtime surface, load a face into it, confirm that its local control endpoint is alive, and explain why this counts as a deployment-shaped result rather than another local demo."
@@ -405,7 +399,7 @@
           {
             "id": "tutorials-authoring",
             "title": "Authoring",
-            "description": "Take the lowest-friction authoring path first: tweak a maintained face, validate the visible change, and stay on the guidebook route.",
+            "description": "Take the lowest-friction authoring path first: tweak a maintained face, validate the visible change, and carry that proof into the next tutorial step.",
             "href": "/tutorials/authoring/",
             "meta": "Authoring basics",
             "badge": "Walkthrough",
@@ -423,7 +417,7 @@
           {
             "id": "tutorials-rigging-and-control",
             "title": "Rigging And Control",
-            "description": "Follow the deeper customization route through authoring, control structure, export discipline, and validation against a real runtime surface.",
+            "description": "Follow the deeper customization pathway through authoring, control structure, export discipline, and validation against a real runtime surface.",
             "href": "/tutorials/rigging-and-control/",
             "meta": "Deep customization",
             "badge": "Walkthrough",
@@ -502,7 +496,7 @@
           {
             "id": "tutorials-deployment",
             "title": "Deployment",
-            "description": "Launch the cleanest maintained standalone deployment path and treat operator handoff as part of the route, not an afterthought.",
+            "description": "Launch the cleanest maintained standalone deployment path and treat operator handoff as part of the tutorial pathway, not an afterthought.",
             "href": "/tutorials/deployment/",
             "meta": "Operator delivery",
             "badge": "Walkthrough",

@@ -9,6 +9,7 @@ import { ResearchDetail, type ResearchOrganizationLink } from "@semio-community/
 import type { ResearchAuthorModel } from "@semio-community/ecosystem-site-core";
 import { isDraftVisible } from "@/utils/drafts";
 import { toOrganizationCardData } from "@/utils/card-mappers";
+import { withResolvedLinks } from "@/utils/content-links";
 
 export async function getStaticPaths() {
   const researchEntries = await getCollection("research", ({ data }) => {
@@ -23,6 +24,7 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props as { entry: CollectionEntry<"research"> };
 const { data } = entry;
+const detailData = withResolvedLinks(data);
 
 const relatedResearch = await fetchRelatedResearch(entry, 3);
 
@@ -86,7 +88,7 @@ const validRelatedSoftware = relatedSoftwareItems.filter(
   containerClassName="max-w-5xl"
 >
       <ResearchDetail
-        data={data}
+        data={detailData}
         authors={authorsWithData}
         authorsSubtitle={authorsString}
         organizationLinks={organizationLinks}

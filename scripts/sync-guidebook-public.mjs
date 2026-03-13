@@ -150,6 +150,17 @@ function sectionBody(markdown, heading) {
 	return collected.join("\n").trim();
 }
 
+function sectionBodyAny(markdown, headings) {
+	for (const heading of headings) {
+		const body = sectionBody(markdown, heading);
+		if (body) {
+			return body;
+		}
+	}
+
+	return "";
+}
+
 function extractHeadings(markdown) {
 	return [...markdown.matchAll(/^## (.+)$/gm)].map((match) => ({
 		depth: 2,
@@ -302,6 +313,7 @@ function stripSection(markdown, heading) {
 function stripProjectedGuidebookSections(markdown) {
 	const sectionsToStrip = [
 		"Guidebook Context",
+		"Page Context",
 		"Reader Outcome",
 		"Success Check",
 		"Implementation Anchors",
@@ -349,7 +361,7 @@ function extractGuidebookContext(
 	publicAssetBase,
 	fallbackBucket,
 ) {
-	const body = sectionBody(markdown, "Guidebook Context");
+	const body = sectionBodyAny(markdown, ["Guidebook Context", "Page Context"]);
 	if (!body) {
 		return {
 			bucket: fallbackBucket,

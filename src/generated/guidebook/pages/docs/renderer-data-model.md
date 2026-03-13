@@ -175,7 +175,7 @@ This is different from directly mutating a scene or attaching view-only state to
 | :--- | :--- | :--- |
 | **Standard** | Reusable rig channels (Gaze) | `Hello Face` / `useMouseGaze` |
 | **Poses** | Authored expressions | `Hello Face` / `usePoseHotkeys` |
-| **Visemes** | Speech-related shapes | `Agent Face` / `STT` |
+| **Speech-timed poses** | Speech-driven pose weights that still use canonical pose paths | `Agent Face` / `STT` |
 | **Animations** | Time-based motion | `Authoring` / `Player` |
 | **Outputs** | Derived runtime values | `Player` / `Diagnostics` |
 
@@ -183,7 +183,7 @@ The most useful categories for guidebook readers are:
 
 1. standard controls, which expose reusable channels such as gaze or shared rig movement,
 2. pose weights, which expose named authored states,
-3. viseme weights, which expose speech-related mouth behavior,
+3. speech-timed pose driving, which still stages pose weights even when authoring groups those poses for different blend behavior,
 4. animation controls, which drive authored time-based motion,
 5. renderer outputs, which can be observed for UI, diagnostics, or logging.
 
@@ -198,7 +198,7 @@ Use this chooser before you start wiring a control or debugging a write:
 | steer a reusable eye, brow, jaw, or similar channel | standard control | you are driving a reusable rig-facing channel directly | [Paths and Standard Controls](/docs/rigging-and-control-model/) |
 | blend a named facial state such as `smile` | pose weight | you are changing the strength of an authored expression | [Poses](https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/customize/poses.md) |
 | play or inspect motion over time | animation control | the main question is clip transport, timing, or playback | [Animations](/docs/animation-model/) |
-| drive speech-shaped mouth motion | viseme path | the behavior is speech-timed, not generic expression control | [Animation, Integration, and Deployment Reference](https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/reference/animation-integration-and-deployment-reference.md) |
+| drive speech-shaped mouth motion | speech-timed pose weight | the speech layer still writes a canonical pose-weight path, while pose groups continue to define how subsets of poses blend | [Animation, Integration, and Deployment Reference](https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/reference/animation-integration-and-deployment-reference.md) |
 | inspect what the runtime resolved after evaluation | output path | you are validating the result of orchestration, not only the staged input | [Orchestration and Diagnostics](https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/control/orchestration-and-diagnostics.md) |
 | expose operator control through a deployment endpoint | deployment slot over runtime input | the client sees a deployment slot name, but the runtime still resolves it into the same typed input semantics underneath | [Operator and Deployment Model](/docs/deployment-model/) |
 
@@ -210,9 +210,11 @@ For example:
 
 1. a slider that writes `rig/{face}/standard/left_eye/pos/x` is steering a reusable rig channel,
 2. a slider that writes `rig/{face}/poses/smile.weight` is blending a named authored state,
-3. a speech-driven system may write viseme weights or animation-related channels without the user touching a control at all.
+3. a speech-driven system may still write `rig/{face}/poses/{poseId}.weight` without the user touching a control at all.
 
 The visible widget is just a surface. The runtime meaning is the important teaching target.
+
+Pose groups matter here because they determine how different subsets of poses blend together. They are not part of the runtime input path syntax.
 
 ## Where Readers See These Semantics In Practice
 

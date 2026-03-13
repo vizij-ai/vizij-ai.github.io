@@ -9,6 +9,7 @@ import { getAllSoftware } from "@/data/software";
 import { PersonDetail } from "@semio-community/ecosystem-site-core";
 import { isDraftVisible } from "@/utils/drafts";
 import { toOrganizationCardData } from "@/utils/card-mappers";
+import { withResolvedLinks } from "@/utils/content-links";
 
 export async function getStaticPaths() {
   const people = await getCollection("people", ({ data }) => {
@@ -23,6 +24,7 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { data } = entry;
+const detailData = withResolvedLinks(data);
 const fullName = data.honorific ? `${data.honorific} ${data.name}` : data.name;
 
 // Get related people (by expertise or organization)
@@ -273,7 +275,7 @@ if (data.links?.mastodon) {
   containerClassName="max-w-5xl"
 >
       <PersonDetail
-        data={data}
+        data={detailData}
         fullName={fullName}
         badges={badges}
         currentAffiliations={currentAffiliations.map((aff) => ({

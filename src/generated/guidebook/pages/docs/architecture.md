@@ -10,8 +10,8 @@ canonicalPath: /docs/architecture/
 routeRole: system-map
 routeRoleLabel: Architecture bridge
 title: Architecture
-summary: Connect the public learning model to the real Vizij repos, packages,
-  apps, assets, and deployment surfaces.
+summary: Connect the docs overview to the real Vizij repos, packages, apps,
+  assets, and deployment surfaces.
 moduleType: reference bridge
 bucket: Introduction
 depth: Advanced

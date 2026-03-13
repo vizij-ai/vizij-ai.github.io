@@ -10,7 +10,7 @@ canonicalPath: /tutorials/rigging-and-control/
 routeRole: walkthrough
 routeRoleLabel: Deep customization
 title: Rigging And Control
-summary: Follow the deeper customization route through authoring, control
+summary: Follow the deeper customization pathway through authoring, control
   structure, export discipline, and validation against a real runtime surface.
 moduleType: walkthrough
 bucket: Customize

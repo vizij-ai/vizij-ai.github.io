@@ -8,11 +8,10 @@ publish: true
 routeSlug: getting-started
 canonicalPath: /docs/getting-started/
 routeRole: orientation
-routeRoleLabel: Route chooser
+routeRoleLabel: Path chooser
 title: Getting Started
-summary: Choose the right Vizij learning route, understand the maintained public
-  path, and know when to stay in the guidebook versus switch to implementation
-  references.
+summary: Get oriented, choose a learning path, and know when to switch from
+  overview pages to implementation references.
 moduleType: decision guide
 bucket: Introduction
 depth: Surface
@@ -20,16 +19,16 @@ hubGroup: orientation
 order: 10
 redirects:
   - how-to-use-this-guidebook
-outcome: After this page, you should be able to choose the right Vizij learning
-  route for your goal, pick the right depth, and know when to leave the
-  guidebook for repo-local implementation docs.
+outcome: After this page, you should be able to choose the right learning path
+  for your goal, pick the right depth, and know when to switch from overview
+  pages to repo-local implementation docs.
 prerequisites:
   - You do not need to understand Vizij architecture before using this page.
 successCheck:
-  - you can name the route you want to follow,
+  - you can name the path you want to follow,
   - you know whether you need Surface, Fundamentals, or Advanced depth first,
   - you know which page you are opening next,
-  - you know when to switch from the guidebook to repo-local docs.
+  - you know when to switch from overview pages to repo-local docs.
 headings:
   - depth: 2
     slug: module-notes
@@ -38,26 +37,26 @@ headings:
     slug: what-you-need
     text: What You Need
   - depth: 2
-    slug: route-map
-    text: Route Map
+    slug: learning-paths
+    text: Learning Paths
   - depth: 2
-    slug: start-here-if
-    text: Start Here If
+    slug: choose-a-path
+    text: Choose A Path
   - depth: 2
-    slug: route-chooser
-    text: Route Chooser
+    slug: path-chooser
+    text: Path Chooser
   - depth: 2
     slug: quick-chooser
     text: Quick chooser
   - depth: 2
-    slug: when-to-stay-in-the-guidebook
-    text: When To Stay In The Guidebook
+    slug: when-to-stay-in-the-overview-docs
+    text: When To Stay In The Overview Docs
   - depth: 2
-    slug: when-to-leave-the-guidebook
-    text: When To Leave The Guidebook
+    slug: when-to-switch-to-implementation-docs
+    text: When To Switch To Implementation Docs
   - depth: 2
-    slug: what-this-guidebook-does-not-replace
-    text: What This Guidebook Does Not Replace
+    slug: what-these-pages-do-not-replace
+    text: What These Pages Do Not Replace
   - depth: 2
     slug: suggested-first-step
     text: Suggested First Step
@@ -65,12 +64,12 @@ headings:
     slug: recommended-next-steps
     text: Recommended Next Steps
 context:
-  bucketChain: "Previous: Start of guidebook Current: Introduction Next: Experience"
+  bucketChain: "Previous: Start of docs path Current: Introduction Next: Experience"
   depthLadder: "Above: none, this is the entry depth in this bucket Current:
     Surface Below: System Mental Model, Customization Concepts Primer,
     Architecture Bridge"
-  modulePosition: "Previous in bucket: What Is Vizij? Current module: How To Use
-    This Guidebook Next in bucket: System Mental Model"
+  modulePosition: "Previous in bucket: What Is Vizij? Current module: Choose a
+    Learning Path Next in bucket: System Mental Model"
   moduleType: decision guide
   bucketOverview:
     label: Introduction
@@ -87,9 +86,9 @@ next:
   href: /docs/architecture/
   description: Map the public route back to the real cross-repo implementation surfaces.
 implementationAnchors:
-  - label: Guidebook README
+  - label: Docs source overview
     href: https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/README.md
-    description: Canonical teaching-system framing for the public route.
+    description: Canonical source framing behind the public docs path.
   - label: Vizij roadmap
     href: https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/ROADMAP.md
     description: Cross-repo program framing behind the maintained path.
@@ -108,23 +107,23 @@ This page is for:
 
 1. newcomers who want the shortest path to a working Vizij face,
 2. builders who want to know where customization fits,
-3. contributors who need to understand the guidebook structure before going deeper.
+3. contributors who need to understand the docs map before going deeper.
 
 ### Artifact Being Touched
 
-The guidebook is the artifact here.
+The artifact here is the reader-facing docs map.
 
-It is the canonical teaching system for Vizij. It is not the same thing as the internal architecture of the platform.
+Use it to decide what to learn next. It is not the same thing as the internal architecture of the platform.
 
 ## What You Need
 
 You do not need to understand Vizij architecture before using this page.
 
-It is enough to know that Vizij can load and control expressive faces and that the guidebook is organized to help you learn that system in stages.
+It is enough to know that Vizij can load and control expressive faces and that these docs are organized to help you move from first proof to deeper ownership.
 
-## Route Map
+## Learning Paths
 
-The guidebook is organized around six documentation buckets:
+The docs are organized around six documentation buckets:
 
 1. `Introduction`
 2. `Experience`
@@ -156,13 +155,13 @@ flowchart LR
     advanced[&quot;Advanced\nownership + implementation bridges&quot;] --- deploy
 </pre>
 
-Use the route to choose *where to learn next*.
+Use the path to choose *where to learn next*.
 
 Use the depth to choose *how much detail you need right now*.
 
-## Start Here If
+## Choose A Path
 
-### Fast route: you want the fastest believable route to a working deployment
+### Fast path: you want the fastest believable path to a working deployment
 
 Follow:
 
@@ -177,7 +176,7 @@ Choose this first if you want to:
 
 Most first-time builders should start here.
 
-### Customization route: you want to make the face your own before deploying it
+### Customization path: you want to make the face your own before deploying it
 
 Follow:
 
@@ -200,13 +199,13 @@ Jump directly to the bucket that matches the problem you are trying to solve:
 4. `Integrate` if you need a runtime shell or application embedding,
 5. `Deploy` if you need a real endpoint, operator flow, or standalone path.
 
-## Route Chooser
+## Path Chooser
 
-| Route | Choose it when | First maintained anchor | What it intentionally skips |
+| Path | Choose it when | First maintained anchor | What it intentionally skips |
 | --- | --- | --- | --- |
-| Fast deployment route | You need proof, control understanding, a player, and a first deployed endpoint | `tutorial-fullscreen-face`, `demo-vizij-player`, `vizij-standalone` | deep customization and authoring ownership |
-| Customization route | You need to change the face or its behavior before integrating it | `vizij-authoring` and its local docs | the fastest path to a deployed endpoint |
-| Single-bucket jump-in | You already know the route and only need one concept or recovery page | the bucket that matches the immediate problem | route-level context and sequencing |
+| Fast deployment path | You need proof, control understanding, a player, and a first deployed endpoint | `tutorial-fullscreen-face`, `demo-vizij-player`, `vizij-standalone` | deep customization and authoring ownership |
+| Customization path | You need to change the face or its behavior before integrating it | `vizij-authoring` and its local docs | the fastest path to a deployed endpoint |
+| Single-bucket jump-in | You already know the path and only need one concept or recovery page | the bucket that matches the immediate problem | path-level context and sequencing |
 
 ## Quick chooser
 
@@ -214,15 +213,15 @@ Use this if you are hesitating at the first fork:
 
 | If your immediate question is... | Open this next | Why |
 | --- | --- | --- |
-| `Can I make a face run at all?` | [Hello Face Quickstart](/tutorials/hello-face/) | fastest route-faithful proof |
+| `Can I make a face run at all?` | [Hello Face Quickstart](/tutorials/hello-face/) | fastest maintained proof |
 | `What do these runtime interactions actually mean?` | [First Control Interactions](/tutorials/renderer-data-model/) | same maintained app, slower explanation |
 | `How do I change the face or its behavior before integrating it?` | [Tweak an Existing Face](/tutorials/authoring/) | lowest-friction authoring entry |
 | `How do I embed a face in my app?` | [Minimal Web Player](/tutorials/minimal-player/) | first practical integration shell |
 | `How do I get to a same-host operator endpoint?` | [Easiest Standalone Deployment](/tutorials/deployment/) | first maintained deployment floor |
 
-## When To Stay In The Guidebook
+## When To Stay In The Overview Docs
 
-Stay in the guidebook when your question is primarily:
+Stay in the overview docs when your question is primarily:
 
 1. what does this concept mean,
 2. what should I learn next,
@@ -230,16 +229,16 @@ Stay in the guidebook when your question is primarily:
 4. what misunderstanding should I avoid,
 5. which maintained app is the right example to inspect.
 
-## When To Leave The Guidebook
+## When To Switch To Implementation Docs
 
-Leave the guidebook when your question becomes implementation-specific:
+Switch to implementation docs when your question becomes implementation-specific:
 
 1. which app or package owns this behavior,
 2. what the current code contract is,
 3. how a maintained example is assembled,
 4. which runtime or authoring document is authoritative.
 
-For the maintained route, the usual implementation docs are:
+For the maintained path, the usual implementation docs are:
 
 1. `vizij-web/apps/tutorial-fullscreen-face`
 2. `vizij-web/apps/tutorial-agent-face`
@@ -248,11 +247,11 @@ For the maintained route, the usual implementation docs are:
 5. `vizij-web/apps/vizij-standalone`
 6. `vizij-web/packages/@vizij/runtime-react`
 
-## What This Guidebook Does Not Replace
+## What These Pages Do Not Replace
 
-This guidebook is deliberately reader-facing.
+These overview pages are deliberately reader-facing.
 
-It does not replace:
+They do not replace:
 
 1. repo-local implementation docs in `vizij-web` and `vizij-rs`,
 2. internal roadmap and architecture authority docs in `vizij-docs/current_documentation`,

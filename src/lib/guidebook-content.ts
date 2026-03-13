@@ -35,7 +35,7 @@ export type GuidebookHubContent = {
 	title: string;
 	description: string;
 	presentationStyle: "atlas" | "spine";
-	heroFigure: {
+	heroFigure?: {
 		src: string;
 		alt: string;
 		title: string;
