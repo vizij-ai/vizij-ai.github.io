@@ -1,5 +1,3 @@
-import { url } from "../../utils/url";
-
 export type DemoPageId = "controls" | "expressions" | "gaze" | "voice";
 export type DemoPageVariant = "primary" | "secondary" | "tertiary" | "default";
 
@@ -31,7 +29,7 @@ export const DEMO_PAGES: DemoPageMeta[] = [
       "Search and control low-level rig inputs while previewing updates in real time.",
     description:
       "Inspect direct rig-path writes against the live face output, then move into the renderer-data-model tutorial to reproduce the same contract in code.",
-    learnHref: url("/tutorials/renderer-data-model/"),
+    learnHref: "/tutorials/renderer-data-model/",
     learnLabel: "Learn the path model",
     variant: "primary",
   },
@@ -47,7 +45,7 @@ export const DEMO_PAGES: DemoPageMeta[] = [
       "Trigger pose presets and preview the resulting expression on both Quori and Hugo outputs.",
     description:
       "Use canonical pose-weight writes to compare how one expression contract maps cleanly across different rendered faces.",
-    learnHref: url("/tutorials/rigging-and-control/"),
+    learnHref: "/tutorials/rigging-and-control/",
     learnLabel: "Learn rigging and control",
     variant: "secondary",
   },
@@ -63,7 +61,7 @@ export const DEMO_PAGES: DemoPageMeta[] = [
       "Drive gaze in real time from pointer input and click-triggered reactions.",
     description:
       "Pointer motion fans out into canonical left and right eye writes, making the standard gaze path family observable before you rebuild it yourself.",
-    learnHref: url("/tutorials/renderer-data-model/"),
+    learnHref: "/tutorials/renderer-data-model/",
     learnLabel: "Build the gaze writes",
     variant: "tertiary",
   },
@@ -79,7 +77,7 @@ export const DEMO_PAGES: DemoPageMeta[] = [
       "Run text-to-speech and viseme playback with synchronized facial motion.",
     description:
       "Trace the service boundary, viseme timing, and degraded states that sit underneath the synchronized face behavior.",
-    learnHref: url("/tutorials/agent-face/"),
+    learnHref: "/tutorials/agent-face/",
     learnLabel: "Build the live agent face",
     variant: "default",
   },
@@ -88,7 +86,7 @@ export const DEMO_PAGES: DemoPageMeta[] = [
 export function getDemoPageHref(idOrDemo: DemoPageId | DemoPageMeta) {
   const demo =
     typeof idOrDemo === "string" ? getDemoPageById(idOrDemo) : idOrDemo;
-  return url(`/demos/${demo.slug}/`);
+  return `/demos/${demo.slug}/`;
 }
 
 export function getDemoPageById(id: DemoPageId) {

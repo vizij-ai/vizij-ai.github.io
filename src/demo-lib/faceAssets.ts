@@ -1,11 +1,16 @@
 import { FACE_ROOT_BOUNDS } from "@/demo-lib/runtimeFace";
+import { resolveSitePath } from "@/utils/url";
 import type { VizijAssetBundle } from "@vizij/runtime-react";
 
 const FACE_ASSET_PATHS = {
-  hugoCurrentExtended: "/demos/assets/Hugo_Current_Extended.glb",
-  quoriCurrentExtended: "/demos/assets/Quori_Current_Extended.glb",
-  hugoLatest: "/demos/assets/Hugo_Current_Extended.glb",
-  quoriLatest: "/demos/assets/Quori_Current_Extended.glb",
+  hugoCurrentExtended: resolveSitePath(
+    "/demos/assets/Hugo_Current_Extended.glb",
+  ),
+  quoriCurrentExtended: resolveSitePath(
+    "/demos/assets/Quori_Current_Extended.glb",
+  ),
+  hugoLatest: resolveSitePath("/demos/assets/Hugo_Current_Extended.glb"),
+  quoriLatest: resolveSitePath("/demos/assets/Quori_Current_Extended.glb"),
 } as const;
 
 export type ShowcaseFaceAssetKey = keyof typeof FACE_ASSET_PATHS;

@@ -68,10 +68,10 @@ const DOCS_RENDERER_DATA_MODEL_HREF = url("/docs/renderer-data-model/");
 const TUTORIALS_HELLO_FACE_HREF = url("/tutorials/hello-face/");
 
 const LEGACY_HASH_ROUTE_MAP: Partial<Record<string, string>> = {
-  controls: url(getDemoPageHref("controls")),
-  expressions: url(getDemoPageHref("expressions")),
-  gaze: url(getDemoPageHref("gaze")),
-  voice: url(getDemoPageHref("voice")),
+  controls: resolveSitePath(getDemoPageHref("controls")),
+  expressions: resolveSitePath(getDemoPageHref("expressions")),
+  gaze: resolveSitePath(getDemoPageHref("gaze")),
+  voice: resolveSitePath(getDemoPageHref("voice")),
 };
 
 type DemosPageProps = {
@@ -388,7 +388,7 @@ standard/vizij/jaw/open -> { f64: 0.15 }`}
 
           <div className="flex flex-wrap gap-3">
             <DemoActionButton
-              href={url(getDemoPageHref("controls"))}
+              href={getDemoPageHref("controls")}
               label="Open Rig Controls"
               variant="primary"
             />
@@ -451,7 +451,7 @@ function DemosRail() {
         {DEMO_PAGES.map((demo) => (
           <a
             key={demo.id}
-            href={url(getDemoPageHref(demo))}
+            href={resolveSitePath(getDemoPageHref(demo))}
             className={RAIL_CARD_CLASS}
           >
             <p
@@ -494,7 +494,7 @@ function DemoSwitchboard({ activeDemoId }: { activeDemoId: DemoPageId }) {
         return (
           <a
             key={demo.id}
-            href={url(getDemoPageHref(demo))}
+            href={resolveSitePath(getDemoPageHref(demo))}
             aria-current={isActive ? "page" : undefined}
             className={`rounded-[1.45rem] border p-4 transition-colors ${
               isActive
@@ -581,7 +581,7 @@ function DemoDetailHeader({ demo }: { demo: DemoPageMeta }) {
 
           <div className="flex flex-wrap gap-3">
             <DemoActionButton
-              href={url(demo.learnHref)}
+              href={demo.learnHref}
               label={demo.learnLabel}
               variant="primary"
             />
@@ -1094,7 +1094,7 @@ function DemoRouteFooter({ demo }: { demo: DemoPageMeta }) {
         <div className="grid gap-5 md:grid-cols-2">
           {prevDemo ? (
             <a
-              href={url(getDemoPageHref(prevDemo))}
+              href={resolveSitePath(getDemoPageHref(prevDemo))}
               className={RAIL_CARD_CLASS}
             >
               <p
@@ -1119,7 +1119,7 @@ function DemoRouteFooter({ demo }: { demo: DemoPageMeta }) {
           ) : null}
           {nextDemo ? (
             <a
-              href={url(getDemoPageHref(nextDemo))}
+              href={resolveSitePath(getDemoPageHref(nextDemo))}
               className={RAIL_CARD_CLASS}
             >
               <p
@@ -1166,7 +1166,7 @@ function DemoRouteFooter({ demo }: { demo: DemoPageMeta }) {
               variant="secondary"
             />
             <DemoActionButton
-              href={url(demo.learnHref)}
+              href={demo.learnHref}
               label={demo.learnLabel}
               variant="primary"
             />
