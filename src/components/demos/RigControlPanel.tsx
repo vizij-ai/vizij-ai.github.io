@@ -408,10 +408,10 @@ function extractRigInputOptions(
 		return [];
 	}
 	return metadata
-		.map((entry) => {
+		.flatMap((entry): RigInputOption[] => {
 			const relativePath = normalizeInputPath(entry.path);
 			if (!relativePath) {
-				return null;
+				return [];
 			}
 
 			const absolutePath = buildRigInputPath(faceId, relativePath);
@@ -421,20 +421,27 @@ function extractRigInputOptions(
 					? entry.label
 					: absolutePath;
 
-			return {
-				path: absolutePath,
-				label,
-				min:
-					constraint?.min ??
-					(Number.isFinite(Number(entry.range?.min)) ? Number(entry.range?.min) : undefined),
-				max:
-					constraint?.max ??
-					(Number.isFinite(Number(entry.range?.max)) ? Number(entry.range?.max) : undefined),
-				defaultValue:
-					constraint?.defaultValue ??
-					(Number.isFinite(Number(entry.defaultValue)) ? Number(entry.defaultValue) : undefined),
-			};
+			return [
+				{
+					path: absolutePath,
+					label,
+					min:
+						constraint?.min ??
+						(Number.isFinite(Number(entry.range?.min))
+							? Number(entry.range?.min)
+							: undefined),
+					max:
+						constraint?.max ??
+						(Number.isFinite(Number(entry.range?.max))
+							? Number(entry.range?.max)
+							: undefined),
+					defaultValue:
+						constraint?.defaultValue ??
+						(Number.isFinite(Number(entry.defaultValue))
+							? Number(entry.defaultValue)
+							: undefined),
+				},
+			];
 		})
-		.filter((entry): entry is RigInputOption => Boolean(entry))
 		.sort((a, b) => a.path.localeCompare(b.path));
 }

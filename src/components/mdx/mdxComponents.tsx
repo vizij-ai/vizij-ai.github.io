@@ -2,13 +2,17 @@ import { clsx } from "clsx";
 import type { ComponentPropsWithoutRef, ComponentType, ElementType } from "react";
 
 type ElementProps<Tag extends ElementType> = ComponentPropsWithoutRef<Tag>;
+type CodeElementProps = ElementProps<"code"> & {
+	"data-language"?: string;
+	"data-theme"?: string;
+};
 // biome-ignore lint/suspicious/noExplicitAny: MDX component map accepts any component type
 export type MDXComponentMap = Record<string, ComponentType<any>>;
 
 const headingBase = "text-accent-base font-semibold tracking-tight";
 const bodyText = "text-color-800 dark:text-color-100 leading-8";
 
-function isBlockCode(props: ElementProps<"code">) {
+function isBlockCode(props: CodeElementProps) {
 	return Boolean(
 		props.className?.includes("language-") ||
 		props["data-language"] ||
@@ -91,7 +95,7 @@ export const mdxComponents: MDXComponentMap = {
 			)}
 		/>
 	),
-	code: (props: ElementProps<"code">) => (
+	code: (props: CodeElementProps) => (
 		isBlockCode(props) ? (
 			<code {...props} className={clsx("font-mono text-[0.95em]", props.className)} />
 		) : (
