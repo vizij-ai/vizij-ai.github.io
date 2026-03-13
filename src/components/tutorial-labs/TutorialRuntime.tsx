@@ -1,10 +1,10 @@
-import { createShowcaseBundle, type ShowcaseFaceAssetKey } from "@/demo-lib/faceAssets";
+import { type ShowcaseFaceAssetKey, createShowcaseBundle } from "@/demo-lib/faceAssets";
 import { VizijRuntimeProvider } from "@vizij/runtime-react";
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { type ReactNode, useEffect, useMemo, useState } from "react";
 
 export function TutorialRuntime({
 	namespace,
-	asset = "hugoLatest",
+	asset = "quoriCurrentExtended",
 	children,
 	fallback,
 }: {
@@ -30,4 +30,3 @@ export function TutorialRuntime({
 		</VizijRuntimeProvider>
 	);
 }
-

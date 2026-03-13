@@ -570,7 +570,7 @@ function ControlsDemoSection() {
 			<div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 md:grid-cols-2">
 				<ShowcaseRuntime
 					namespace="controls"
-					asset="hugoCurrentExtended"
+					asset="quoriCurrentExtended"
 					active
 					visible
 					autostart
@@ -771,22 +771,23 @@ function GazeDemoSection() {
 			</div>
 			<div className="mx-auto max-w-6xl">
 				<DemoTeachingPanel
-					title="Pointer gaze fans out into four standard eye paths"
-					summary="Gaze feels playful on the page, but the runtime contract is strict: one visible pointer gesture becomes four canonical standard-path writes, usually with clamped float values."
+					title="Pointer gaze fans out into four resolved eye paths"
+					summary="Gaze feels playful on the page, but the runtime contract is strict: one visible pointer gesture becomes four asset-resolved eye writes, with normalized values mapped into the authored control ranges."
 					bullets={[
 						"Horizontal and vertical pointer motion each fan out to left and right eye paths.",
-						"A reader should be able to reproduce this exact behavior with `useVizijRuntime()` and the standard gaze path family.",
+						"A reader should be able to reproduce this exact behavior with `resolveFaceControls()` and `mapNormalizedControlValue()`.",
 						"Click reactions belong on top of the gaze model, not instead of it.",
 					]}
 					validation={[
 						"Pointer motion produces paired left/right eye movement rather than one drifting eye.",
-						"You can name the four standard gaze paths without looking them up mid-build.",
-						"You can rebuild the behavior with clamped float writes in your own runtime component.",
+						"You can identify the four resolved eye paths for the active asset without guessing a legacy path family.",
+						"You can rebuild the behavior with normalized writes in your own runtime component.",
 					]}
-					code={`setInput(\`rig/\${faceId}/standard/left_eye/pos/x\`, { float: x });
-setInput(\`rig/\${faceId}/standard/right_eye/pos/x\`, { float: x });
-setInput(\`rig/\${faceId}/standard/left_eye/pos/y\`, { float: y });
-setInput(\`rig/\${faceId}/standard/right_eye/pos/y\`, { float: y });`}
+					code={`const controls = resolveFaceControls(assetBundle, faceId, inputConstraints);
+setInput(controls.eyes.leftX.path, { float: mapNormalizedControlValue(controls.eyes.leftX, x) });
+setInput(controls.eyes.rightX.path, { float: mapNormalizedControlValue(controls.eyes.rightX, x) });
+setInput(controls.eyes.leftY.path, { float: mapNormalizedControlValue(controls.eyes.leftY, y) });
+setInput(controls.eyes.rightY.path, { float: mapNormalizedControlValue(controls.eyes.rightY, y) });`}
 					sources={[
 						{
 							label: "GazeInteractiveFace",

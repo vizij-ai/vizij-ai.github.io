@@ -1,4 +1,4 @@
-import { getPoseGroup, type PoseHotkeyBinding } from "@/demo-lib/usePoseHotkeys";
+import { type PoseHotkeyBinding, getPoseGroup } from "@/demo-lib/usePoseHotkeys";
 
 function bindingLabel(binding: PoseHotkeyBinding) {
 	return `${getPoseGroup(binding.pose) ?? ""} ${binding.pose.name ?? binding.pose.id}`.toLowerCase();
@@ -12,11 +12,3 @@ export function pickExpressiveBindings(bindings: PoseHotkeyBinding[], count = 3)
 	);
 	return [...emotion, ...remaining, ...viseme].slice(0, count);
 }
-
-export const STANDARD_GAZE_PATHS = {
-	leftX: "standard/left_eye/pos/x",
-	leftY: "standard/left_eye/pos/y",
-	rightX: "standard/right_eye/pos/x",
-	rightY: "standard/right_eye/pos/y",
-} as const;
-

@@ -67,6 +67,7 @@ const EMOTION_GROUP_NEEDLES = ["emotion", "expression", "mood", "affect"];
 const VISEME_POSE_KEY_SET = new Set<string>(VISEME_POSE_KEYS);
 const EMOTION_POSE_KEY_SET = new Set<string>(EMOTION_POSE_KEYS);
 const POSE_KEY_ALIASES: Record<string, string> = {
+  anger: "angry",
   concern: "concerned",
   surprised: "surprise",
 };
