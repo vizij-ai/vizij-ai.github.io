@@ -35,7 +35,7 @@ const sansStack =
 
 <section id="hero" class="mx-auto max-w-7xl scroll-mt-28 px-4 pt-20 sm:px-6 sm:pt-24 lg:px-8">
 	<div class="grid gap-8 lg:grid-cols-[minmax(0,1.02fr)_minmax(0,0.98fr)] lg:items-start">
-		<div class="space-y-6 rounded-[2.35rem] border border-[#ead7c3] bg-[linear-gradient(180deg,rgba(255,251,245,0.98),rgba(245,241,232,0.93))] p-6 shadow-[0_20px_64px_-34px_rgba(24,24,27,0.24)] sm:p-8">
+		<div class="space-y-6 rounded-[2.35rem] border border-[#ead7c3] bg-[linear-gradient(180deg,rgba(255,251,245,0.98),rgba(245,241,232,0.93))] p-6 shadow-[0_20px_64px_-34px_rgba(24,24,27,0.24)] dark:border-white/10 dark:bg-[linear-gradient(180deg,rgba(22,25,31,0.96),rgba(16,18,23,0.92))] dark:shadow-[0_20px_64px_-34px_rgba(0,0,0,0.6)] sm:p-8">
 			<div class="flex flex-wrap items-center gap-3">
 				<span
 					class="rounded-full border border-accent-two/25 bg-accent-two/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-accent-two"
@@ -53,20 +53,20 @@ const sansStack =
 
 			<div class="space-y-4">
 				<h1
-					class="max-w-4xl text-4xl leading-[1.02] text-[#211b16] sm:text-5xl lg:text-6xl"
+					class="max-w-4xl text-4xl leading-[1.02] text-[#211b16] dark:text-[#f6f1e8] sm:text-5xl lg:text-6xl"
 					style={`font-family:${serifStack}`}
 				>
 					{title}
 				</h1>
 				<p
-					class="max-w-2xl text-base leading-8 text-[#5d5247] sm:text-lg"
+					class="max-w-2xl text-base leading-8 text-[#5d5247] dark:text-[#c8c0b4] sm:text-lg"
 					style={`font-family:${sansStack}`}
 				>
 					{summary}
 				</p>
 				{outcome ? (
 					<p
-						class="max-w-3xl rounded-[1.6rem] border border-accent-base/10 bg-white/60 px-5 py-4 text-sm leading-7 text-color-700"
+						class="max-w-3xl rounded-[1.6rem] border border-accent-base/10 bg-white/60 px-5 py-4 text-sm leading-7 text-color-700 dark:border-white/10 dark:bg-[#1b1f27]/82 dark:text-[#ddd4c8]"
 						style={`font-family:${sansStack}`}
 					>
 						<strong class="text-foreground">Reader outcome:</strong> {outcome}
@@ -226,29 +226,54 @@ const sansStack =
 						try {
 							const mermaidModule = await import("https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs");
 							const mermaid = mermaidModule.default;
-							mermaid.initialize({
-								startOnLoad: false,
-								securityLevel: "loose",
-								theme: "base",
-								themeVariables: {
-									background: "#fffdf7",
-									primaryColor: "#efe1cd",
-									primaryBorderColor: "#c78732",
-									primaryTextColor: "#211b16",
-									lineColor: "#5d5247",
-									secondaryColor: "#f7f1e7",
-									tertiaryColor: "#fff8ef",
-								},
+							const getThemeName = () =>
+								document.documentElement.getAttribute("data-theme") === "light"
+									? "light"
+									: "dark";
+							const getThemeVariables = (theme) =>
+								theme === "dark"
+									? {
+											background: "#171b22",
+											primaryColor: "#232933",
+											primaryBorderColor: "#f0b36b",
+											primaryTextColor: "#f4ede3",
+											lineColor: "#c8c0b4",
+											secondaryColor: "#1b1f27",
+											tertiaryColor: "#101317",
+										}
+									: {
+											background: "#fffdf7",
+											primaryColor: "#efe1cd",
+											primaryBorderColor: "#c78732",
+											primaryTextColor: "#211b16",
+											lineColor: "#5d5247",
+											secondaryColor: "#f7f1e7",
+											tertiaryColor: "#fff8ef",
+										};
+							const renderDiagrams = async () => {
+								const theme = getThemeName();
+								mermaid.initialize({
+									startOnLoad: false,
+									securityLevel: "loose",
+									theme: "base",
+									themeVariables: getThemeVariables(theme),
+								});
+								for (const [index, diagram] of Array.from(diagrams).entries()) {
+									const source =
+										diagram.dataset.mermaidSource ?? diagram.textContent?.trim();
+									if (!source) continue;
+									diagram.dataset.mermaidSource = source;
+									const renderId = `guidebook-mermaid-${theme}-${index}`;
+									const { svg, bindFunctions } = await mermaid.render(renderId, source);
+									diagram.innerHTML = svg;
+									diagram.setAttribute("data-processed", "true");
+									bindFunctions?.(diagram);
+								}
+							};
+							await renderDiagrams();
+							document.addEventListener("theme-change", () => {
+								void renderDiagrams();
 							});
-							for (const [index, diagram] of Array.from(diagrams).entries()) {
-								const source = diagram.textContent?.trim();
-								if (!source) continue;
-								const renderId = `guidebook-mermaid-${index}`;
-								const { svg, bindFunctions } = await mermaid.render(renderId, source);
-								diagram.innerHTML = svg;
-								diagram.setAttribute("data-processed", "true");
-								bindFunctions?.(diagram);
-							}
 						} catch (error) {
 							console.error("Failed to render guidebook mermaid diagram", error);
 						}
@@ -299,6 +324,11 @@ const sansStack =
 		border-radius: 1.5rem;
 		background: linear-gradient(180deg, rgba(255, 251, 245, 0.98), rgba(247, 241, 231, 0.9));
 		padding: 1rem;
+	}
+
+	:root[data-theme="dark"] article :global(.guidebook-mermaid) {
+		border-color: rgb(255 255 255 / 0.1);
+		background: linear-gradient(180deg, rgba(24, 27, 34, 0.96), rgba(16, 19, 24, 0.98));
 	}
 
 	article :global(.guidebook-mermaid svg) {

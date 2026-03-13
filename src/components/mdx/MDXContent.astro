@@ -33,7 +33,7 @@ const { Content } =
 const componentMap = mergeMDXComponents(components);
 const contentClass =
   variant === "guidebook"
-    ? "mdx-content mdx-content--guidebook max-w-none text-color-800 leading-7 md:leading-8"
+    ? "mdx-content mdx-content--guidebook max-w-none text-color-800 dark:text-color-100 leading-7 md:leading-8"
     : "mdx-content prose prose-lg dark:prose-invert max-w-none text-color-800 dark:text-color-100 leading-7 md:leading-8";
 ---
 
@@ -43,19 +43,82 @@ const contentClass =
 
 <style is:global>
   .mdx-content--guidebook {
+    --guidebook-heading: #211b16;
+    --guidebook-body: #312a25;
+    --guidebook-body-muted: #3f372f;
+    --guidebook-blockquote-bg: linear-gradient(
+      180deg,
+      rgba(255, 159, 64, 0.08),
+      rgba(255, 159, 64, 0.03)
+    );
+    --guidebook-inline-code-border: rgba(22, 23, 26, 0.08);
+    --guidebook-inline-code-bg: rgba(22, 23, 26, 0.05);
+    --guidebook-inline-code-color: #9a3412;
     --guidebook-code-bg: #16171a;
-    --guidebook-code-surface: rgba(22, 23, 26, 0.05);
     --guidebook-code-border: rgba(34, 34, 37, 0.1);
     --guidebook-table-border: rgba(34, 34, 37, 0.12);
+    --guidebook-table-bg: rgba(255, 255, 255, 0.8);
+    --guidebook-table-head-bg: linear-gradient(
+      180deg,
+      rgba(239, 225, 205, 0.88),
+      rgba(247, 241, 231, 0.9)
+    );
+    --guidebook-table-row-alt: rgba(247, 241, 231, 0.46);
+    --guidebook-th: #8f4e14;
     --guidebook-figure-border: rgba(34, 34, 37, 0.1);
+    --guidebook-figure-bg: rgba(255, 253, 248, 0.96);
+    --guidebook-figure-media-bg: linear-gradient(
+      180deg,
+      rgba(247, 241, 231, 0.7),
+      rgba(255, 253, 248, 0.94)
+    );
+    --guidebook-caption-bg: rgba(247, 241, 231, 0.66);
+    --guidebook-caption-border: rgba(22, 23, 26, 0.08);
     --guidebook-caption: #6b625a;
-    color: #312a25;
+    --guidebook-rule: rgba(22, 23, 26, 0.12);
+    color: var(--guidebook-body);
+  }
+
+  :root[data-theme="dark"] .mdx-content--guidebook {
+    --guidebook-heading: #f4ede3;
+    --guidebook-body: #e5dccf;
+    --guidebook-body-muted: #d0c4b5;
+    --guidebook-blockquote-bg: linear-gradient(
+      180deg,
+      rgba(240, 179, 107, 0.12),
+      rgba(240, 179, 107, 0.04)
+    );
+    --guidebook-inline-code-border: rgba(255, 255, 255, 0.1);
+    --guidebook-inline-code-bg: rgba(255, 255, 255, 0.06);
+    --guidebook-inline-code-color: #ffbf8a;
+    --guidebook-code-bg: #101317;
+    --guidebook-code-border: rgba(255, 255, 255, 0.1);
+    --guidebook-table-border: rgba(255, 255, 255, 0.12);
+    --guidebook-table-bg: rgba(23, 27, 34, 0.9);
+    --guidebook-table-head-bg: linear-gradient(
+      180deg,
+      rgba(36, 39, 47, 0.96),
+      rgba(25, 28, 35, 0.96)
+    );
+    --guidebook-table-row-alt: rgba(255, 255, 255, 0.03);
+    --guidebook-th: #f0b36b;
+    --guidebook-figure-border: rgba(255, 255, 255, 0.1);
+    --guidebook-figure-bg: rgba(23, 27, 34, 0.92);
+    --guidebook-figure-media-bg: linear-gradient(
+      180deg,
+      rgba(34, 38, 45, 0.92),
+      rgba(16, 19, 24, 0.98)
+    );
+    --guidebook-caption-bg: rgba(18, 21, 27, 0.92);
+    --guidebook-caption-border: rgba(255, 255, 255, 0.08);
+    --guidebook-caption: #bbb2a7;
+    --guidebook-rule: rgba(255, 255, 255, 0.12);
   }
 
   .mdx-content--guidebook :where(h2, h3, h4) {
-    font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia,
-      serif;
-    color: #211b16;
+    font-family:
+      "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+    color: var(--guidebook-heading);
     letter-spacing: -0.015em;
   }
 
@@ -91,7 +154,7 @@ const contentClass =
 
   .mdx-content--guidebook p {
     margin-block: 1rem;
-    color: #3f372f;
+    color: var(--guidebook-body-muted);
     line-height: 1.9;
   }
 
@@ -110,7 +173,7 @@ const contentClass =
   .mdx-content--guidebook ol {
     margin-block: 1.15rem;
     padding-left: 1.6rem;
-    color: #3f372f;
+    color: var(--guidebook-body-muted);
     list-style-position: outside;
   }
 
@@ -154,18 +217,18 @@ const contentClass =
     margin-block: 1.75rem;
     border-left: 4px solid hsl(var(--theme-accent-one) / 0.72);
     border-radius: 0 1rem 1rem 0;
-    background: linear-gradient(180deg, rgba(255, 159, 64, 0.08), rgba(255, 159, 64, 0.03));
+    background: var(--guidebook-blockquote-bg);
     padding: 1rem 1.15rem;
-    color: #312a25;
+    color: var(--guidebook-body);
   }
 
   .mdx-content--guidebook :not(pre) > code {
-    border: 1px solid rgba(22, 23, 26, 0.08);
+    border: 1px solid var(--guidebook-inline-code-border);
     border-radius: 0.6rem;
-    background: rgba(22, 23, 26, 0.05);
+    background: var(--guidebook-inline-code-bg);
     padding: 0.16rem 0.42rem;
     font-size: 0.92em;
-    color: #9a3412;
+    color: var(--guidebook-inline-code-color);
   }
 
   .mdx-content--guidebook [data-rehype-pretty-code-figure] {
@@ -204,7 +267,9 @@ const contentClass =
     color: #f7f4ed;
   }
 
-  .mdx-content--guidebook pre:not(.guidebook-mermaid):not([data-language]) code {
+  .mdx-content--guidebook
+    pre:not(.guidebook-mermaid):not([data-language])
+    code {
     padding: 0;
     border: 0;
     background: transparent;
@@ -216,7 +281,7 @@ const contentClass =
     overflow: auto;
     border: 1px solid var(--guidebook-figure-border);
     border-radius: 1.25rem;
-    background: linear-gradient(180deg, rgba(255, 251, 245, 0.98), rgba(247, 241, 231, 0.92));
+    background: var(--guidebook-figure-media-bg);
     padding: 1rem;
     box-shadow: 0 24px 64px -38px rgba(24, 24, 27, 0.28);
     white-space: pre;
@@ -246,12 +311,12 @@ const contentClass =
     border-radius: 1.15rem;
     border-collapse: separate;
     border-spacing: 0;
-    background: rgba(255, 255, 255, 0.8);
+    background: var(--guidebook-table-bg);
     box-shadow: 0 20px 48px -34px rgba(24, 24, 27, 0.28);
   }
 
   .mdx-content--guidebook thead {
-    background: linear-gradient(180deg, rgba(239, 225, 205, 0.88), rgba(247, 241, 231, 0.9));
+    background: var(--guidebook-table-head-bg);
   }
 
   .mdx-content--guidebook th,
@@ -269,13 +334,13 @@ const contentClass =
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: #8f4e14;
+    color: var(--guidebook-th);
   }
 
   .mdx-content--guidebook td {
     font-size: 0.97rem;
     line-height: 1.75;
-    color: #312a25;
+    color: var(--guidebook-body);
   }
 
   .mdx-content--guidebook tr > :last-child {
@@ -287,7 +352,7 @@ const contentClass =
   }
 
   .mdx-content--guidebook tbody tr:nth-child(even) {
-    background: rgba(247, 241, 231, 0.46);
+    background: var(--guidebook-table-row-alt);
   }
 
   .mdx-content--guidebook figure:not([data-rehype-pretty-code-figure]),
@@ -296,7 +361,7 @@ const contentClass =
     overflow: hidden;
     border: 1px solid var(--guidebook-figure-border);
     border-radius: 1.25rem;
-    background: rgba(255, 253, 248, 0.96);
+    background: var(--guidebook-figure-bg);
     box-shadow: 0 24px 64px -38px rgba(24, 24, 27, 0.32);
   }
 
@@ -308,13 +373,13 @@ const contentClass =
     height: auto;
     max-height: min(72vh, 54rem);
     object-fit: contain;
-    background: linear-gradient(180deg, rgba(247, 241, 231, 0.7), rgba(255, 253, 248, 0.94));
+    background: var(--guidebook-figure-media-bg);
   }
 
   .mdx-content--guidebook figcaption,
   .mdx-content--guidebook .guidebook-media figcaption {
-    border-top: 1px solid rgba(22, 23, 26, 0.08);
-    background: rgba(247, 241, 231, 0.66);
+    border-top: 1px solid var(--guidebook-caption-border);
+    background: var(--guidebook-caption-bg);
     padding: 0.9rem 1rem 1rem;
     font-size: 0.92rem;
     line-height: 1.7;
@@ -324,7 +389,7 @@ const contentClass =
   .mdx-content--guidebook hr {
     margin-block: 2.4rem;
     border: 0;
-    border-top: 1px solid rgba(22, 23, 26, 0.12);
+    border-top: 1px solid var(--guidebook-rule);
   }
 
   @media (max-width: 50rem) {
