@@ -8,6 +8,14 @@ export type MDXComponentMap = Record<string, ComponentType<any>>;
 const headingBase = "text-accent-base font-semibold tracking-tight";
 const bodyText = "text-color-800 dark:text-color-100 leading-8";
 
+function isBlockCode(props: ElementProps<"code">) {
+	return Boolean(
+		props.className?.includes("language-") ||
+		props["data-language"] ||
+		props["data-theme"],
+	);
+}
+
 export const mdxComponents: MDXComponentMap = {
 	h1: (props: ElementProps<"h1">) => (
 		<h1
@@ -84,19 +92,23 @@ export const mdxComponents: MDXComponentMap = {
 		/>
 	),
 	code: (props: ElementProps<"code">) => (
-		<code
-			{...props}
-			className={clsx(
-				"bg-(--code-inline-bg) px-2 py-1 rounded-md font-mono text-sm text-accent-base",
-				props.className,
-			)}
-		/>
+		isBlockCode(props) ? (
+			<code {...props} className={clsx("font-mono text-[0.95em]", props.className)} />
+		) : (
+			<code
+				{...props}
+				className={clsx(
+					"bg-(--code-inline-bg) px-2 py-1 rounded-md font-mono text-sm text-accent-base",
+					props.className,
+				)}
+			/>
+		)
 	),
 	pre: (props: ElementProps<"pre">) => (
 		<pre
 			{...props}
 			className={clsx(
-				"my-6 rounded-xl border border-accent-one/10 bg-(--code-bg) px-4 py-3 overflow-x-auto text-sm",
+				"my-6 rounded-xl border border-accent-one/10 bg-(--code-bg) px-4 py-3 overflow-x-auto text-sm shadow-[0_18px_48px_-34px_rgba(24,24,27,0.45)]",
 				props.className,
 			)}
 		/>
@@ -105,13 +117,15 @@ export const mdxComponents: MDXComponentMap = {
 		<hr {...props} className={clsx("my-10 border-t border-accent-one/30", props.className)} />
 	),
 	table: (props: ElementProps<"table">) => (
-		<table
-			{...props}
-			className={clsx(
-				"my-6 w-full border-collapse text-sm overflow-hidden rounded-xl",
-				props.className,
-			)}
-		/>
+		<div className="my-6 overflow-x-auto rounded-xl border border-accent-one/15 shadow-[0_16px_42px_-34px_rgba(24,24,27,0.28)]">
+			<table
+				{...props}
+				className={clsx(
+					"w-max min-w-full border-separate border-spacing-0 bg-surface/90 text-sm",
+					props.className,
+				)}
+			/>
+		</div>
 	),
 	thead: (props: ElementProps<"thead">) => (
 		<thead {...props} className={clsx("bg-accent-one/10", props.className)} />

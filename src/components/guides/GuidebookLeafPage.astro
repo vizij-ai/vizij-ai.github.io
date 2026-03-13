@@ -1,0 +1,308 @@
+---
+import type { CollectionEntry } from "astro:content";
+import MDXContent from "@/components/mdx/MDXContent.astro";
+
+interface Props {
+	entry: CollectionEntry<"guidebookPages">;
+}
+
+const { entry } = Astro.props as Props;
+const hasLab = Astro.slots.has("lab");
+const {
+	title,
+	summary,
+	surface,
+	bucket,
+	depth,
+	moduleType,
+	outcome,
+	prerequisites,
+	successCheck,
+	context,
+	headings,
+	prev,
+	next,
+	implementationAnchors,
+	demoLinks,
+	hasMermaid,
+} = entry.data;
+
+const serifStack =
+	'"Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif';
+const sansStack =
+	'"Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif';
+---
+
+<section id="hero" class="mx-auto max-w-7xl scroll-mt-28 px-4 pt-20 sm:px-6 sm:pt-24 lg:px-8">
+	<div class="grid gap-8 lg:grid-cols-[minmax(0,1.02fr)_minmax(0,0.98fr)] lg:items-start">
+		<div class="space-y-6 rounded-[2.35rem] border border-[#ead7c3] bg-[linear-gradient(180deg,rgba(255,251,245,0.98),rgba(245,241,232,0.93))] p-6 shadow-[0_20px_64px_-34px_rgba(24,24,27,0.24)] sm:p-8">
+			<div class="flex flex-wrap items-center gap-3">
+				<span
+					class="rounded-full border border-accent-two/25 bg-accent-two/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-accent-two"
+					style={`font-family:${sansStack}`}
+				>
+					{surface === "docs" ? "Vizij Docs" : "Vizij Tutorials"}
+				</span>
+				<span
+					class="rounded-full border border-accent-base/15 bg-surface/90 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-color-500"
+					style={`font-family:${sansStack}`}
+				>
+					{moduleType}
+				</span>
+			</div>
+
+			<div class="space-y-4">
+				<h1
+					class="max-w-4xl text-4xl leading-[1.02] text-[#211b16] sm:text-5xl lg:text-6xl"
+					style={`font-family:${serifStack}`}
+				>
+					{title}
+				</h1>
+				<p
+					class="max-w-2xl text-base leading-8 text-[#5d5247] sm:text-lg"
+					style={`font-family:${sansStack}`}
+				>
+					{summary}
+				</p>
+				{outcome ? (
+					<p
+						class="max-w-3xl rounded-[1.6rem] border border-accent-base/10 bg-white/60 px-5 py-4 text-sm leading-7 text-color-700"
+						style={`font-family:${sansStack}`}
+					>
+						<strong class="text-foreground">Reader outcome:</strong> {outcome}
+					</p>
+				) : null}
+			</div>
+
+			<div class="grid gap-4 md:grid-cols-3">
+				<div class="rounded-[1.7rem] border border-accent-base/15 bg-surface/90 p-5 shadow-[0_18px_52px_-30px_rgba(24,24,27,0.28)]">
+					<p class="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent-two" style={`font-family:${sansStack}`}>Bucket</p>
+					<p class="mt-3 text-lg leading-tight text-foreground" style={`font-family:${serifStack}`}>{bucket}</p>
+				</div>
+				<div class="rounded-[1.7rem] border border-accent-base/15 bg-surface/90 p-5 shadow-[0_18px_52px_-30px_rgba(24,24,27,0.28)]">
+					<p class="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent-two" style={`font-family:${sansStack}`}>Depth</p>
+					<p class="mt-3 text-lg leading-tight text-foreground" style={`font-family:${serifStack}`}>{depth}</p>
+				</div>
+				<div class="rounded-[1.7rem] border border-accent-base/15 bg-[#16171a] p-5 text-white shadow-[0_18px_52px_-30px_rgba(24,24,27,0.42)]">
+					<p class="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#f8c46d]" style={`font-family:${sansStack}`}>Route role</p>
+					<p class="mt-3 text-lg leading-tight" style={`font-family:${serifStack}`}>{entry.data.routeRoleLabel || entry.data.routeRole}</p>
+				</div>
+			</div>
+
+			<div class="flex flex-wrap gap-3">
+				<a href={`/${surface}/`} class="inline-flex items-center gap-2 rounded-full bg-accent-two px-4 py-2 text-sm font-medium text-surface transition-colors hover:bg-accent-two/90">
+					Back To {surface === "docs" ? "Docs Hub" : "Tutorials Hub"}
+				</a>
+				{prev ? (
+					<a href={prev.href} class="inline-flex items-center gap-2 rounded-full border border-accent-two/35 bg-surface/70 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-accent-two/60 hover:bg-accent-two/10">
+						Previous Route
+					</a>
+				) : null}
+				{next ? (
+					<a href={next.href} class="inline-flex items-center gap-2 rounded-full border border-accent-base/25 bg-transparent px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-accent-base/45 hover:bg-accent-base/10">
+						Next Route
+					</a>
+				) : null}
+			</div>
+		</div>
+
+		<div class="grid gap-5">
+			{prerequisites.length ? (
+				<div class="rounded-[2rem] border border-accent-base/15 bg-surface/90 p-6 shadow-[0_24px_80px_-28px_rgba(24,24,27,0.28)]">
+					<p class="text-[11px] font-semibold uppercase tracking-[0.22em] text-accent-two" style={`font-family:${sansStack}`}>What You Need</p>
+					<ul class="mt-4 space-y-3 text-sm leading-6 text-color-500" style={`font-family:${sansStack}`}>
+						{prerequisites.map((item) => <li class="flex gap-3"><span class="mt-1 h-2 w-2 rounded-full bg-accent-two"></span><span>{item}</span></li>)}
+					</ul>
+				</div>
+			) : null}
+
+			{successCheck.length ? (
+				<div class="rounded-[2rem] border border-accent-base/15 bg-[#16171a] p-6 text-white shadow-[0_24px_80px_-28px_rgba(24,24,27,0.35)]">
+					<p class="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#f8c46d]" style={`font-family:${sansStack}`}>Proof State</p>
+					<ul class="mt-4 space-y-3 text-sm leading-6 text-white/80" style={`font-family:${sansStack}`}>
+						{successCheck.map((item) => <li class="flex gap-3"><span class="mt-1 h-2 w-2 rounded-full bg-[#f8c46d]"></span><span>{item}</span></li>)}
+					</ul>
+				</div>
+			) : null}
+
+			{context?.bucketChain || context?.depthLadder || context?.modulePosition ? (
+				<div class="rounded-[2rem] border border-accent-base/15 bg-surface/90 p-6 shadow-[0_24px_80px_-28px_rgba(24,24,27,0.28)]">
+					<p class="text-[11px] font-semibold uppercase tracking-[0.22em] text-accent-two" style={`font-family:${sansStack}`}>Guidebook Position</p>
+					<div class="mt-4 space-y-4 text-sm leading-6 text-color-500" style={`font-family:${sansStack}`}>
+						{context?.bucketChain ? <p><strong class="text-foreground">Bucket chain:</strong> {context.bucketChain}</p> : null}
+						{context?.depthLadder ? <p><strong class="text-foreground">Depth ladder:</strong> {context.depthLadder}</p> : null}
+						{context?.modulePosition ? <p><strong class="text-foreground">Module position:</strong> {context.modulePosition}</p> : null}
+						{context?.bucketOverview ? (
+							<p>
+								<strong class="text-foreground">Bucket overview:</strong>
+								{" "}
+								<a href={context.bucketOverview.href} class="text-accent-three underline decoration-2 underline-offset-4">{context.bucketOverview.label}</a>
+							</p>
+						) : null}
+					</div>
+				</div>
+			) : null}
+		</div>
+	</div>
+</section>
+
+{hasLab ? (
+	<section class="mx-auto mt-10 max-w-7xl px-4 sm:px-6 lg:px-8">
+		<div class="overflow-hidden rounded-[2.25rem] border border-accent-base/15 bg-surface/85 shadow-[0_24px_80px_-34px_rgba(24,24,27,0.35)]">
+			<div class="grid gap-0 lg:grid-cols-[0.34fr_0.66fr]">
+				<div class="border-b border-accent-base/10 bg-[#16171a] px-6 py-8 text-white lg:border-b-0 lg:border-r">
+					<p class="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#f8c46d]" style={`font-family:${sansStack}`}>Interactive Reference</p>
+					<h2 class="mt-4 text-3xl leading-tight" style={`font-family:${serifStack}`}>Read, run, inspect, then continue.</h2>
+					<p class="mt-4 text-sm leading-7 text-white/78" style={`font-family:${sansStack}`}>
+						The guidebook remains the canonical lesson. The public site can layer in a runnable reference surface when the interaction strengthens the page instead of distracting from it.
+					</p>
+				</div>
+				<div class="bg-surface-lighter/65 p-4 sm:p-6">
+					<slot name="lab" />
+				</div>
+			</div>
+		</div>
+	</section>
+) : null}
+
+<section class="mx-auto mt-10 max-w-7xl px-4 sm:px-6 lg:px-8">
+	<div class="grid gap-10 lg:grid-cols-[minmax(0,0.27fr)_minmax(0,0.73fr)]">
+		<aside class="space-y-5 lg:sticky lg:top-24 lg:self-start">
+			{headings.length ? (
+				<div class="rounded-[1.8rem] border border-accent-base/15 bg-surface/80 p-5 shadow-[0_16px_40px_-28px_rgba(24,24,27,0.32)]">
+					<p class="text-[11px] font-semibold uppercase tracking-[0.22em] text-accent-two" style={`font-family:${sansStack}`}>On This Page</p>
+					<ul class="mt-4 space-y-3">
+						{headings.map((heading, index) => (
+							<li>
+								<a href={`#${heading.slug}`} class="group flex items-start gap-3 rounded-2xl px-3 py-2 text-sm text-color-500 transition-colors hover:bg-accent-base/8 hover:text-foreground" style={`font-family:${sansStack}`}>
+									<span class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-accent-two/25 bg-accent-two/10 text-[11px] font-semibold text-accent-two">{index + 1}</span>
+									<span>{heading.text}</span>
+								</a>
+							</li>
+						))}
+					</ul>
+				</div>
+			) : null}
+
+			{implementationAnchors.length ? (
+				<div class="rounded-[1.8rem] border border-accent-base/15 bg-surface/80 p-5 shadow-[0_16px_40px_-28px_rgba(24,24,27,0.32)]">
+					<p class="text-[11px] font-semibold uppercase tracking-[0.22em] text-accent-two" style={`font-family:${sansStack}`}>Implementation Anchors</p>
+					<div class="mt-4 space-y-3">
+						{implementationAnchors.map((anchor) => (
+							<a href={anchor.href} class="block rounded-2xl border border-accent-base/10 bg-accent-base/5 px-4 py-3 text-sm text-color-500 transition-colors hover:border-accent-two/30 hover:bg-accent-two/10 hover:text-foreground" style={`font-family:${sansStack}`}>
+								<div class="font-semibold text-foreground">{anchor.label}</div>
+								{anchor.description ? <div class="mt-1 text-color-500">{anchor.description}</div> : null}
+							</a>
+						))}
+					</div>
+				</div>
+			) : null}
+
+			{context?.referenceBridges?.length ? (
+				<div class="rounded-[1.8rem] border border-accent-base/15 bg-[#16171a] p-5 text-white shadow-[0_16px_40px_-28px_rgba(24,24,27,0.42)]">
+					<p class="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#f8c46d]" style={`font-family:${sansStack}`}>Reference Bridges</p>
+					<div class="mt-4 space-y-3">
+						{context.referenceBridges.map((anchor) => (
+							<a href={anchor.href} class="block rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/78 transition-colors hover:border-white/20 hover:bg-white/8" style={`font-family:${sansStack}`}>
+								<div class="font-semibold text-white">{anchor.label}</div>
+								{anchor.description ? <div class="mt-1">{anchor.description}</div> : null}
+							</a>
+						))}
+					</div>
+				</div>
+			) : null}
+		</aside>
+
+		<div class="min-w-0">
+			<article class="overflow-hidden rounded-[2.1rem] border border-accent-base/15 bg-surface/90 px-6 py-8 shadow-[0_24px_80px_-34px_rgba(24,24,27,0.22)] sm:px-8 lg:px-10">
+				<MDXContent entry={entry} variant="guidebook" />
+			</article>
+
+			{hasMermaid ? (
+				<script is:inline>
+					(async () => {
+						const diagrams = document.querySelectorAll(".guidebook-mermaid.mermaid");
+						if (!diagrams.length) return;
+						try {
+							const mermaidModule = await import("https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs");
+							const mermaid = mermaidModule.default;
+							mermaid.initialize({
+								startOnLoad: false,
+								securityLevel: "loose",
+								theme: "base",
+								themeVariables: {
+									background: "#fffdf7",
+									primaryColor: "#efe1cd",
+									primaryBorderColor: "#c78732",
+									primaryTextColor: "#211b16",
+									lineColor: "#5d5247",
+									secondaryColor: "#f7f1e7",
+									tertiaryColor: "#fff8ef",
+								},
+							});
+							for (const [index, diagram] of Array.from(diagrams).entries()) {
+								const source = diagram.textContent?.trim();
+								if (!source) continue;
+								const renderId = `guidebook-mermaid-${index}`;
+								const { svg, bindFunctions } = await mermaid.render(renderId, source);
+								diagram.innerHTML = svg;
+								diagram.setAttribute("data-processed", "true");
+								bindFunctions?.(diagram);
+							}
+						} catch (error) {
+							console.error("Failed to render guidebook mermaid diagram", error);
+						}
+					})();
+				</script>
+			) : null}
+
+			{demoLinks.length || prev || next ? (
+				<div class="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+					{prev ? (
+						<a href={prev.href} class="rounded-[1.8rem] border border-accent-base/15 bg-surface/92 p-5 shadow-[0_18px_48px_-30px_rgba(24,24,27,0.24)]">
+							<p class="text-[11px] font-semibold uppercase tracking-[0.22em] text-accent-two" style={`font-family:${sansStack}`}>Previous Route</p>
+							<p class="mt-3 text-xl leading-tight text-foreground" style={`font-family:${serifStack}`}>{prev.label}</p>
+							{prev.description ? <p class="mt-2 text-sm leading-6 text-color-500" style={`font-family:${sansStack}`}>{prev.description}</p> : null}
+						</a>
+					) : null}
+					{next ? (
+						<a href={next.href} class="rounded-[1.8rem] border border-accent-base/15 bg-surface/92 p-5 shadow-[0_18px_48px_-30px_rgba(24,24,27,0.24)]">
+							<p class="text-[11px] font-semibold uppercase tracking-[0.22em] text-accent-two" style={`font-family:${sansStack}`}>Next Route</p>
+							<p class="mt-3 text-xl leading-tight text-foreground" style={`font-family:${serifStack}`}>{next.label}</p>
+							{next.description ? <p class="mt-2 text-sm leading-6 text-color-500" style={`font-family:${sansStack}`}>{next.description}</p> : null}
+						</a>
+					) : null}
+					{demoLinks.length ? (
+						<div class="rounded-[1.8rem] border border-accent-base/15 bg-[#16171a] p-5 text-white shadow-[0_18px_48px_-30px_rgba(24,24,27,0.32)]">
+							<p class="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#f8c46d]" style={`font-family:${sansStack}`}>Demo Cross-Links</p>
+							<div class="mt-4 space-y-3">
+								{demoLinks.map((link) => (
+									<a href={link.href} class="block rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/78 transition-colors hover:border-white/20 hover:bg-white/8" style={`font-family:${sansStack}`}>
+										<div class="font-semibold text-white">{link.label}</div>
+										{link.description ? <div class="mt-1">{link.description}</div> : null}
+									</a>
+								))}
+							</div>
+						</div>
+					) : null}
+				</div>
+			) : null}
+		</div>
+	</div>
+</section>
+
+<style>
+	article :global(.guidebook-mermaid) {
+		margin-block: 2rem;
+		overflow-x: auto;
+		border: 1px solid rgb(214 203 187 / 0.8);
+		border-radius: 1.5rem;
+		background: linear-gradient(180deg, rgba(255, 251, 245, 0.98), rgba(247, 241, 231, 0.9));
+		padding: 1rem;
+	}
+
+	article :global(.guidebook-mermaid svg) {
+		max-width: 100%;
+		height: auto;
+	}
+</style>

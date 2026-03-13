@@ -1,4 +1,8 @@
-import type { SiteConfig } from "@/types";
+import guidebookHubsData from "./generated/guidebook/hubs.json";
+import type { GuidebookHubMap } from "./lib/guidebook-content";
+import type { SiteConfig } from "./types";
+
+const guidebookHubs = guidebookHubsData as GuidebookHubMap;
 
 export const siteConfig: SiteConfig = {
 	// Used as both a meta property (src/components/BaseHead.astro L:31 + L:49) & the generated satori png (src/pages/og-image/[slug].png.ts)
@@ -59,6 +63,18 @@ export type NavCollections = Partial<
 	>
 >;
 
+function buildGuidebookMenuSections(basePath: "/docs/" | "/tutorials/"): Section[] {
+	const hub = basePath === "/docs/" ? guidebookHubs.docs : guidebookHubs.tutorials;
+	return [
+		{ kind: "link", title: "Overview", href: `${basePath}#hero` },
+		...hub.routeStages.map((stage) => ({
+			kind: "link" as const,
+			title: stage.title,
+			href: `${stage.href}#hero`,
+		})),
+	];
+}
+
 // Used to generate links in both the Header & Footer.
 export const menuLinks: {
 	path: string;
@@ -88,44 +104,14 @@ export const menuLinks: {
 		title: "Docs",
 		inHeader: true,
 		dropdownSubtitle: "Core concepts, architecture, and deployment guidance",
-		sections: [
-			{ kind: "link", title: "Overview", href: "/docs/#hero" },
-			{ kind: "link", title: "Getting Started", href: "/docs/getting-started/#hero" },
-			{ kind: "link", title: "Architecture", href: "/docs/architecture/#hero" },
-			{ kind: "link", title: "Renderer Data Model", href: "/docs/renderer-data-model/#hero" },
-			{
-				kind: "link",
-				title: "Rigging and Control Model",
-				href: "/docs/rigging-and-control-model/#hero",
-			},
-			{ kind: "link", title: "Animation Model", href: "/docs/animation-model/#hero" },
-			{ kind: "link", title: "Deployment Model", href: "/docs/deployment-model/#hero" },
-		],
+		sections: buildGuidebookMenuSections("/docs/"),
 	},
 	{
 		path: "/tutorials/",
 		title: "Tutorials",
 		inHeader: true,
 		dropdownSubtitle: "Concept-first walkthroughs and phase-1 runnable labs",
-		sections: [
-			{ kind: "link", title: "Overview", href: "/tutorials/#hero" },
-			{ kind: "link", title: "Hello Face", href: "/tutorials/hello-face/#hero" },
-			{
-				kind: "link",
-				title: "Renderer Data Model",
-				href: "/tutorials/renderer-data-model/#hero",
-			},
-			{ kind: "link", title: "Authoring", href: "/tutorials/authoring/#hero" },
-			{
-				kind: "link",
-				title: "Rigging and Control",
-				href: "/tutorials/rigging-and-control/#hero",
-			},
-			{ kind: "link", title: "Minimal Player", href: "/tutorials/minimal-player/#hero" },
-			{ kind: "link", title: "Animations", href: "/tutorials/animations/#hero" },
-			{ kind: "link", title: "Agent Face", href: "/tutorials/agent-face/#hero" },
-			{ kind: "link", title: "Deployment", href: "/tutorials/deployment/#hero" },
-		],
+		sections: buildGuidebookMenuSections("/tutorials/"),
 	},
 	{
 		path: "/events/",

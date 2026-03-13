@@ -16,8 +16,9 @@ const {
   delay = 0,
 } = Astro.props as Props;
 
-const targetUrl = new URL(to, Astro.url).href;
-const refreshContent = `${delay};url=${targetUrl}`;
+const redirectHref = to;
+const canonicalUrl = new URL(to, Astro.site ?? Astro.url).href;
+const refreshContent = `${delay};url=${redirectHref}`;
 ---
 
 <!doctype html>
@@ -25,12 +26,7 @@ const refreshContent = `${delay};url=${targetUrl}`;
   <head>
     <BaseHead title={title} description={description} />
     <meta http-equiv="refresh" content={refreshContent} />
-    <link rel="canonical" href={targetUrl} />
-    <script is:inline>
-      {
-        `setTimeout(() => { window.location.replace(${JSON.stringify(targetUrl)}); }, ${delay} * 1000);`;
-      }
-    </script>
+    <link rel="canonical" href={canonicalUrl} />
   </head>
   <body
     class="min-h-screen flex items-center justify-center bg-surface text-accent-base"
@@ -38,8 +34,8 @@ const refreshContent = `${delay};url=${targetUrl}`;
     <main class="text-center p-8 space-y-4">
       <p class="text-lg">{description}</p>
       <p>
-        <a class="text-accent-two underline font-semibold" href={targetUrl}>
-          Continue to {targetUrl}
+        <a class="text-accent-two underline font-semibold" href={redirectHref}>
+          Continue to {redirectHref}
         </a>
       </p>
     </main>

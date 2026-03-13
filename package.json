@@ -18,7 +18,8 @@
     "verify:drafts": "node test/verify-drafts.mjs",
     "verify:shared-tailwind": "node scripts/verify-shared-tailwind-wiring.mjs",
     "render:modules": "node scripts/render-configurator-modules.mjs",
-    "content:sync:hub": "node scripts/sync-content-hub.mjs"
+    "content:sync:hub": "node scripts/sync-content-hub.mjs",
+    "content:sync:guidebook": "node scripts/sync-guidebook-public.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.10",
@@ -43,9 +44,9 @@
     "@shikijs/transformers": "^1.25.1",
     "@solar-icons/react-perf": "^1.0.0",
     "@tailwindcss/vite": "^4.1.11",
-    "@vizij/orchestrator-react": "^0.0.7",
-    "@vizij/render": "^0.0.7",
-    "@vizij/runtime-react": "^0.0.14",
+    "@vizij/orchestrator-react": "^0.1.0",
+    "@vizij/render": "^0.1.0",
+    "@vizij/runtime-react": "^0.1.0",
     "astro": "^5.15.5",
     "astro-icon": "^1.1.5",
     "astro-robots-txt": "^1.0.0",
@@ -63,6 +64,7 @@
     "rehype-pretty-code": "^0.14.0",
     "rehype-unwrap-images": "^1.0.0",
     "remark-directive": "^3.0.0",
+    "remark-gfm": "^4.0.1",
     "satori": "0.12.0",
     "satori-html": "^0.3.2",
     "sharp": "^0.33.5",
@@ -72,7 +74,7 @@
     "zustand": "^5.0.9"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.5",
+    "@astrojs/check": "^0.9.7",
     "@biomejs/biome": "^1.9.4",
     "@pagefind/default-ui": "^1.3.0",
     "@resvg/resvg-js": "^2.6.2",
@@ -86,12 +88,10 @@
     "reading-time": "^1.5.0",
     "redux": "^3.7.2",
     "tailwindcss": "^4.1.11",
-    "typescript": "^5.7.2",
+    "typescript": "^5.9.3",
     "yaml": "^2.8.1"
   },
   "overrides": {
-    "@react-three/drei": "^10.7.7",
-    "@react-three/fiber": "^9.5.0",
     "zustand": "^5.0.9",
     "use-sync-external-store": "^1.6.0"
   }

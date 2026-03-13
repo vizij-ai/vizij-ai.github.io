@@ -13,6 +13,7 @@ import { siteConfig } from "./src/site.config";
 
 // Remark plugins
 import remarkDirective from "remark-directive"; /* handle ::: directives as nodes */
+import remarkGfm from "remark-gfm";
 import { remarkAdmonitions } from "./src/plugins/remark-admonitions"; /* add admonitions */
 import { remarkReadingTime } from "./src/plugins/remark-reading-time";
 
@@ -84,7 +85,12 @@ export default defineConfig({
   markdown: {
     syntaxHighlight: false,
 
-    remarkPlugins: [remarkReadingTime, remarkDirective, remarkAdmonitions],
+    remarkPlugins: [
+      remarkGfm,
+      remarkReadingTime,
+      remarkDirective,
+      remarkAdmonitions,
+    ],
     remarkRehype: {
       footnoteLabelProperties: {
         className: [""],

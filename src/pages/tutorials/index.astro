@@ -1,14 +1,16 @@
 ---
+import HubPage from "@/components/guides/HubPage";
+import { buildGuidebookHubContent } from "@/lib/guidebook";
 import SiteShell from "@/layouts/SiteShell.astro";
-import TutorialsHubPage from "@/react-pages/tutorials/TutorialsHubPage";
 
-const meta = {
-	title: "Vizij Tutorials",
-	description:
-		"Follow the concept-first Vizij tutorial spine from Hello Face through authoring, runtime behavior, and deployment.",
-};
+const content = await buildGuidebookHubContent("tutorials");
 ---
 
-<SiteShell title={meta.title} description={meta.description} ogImage="/og/home.png">
-	<TutorialsHubPage />
+<SiteShell
+	title={content.eyebrow}
+	description={content.description}
+	ogImage="/og/home.png"
+	containerClassName="max-w-6xl"
+>
+	<HubPage content={content} />
 </SiteShell>
