@@ -59,21 +59,28 @@ function RiggingControlBody() {
 	};
 
 	return (
-		<div className="grid grid-cols-1 gap-5 lg:grid-cols-[1.1fr_0.9fr]">
-			<RuntimeFaceFrame
-				variant="lg"
-				label="Rig output"
-				subtitle={`Friendly controls fan out into ${controls.gazeSource} paths and optional pose weights.`}
-			/>
-			<div className="space-y-4 rounded-2xl border border-accent-base/20 bg-surface-lighter/45 p-5">
-				<p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent-two">
-					One control, many writes
-				</p>
-				{hasResolvedGaze ? null : (
-					<p className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-sm text-color-500">
-						This asset does not expose a full resolved gaze control set for the demo-style mapping.
+		<div className="space-y-4">
+			<div className="overflow-hidden rounded-xl border border-accent-base/20">
+				<div className="aspect-[4/3] bg-linear-to-br from-special-lighter to-special">
+					<RuntimeFaceFrame mode="media" />
+				</div>
+				<div className="border-t border-accent-base/10 bg-surface-lighter/45 px-4 py-3">
+					<p className="text-xs font-semibold uppercase tracking-wider text-accent-base/80">
+						Rig output
 					</p>
-				)}
+					<p className="mt-0.5 text-sm text-color-500">
+						Friendly controls fan out into {controls.gazeSource} paths and optional pose weights.
+					</p>
+				</div>
+			</div>
+
+			{hasResolvedGaze ? null : (
+				<p className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-sm text-color-500">
+					This asset does not expose a full resolved gaze control set for the demo-style mapping.
+				</p>
+			)}
+
+			<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 				<label className="block text-sm text-color-500">
 					<span className="mb-2 block font-medium text-foreground">Look right / left</span>
 					<input
@@ -108,29 +115,30 @@ function RiggingControlBody() {
 						className="w-full"
 					/>
 				</label>
-				{featured ? (
-					<button
-						type="button"
-						className="w-full rounded-xl border border-accent-base/20 bg-surface px-4 py-3 text-left text-sm transition-colors hover:border-accent-two/45 hover:bg-accent-base/10"
-						onClick={() => {
-							setPoseWeight(featured, 1);
-							setLastMode(`Custom pose control: ${featured.pose.name ?? featured.pose.id}`);
-							window.setTimeout(() => setPoseWeight(featured, 0), 550);
-						}}
-					>
-						Trigger featured {getPoseGroup(featured.pose) ?? "pose"} control
-					</button>
-				) : null}
-				<div className="rounded-xl border border-accent-base/20 bg-surface p-4 text-xs leading-6 text-color-500">
-					<p className="font-medium text-foreground">Current teaching point</p>
-					<p className="mt-1">{lastMode}</p>
-					<p className="mt-3">
-						The gaze sliders now resolve against the active asset before writing both left and right
-						eye paths. The featured pose button shows how a friendlier control can target a pose
-						weight instead.
-					</p>
-				</div>
 			</div>
+
+			{featured ? (
+				<button
+					type="button"
+					className="w-full rounded-xl border border-accent-base/20 bg-surface px-4 py-3 text-left text-sm transition-colors hover:border-accent-two/45 hover:bg-accent-base/10"
+					onClick={() => {
+						setPoseWeight(featured, 1);
+						setLastMode(`Custom pose control: ${featured.pose.name ?? featured.pose.id}`);
+						window.setTimeout(() => setPoseWeight(featured, 0), 550);
+					}}
+				>
+					Trigger featured {getPoseGroup(featured.pose) ?? "pose"} control
+				</button>
+			) : null}
+
+			<details className="rounded-xl border border-accent-base/20 bg-surface-lighter/45">
+				<summary className="cursor-pointer px-4 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-accent-two">
+					Control status
+				</summary>
+				<div className="border-t border-accent-base/10 p-4 text-xs leading-6 text-color-500">
+					<p className="font-medium text-foreground">{lastMode}</p>
+				</div>
+			</details>
 		</div>
 	);
 }

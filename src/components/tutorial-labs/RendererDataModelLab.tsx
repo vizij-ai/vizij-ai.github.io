@@ -76,22 +76,29 @@ function DataModelBody() {
 	const hasResolvedGaze = writes.length === 4;
 
 	return (
-		<div className="grid grid-cols-1 gap-5 lg:grid-cols-[1.1fr_0.9fr]">
-			<RuntimeFaceFrame
-				variant="lg"
-				label="Renderer output"
-				subtitle={`Namespace ${namespace} · ${controls.gazeSource} control writes fan into the live face`}
-			/>
-			<div className="space-y-4 rounded-2xl border border-accent-base/20 bg-surface-lighter/45 p-5">
-				<p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent-two">
-					Path and value writes
-				</p>
-				{hasResolvedGaze ? null : (
-					<p className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-sm text-color-500">
-						This face did not expose a full resolved gaze control set, so the lab cannot mirror the
-						working demo behavior yet.
+		<div className="space-y-4">
+			<div className="overflow-hidden rounded-xl border border-accent-base/20">
+				<div className="aspect-[4/3] bg-linear-to-br from-special-lighter to-special">
+					<RuntimeFaceFrame mode="media" />
+				</div>
+				<div className="border-t border-accent-base/10 bg-surface-lighter/45 px-4 py-3">
+					<p className="text-xs font-semibold uppercase tracking-wider text-accent-base/80">
+						Renderer output
 					</p>
-				)}
+					<p className="mt-0.5 text-sm text-color-500">
+						{controls.gazeSource} control writes fan into the live face
+					</p>
+				</div>
+			</div>
+
+			{hasResolvedGaze ? null : (
+				<p className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-sm text-color-500">
+					This face did not expose a full resolved gaze control set, so the lab cannot mirror the
+					working demo behavior yet.
+				</p>
+			)}
+
+			<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 				<label className="block text-sm text-color-500">
 					<span className="mb-2 block font-medium text-foreground">Horizontal gaze</span>
 					<input
@@ -126,10 +133,16 @@ function DataModelBody() {
 						className="w-full"
 					/>
 				</label>
-				<pre className="overflow-x-auto rounded-xl border border-accent-base/20 bg-surface p-4 text-xs leading-6 text-color-500">
+			</div>
+
+			<details className="rounded-xl border border-accent-base/20 bg-surface-lighter/45">
+				<summary className="cursor-pointer px-4 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-accent-two">
+					Path and value writes
+				</summary>
+				<pre className="overflow-x-auto border-t border-accent-base/10 p-4 text-xs leading-6 text-color-500">
 					{JSON.stringify(writes, null, 2)}
 				</pre>
-			</div>
+			</details>
 		</div>
 	);
 }

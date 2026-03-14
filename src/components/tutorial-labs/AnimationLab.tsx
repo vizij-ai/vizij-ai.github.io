@@ -57,40 +57,50 @@ function AnimationLabBody() {
 	}, []);
 
 	return (
-		<div className="grid grid-cols-1 gap-5 lg:grid-cols-[1.1fr_0.9fr]">
-			<RuntimeFaceFrame
-				variant="lg"
-				label="Animated output"
-				subtitle="A short scripted sequence shows timing, reset, and replay behavior."
-			/>
-			<div className="space-y-4 rounded-2xl border border-accent-base/20 bg-surface-lighter/45 p-5">
-				<p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent-two">
-					Playback controls
-				</p>
-				<div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-					<button
-						type="button"
-						className="rounded-xl border border-accent-base/20 bg-surface px-4 py-3 text-sm transition-colors hover:border-accent-two/45 hover:bg-accent-base/10 disabled:opacity-60"
-						disabled={!ready || playing || sequence.length === 0}
-						onClick={() => void playSequence()}
-					>
-						Play sequence
-					</button>
-					<button
-						type="button"
-						className="rounded-xl border border-accent-base/20 bg-surface px-4 py-3 text-sm transition-colors hover:border-accent-two/45 hover:bg-accent-base/10 disabled:opacity-60"
-						disabled={!ready}
-						onClick={() => {
-							cancelRef.current = true;
-							setPlaying(false);
-							setStatus("Reset to neutral");
-							void resetSequence();
-						}}
-					>
-						Reset
-					</button>
+		<div className="space-y-4">
+			<div className="overflow-hidden rounded-xl border border-accent-base/20">
+				<div className="aspect-[4/3] bg-linear-to-br from-special-lighter to-special">
+					<RuntimeFaceFrame mode="media" />
 				</div>
-				<div className="rounded-xl border border-accent-base/20 bg-surface p-4 text-sm leading-6 text-color-500">
+				<div className="border-t border-accent-base/10 bg-surface-lighter/45 px-4 py-3">
+					<p className="text-xs font-semibold uppercase tracking-wider text-accent-base/80">
+						Animated output
+					</p>
+					<p className="mt-0.5 text-sm text-color-500">
+						A short scripted sequence shows timing, reset, and replay behavior.
+					</p>
+				</div>
+			</div>
+
+			<div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+				<button
+					type="button"
+					className="rounded-xl border border-accent-base/20 bg-surface px-4 py-3 text-sm transition-colors hover:border-accent-two/45 hover:bg-accent-base/10 disabled:opacity-60"
+					disabled={!ready || playing || sequence.length === 0}
+					onClick={() => void playSequence()}
+				>
+					Play sequence
+				</button>
+				<button
+					type="button"
+					className="rounded-xl border border-accent-base/20 bg-surface px-4 py-3 text-sm transition-colors hover:border-accent-two/45 hover:bg-accent-base/10 disabled:opacity-60"
+					disabled={!ready}
+					onClick={() => {
+						cancelRef.current = true;
+						setPlaying(false);
+						setStatus("Reset to neutral");
+						void resetSequence();
+					}}
+				>
+					Reset
+				</button>
+			</div>
+
+			<details className="rounded-xl border border-accent-base/20 bg-surface-lighter/45">
+				<summary className="cursor-pointer px-4 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-accent-two">
+					Playback status
+				</summary>
+				<div className="border-t border-accent-base/10 p-4 text-sm leading-6 text-color-500">
 					<p>
 						Status: <span className="font-medium text-foreground">{status}</span>
 					</p>
@@ -101,7 +111,7 @@ function AnimationLabBody() {
 							: "No expressive bindings found in the current bundle"}
 					</p>
 				</div>
-			</div>
+			</details>
 		</div>
 	);
 }

@@ -40,40 +40,41 @@ function HelloFaceLabBody() {
 	);
 
 	return (
-		<div className="grid grid-cols-1 gap-5 lg:grid-cols-[1.1fr_0.9fr]">
-			<RuntimeFaceFrame
-				variant="lg"
-				label="Live runtime output"
-				subtitle={`Namespace ${namespace} · Face ${faceId ?? "face"}`}
-			/>
-			<div className="rounded-2xl border border-accent-base/20 bg-surface-lighter/45 p-5">
-				<p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent-two">
-					First control interaction
-				</p>
-				<h3 className="mt-2 text-lg font-semibold text-foreground">Trigger a visible response.</h3>
-				<p className="mt-2 text-sm leading-6 text-color-500">
-					These preset buttons fire a small pose weight and then return the face to neutral.
-				</p>
-				<div className="mt-4 grid grid-cols-1 gap-2">
-					{featuredBindings.map((binding, index) => (
-						<button
-							key={binding.pose.id}
-							type="button"
-							className="flex items-center justify-between rounded-xl border border-accent-base/20 bg-surface px-4 py-3 text-left text-sm transition-colors hover:border-accent-two/45 hover:bg-accent-base/10 disabled:opacity-60"
-							disabled={!ready}
-							onClick={() => triggerPose(index)}
-						>
-							<span>{binding.pose.name ?? `Pose ${index + 1}`}</span>
-							<span className="text-xs uppercase tracking-[0.2em] text-color-500">
-								{getPoseGroup(binding.pose) ?? "pose"}
-							</span>
-						</button>
-					))}
+		<div className="space-y-4">
+			<div className="overflow-hidden rounded-xl border border-accent-base/20">
+				<div className="aspect-[4/3] bg-linear-to-br from-special-lighter to-special">
+					<RuntimeFaceFrame mode="media" />
 				</div>
-				<p className="mt-4 text-sm leading-6 text-color-500">
-					Last trigger: <span className="font-medium text-foreground">{lastTriggered}</span>
-				</p>
+				<div className="border-t border-accent-base/10 bg-surface-lighter/45 px-4 py-3">
+					<p className="text-xs font-semibold uppercase tracking-wider text-accent-base/80">
+						Live runtime output
+					</p>
+					<p className="mt-0.5 text-sm text-color-500">
+						Namespace {namespace} · Face {faceId ?? "face"}
+					</p>
+				</div>
 			</div>
+
+			<div className="grid grid-cols-1 gap-2">
+				{featuredBindings.map((binding, index) => (
+					<button
+						key={binding.pose.id}
+						type="button"
+						className="flex items-center justify-between rounded-xl border border-accent-base/20 bg-surface px-4 py-3 text-left text-sm transition-colors hover:border-accent-two/45 hover:bg-accent-base/10 disabled:opacity-60"
+						disabled={!ready}
+						onClick={() => triggerPose(index)}
+					>
+						<span>{binding.pose.name ?? `Pose ${index + 1}`}</span>
+						<span className="text-xs uppercase tracking-[0.2em] text-color-500">
+							{getPoseGroup(binding.pose) ?? "pose"}
+						</span>
+					</button>
+				))}
+			</div>
+
+			<p className="text-sm leading-6 text-color-500">
+				Last trigger: <span className="font-medium text-foreground">{lastTriggered}</span>
+			</p>
 		</div>
 	);
 }
