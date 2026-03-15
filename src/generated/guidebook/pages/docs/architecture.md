@@ -1,37 +1,41 @@
 ---
 pageId: docs-architecture
 moduleId: docs/architecture
-sourceModuleId: introduction/architecture-bridge
-sourcePath: introduction/architecture-bridge.md
+sourceModuleId: introduction/system-mental-model
+sourcePath: introduction/system-mental-model.md
 surface: docs
 publish: true
 routeSlug: architecture
 canonicalPath: /docs/architecture/
 routeRole: system-map
-routeRoleLabel: Architecture bridge
-title: Architecture
-summary: Connect the docs overview to the real Vizij repos, packages, apps,
-  assets, and deployment surfaces.
-moduleType: reference bridge
+routeRoleLabel: System mental model
+title: System Mental Model
+summary: "Understand the stable Vizij layers: authored assets, runtime control,
+  integration surfaces, and deployment surfaces."
+moduleType: concept page
 bucket: Introduction
-depth: Advanced
+depth: Fundamentals
 hubGroup: orientation
 order: 20
 redirects:
   - architecture-bridge
-outcome: "After this page, you should be able to explain:"
+  - system-mental-model
+outcome: After this page, you should be able to explain the major parts of
+  Vizij, how authored assets and runtime control relate, and which conceptual
+  contracts stay stable as a face moves from authoring into integration and
+  deployment.
 prerequisites:
-  - vizij-docs/current_documentation/ARCHITECTURE.md,
-  - vizij-docs/current_documentation/concepts/ARCHITECTURE_PRIMER.md,
-  - vizij-docs/current_documentation/ROADMAP.md,
-  - guidebook/reference/README.md.
+  - read What Is Vizij?,
+  - seen a running face in the public demos or the Hello Face tutorial.
 successCheck:
-  - you can explain why the guidebook bucket model is not the repo map,
-  - you can identify which documentation surface owns which type of truth,
-  - you can route from a learner-facing question to the right
-    implementation-facing source,
-  - you can describe the public route and the deeper platform view without
-    treating them as conflicting stories.
+  - you can describe Vizij as authored assets plus runtime coordination plus
+    application and deployment surfaces,
+  - you can explain the distinct roles of the renderer, orchestrator,
+    controllers, and blackboard at a high level,
+  - you can explain why typed paths, values, and shapes matter even before
+    learning their detailed syntax,
+  - you can place Hello Face, Authoring, Player, and Deployment in the overall
+    system without confusing them for one another.
 headings:
   - depth: 2
     slug: module-notes
@@ -40,35 +44,36 @@ headings:
     slug: what-you-need
     text: What You Need
   - depth: 2
-    slug: teaching-view-vs-platform-view
-    text: Teaching View vs. Platform View
+    slug: the-stable-system-map
+    text: The Stable System Map
   - depth: 2
-    slug: the-guidebook-is-a-teaching-structure
-    text: The Guidebook Is A Teaching Structure
+    slug: one-face-multiple-layers
+    text: One Face, Multiple Layers
   - depth: 2
-    slug: documentation-authority-matrix
-    text: Documentation Authority Matrix
+    slug: the-runtime-contracts-that-stay-stable
+    text: The Runtime Contracts That Stay Stable
   - depth: 2
-    slug: mapping-the-maintained-route-to-the-platform
-    text: Mapping The Maintained Route To The Platform
+    slug: where-authoring-fits
+    text: Where Authoring Fits
   - depth: 2
-    slug: when-to-stay-in-the-guidebook
-    text: When To Stay In The Guidebook
+    slug: where-control-fits
+    text: Where Control Fits
   - depth: 2
-    slug: when-to-leave-the-guidebook
-    text: When To Leave The Guidebook
+    slug: where-the-public-route-fits
+    text: Where The Public Route Fits
+  - depth: 2
+    slug: misunderstandings-this-page-should-prevent
+    text: Misunderstandings This Page Should Prevent
   - depth: 2
     slug: recommended-next-steps
     text: Recommended Next Steps
 context:
   bucketChain: "Previous: Start of guidebook Current: Introduction Next: Experience"
-  depthLadder: "Above: What Is Vizij?, How To Use This Guidebook, System Mental
-    Model, Customization Concepts Primer Current: Advanced Below: none, this is
-    the deepest current depth in this bucket"
-  modulePosition: "Previous in bucket: Customization Concepts Primer Current
-    module: Architecture Bridge Next in bucket: none, this is the last module in
-    the bucket sequence"
-  moduleType: reference bridge
+  depthLadder: "Above: What Is Vizij?, How To Use This Guidebook Current:
+    Fundamentals Below: Architecture Bridge"
+  modulePosition: "Previous in bucket: How To Use This Guidebook Current module:
+    System Mental Model Next in bucket: Customization Concepts Primer"
+  moduleType: concept page
   bucketOverview:
     label: Introduction
     href: /docs/
@@ -80,20 +85,21 @@ context:
     - label: Glossary and Terminology Bridge
       href: https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/support/glossary-and-terminology-bridge.md
 prev:
-  label: Getting Started
+  label: Guide
   href: /docs/getting-started/
-  description: Choose the right public route before you dive into the repo map.
+  description: Choose the right public route before you separate the stable Vizij
+    system layers.
 next:
   label: Renderer Data Model
   href: /docs/renderer-data-model/
-  description: Move from the repo map into the runtime path/value contract.
+  description: Move from the system layers into the runtime path and value contract.
 implementationAnchors:
-  - label: Cross-repo architecture
-    href: https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/ARCHITECTURE.md
-    description: Canonical internal repo-boundary reference.
+  - label: Guidebook introduction bucket
+    href: https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/introduction/README.md
+    description: Canonical conceptual bucket framing behind the system mental model.
   - label: Runtime provider
     href: https://github.com/vizij-ai/vizij-web/tree/main/packages/@vizij/runtime-react/src/VizijRuntimeProvider.tsx
-    description: The public route’s runtime boundary in code.
+    description: A concrete code anchor behind the runtime layer described on this page.
 demoLinks:
   - label: Demos architecture lane
     href: /demos/#architecture
@@ -103,151 +109,248 @@ hasMermaid: true
 
 ## Module Notes
 
-- Read this after the `Introduction` pages if you need to bridge from the guidebook route into repo and architecture documentation.
-- The page is mainly for contributors, facilitators, and advanced readers who need an authority map and a clean handoff from learner framing to implementation framing.
-- ABI details, package signatures, runtime internals, and project-status tracking remain outside this module.
+- Read this after [What Is Vizij?](https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/introduction/what-is-vizij.md) if you need the system layers separated before going deeper.
+- The page keeps five concepts distinct: the face artifact, authored behavior, runtime coordination, application surface, and deployment surface.
+- Detailed path semantics, authoring workflows, package ownership, and deployment procedures stay in later modules.
 
 ## What You Need
 
-It helps if you can inspect these internal anchors:
+You do not need package-level or crate-level knowledge to use this page.
 
-1. `vizij-docs/current_documentation/ARCHITECTURE.md`,
-2. `vizij-docs/current_documentation/concepts/ARCHITECTURE_PRIMER.md`,
-3. `vizij-docs/current_documentation/ROADMAP.md`,
-4. `guidebook/reference/README.md`.
+It helps if you have already:
 
-You do not need crate-by-crate or package-by-package detail to use this page well.
+1. read [What Is Vizij?](https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/introduction/what-is-vizij.md),
+2. seen a running face in the public demos or the `Hello Face` tutorial.
 
-## Teaching View vs. Platform View
+## The Stable System Map
 
-Vizij is easiest to navigate when you keep two views in mind at the same time:
+At the most useful learner level, Vizij is a relationship between four things:
+
+1. authored assets,
+2. runtime control,
+3. integration surfaces,
+4. deployment surfaces.
+
+Those are connected by a small set of stable contracts rather than by one single app.
+
+### Asset To Runtime Relationship
 
 <pre class="guidebook-mermaid mermaid">
-flowchart TD
-    subgraph TeachingView [&quot;Guidebook / Teaching View&quot;]
-        t1[&quot;Experience\n(Proof of Life)&quot;] --&gt; t2[&quot;Control\n(Runtime Specs)&quot;]
-        t2 --&gt; t3[&quot;Customize\n(Authoring)&quot;]
-        t3 --&gt; t4[&quot;Integrate\n(App Shells)&quot;]
-        t4 --&gt; t5[&quot;Deploy\n(Endpoints)&quot;]
-    end
+flowchart LR
+    classDef asset fill:#fff4e5,stroke:#c97a00,stroke-width:1.5px
+    classDef runtime fill:#eef7ee,stroke:#2f855a,stroke-width:1.5px
+    classDef app fill:#eef4ff,stroke:#4e79a7,stroke-width:1.5px
 
-    subgraph PlatformView [&quot;Platform / Implementation View&quot;]
-        p1[&quot;vizij-rs\n(Rust Cores / WASM)&quot;]
-        p2[&quot;vizij-web\n(TS Packages / Apps)&quot;]
-        p3[&quot;vizij-assets\n(Binary Sources)&quot;]
-        p4[&quot;vizij-docs\n(Architecture / Roadmap)&quot;]
-    end
+    asset[&quot;1. Face asset\nGLB / loaded world&quot;]
+    bundle[&quot;2. Vizij bundle metadata\nrig, poses, animations, programs&quot;]
+    provider[&quot;3. VizijRuntimeProvider\nloads and owns runtime startup&quot;]
+    inputs[&quot;4. Typed inputs\npaths + values&quot;]
+    orch[&quot;5. Orchestrator + controllers&quot;]
+    board[&quot;6. Blackboard and output paths&quot;]
+    render[&quot;7. Renderer applies resolved values&quot;]
+    face[&quot;8. VizijRuntimeFace&quot;]
 
-    t1 -.-&gt; p2
-    t2 -.-&gt; p1
-    t3 -.-&gt; p2
-    t4 -.-&gt; p2
-    t5 -.-&gt; p2
-    p1 -.-&gt; p2
-    p3 -.-&gt; p2
-    p4 -.-&gt; TeachingView
+    asset --- bundle
+    asset --&gt;|&quot;loaded as bundle input&quot;| provider
+    bundle --&gt;|&quot;registers authored runtime layers&quot;| provider
+    provider --&gt;|&quot;stages runtime inputs&quot;| inputs
+    inputs --&gt; orch --&gt; board --&gt; render --&gt; face
 
-    style TeachingView fill:#161a33,stroke:#2d3356
-    style PlatformView fill:#0b0d18,stroke:#7c4dff,stroke-width:2px
+    class asset,bundle asset
+    class inputs,orch,board,render runtime
+    class provider,face app
 </pre>
 
-The teaching view organizes concepts in the order that helps readers learn.
-The platform view organizes implementation truth by repo, app, package, and asset ownership.
+### App And Deployment Boundary
 
-Both views are real. The bridge ensures you can transition from "learning a concept" to "finding the code" without losing the narrative thread.
+<pre class="guidebook-mermaid mermaid">
+flowchart LR
+    classDef app fill:#eef4ff,stroke:#4e79a7,stroke-width:1.5px
+    classDef deploy fill:#fdf1f3,stroke:#c05670,stroke-width:1.5px
 
-## The Guidebook Is A Teaching Structure
+    provider[&quot;Runtime provider\nowns lifecycle&quot;]
+    face[&quot;Runtime face surface&quot;]
+    ui[&quot;App-owned hooks,\npanels, and session state&quot;]
+    shell[&quot;Browser app or standalone shell&quot;]
+    operator[&quot;Operator or end-user context&quot;]
 
-The guidebook buckets answer questions like:
+    provider --&gt; face
+    provider --&gt; ui
+    face --&gt;|&quot;embedded inside&quot;| shell
+    ui --&gt;|&quot;belongs to&quot;| shell
+    shell --&gt; operator
 
-1. what should a reader learn first,
-2. what misunderstanding should a page prevent,
-3. what should the next step be,
-4. how should the route feel coherent.
+    class provider,face,ui app
+    class shell,operator deploy
+</pre>
 
-They do not answer:
+The first diagram explains where the stable runtime contracts live.
 
-1. which package owns a type,
-2. which repo defines a contract,
-3. which app is the deepest implementation source,
-4. how every runtime subsystem is wired internally.
+The second explains where application ownership starts and where deployment becomes operational rather than architectural.
 
-That is why the guidebook can be canonical for teaching without pretending to be the canonical implementation spec.
+### 1. Authored assets
 
-## Documentation Authority Matrix
+An authored Vizij face is more than mesh data.
 
-| Surface | Owns this kind of truth | Best used for | Not the right source for |
-| --- | --- | --- | --- |
-| `vizij-docs/current_documentation` | cross-repo architecture, roadmap framing, decisions, known issues | understanding stable platform direction | app-by-app behavior or package usage details |
-| `vizij-web` app docs | maintained app behavior, setup, shell anatomy, operator flow | understanding the current route anchors | cross-repo architectural decisions |
-| `vizij-web` package docs | package contracts and usage surfaces | integration details and API shape | learner route framing |
-| `vizij-rs` docs | runtime semantics, WASM boundaries, crate-level truth | low-level runtime ownership | public route teaching |
-| `vizij-assets` | asset files and provenance | source asset truth | runtime or app behavior |
-| guidebook | learner path, terminology, concept boundaries, next steps | teaching and routing | exact implementation truth |
+At runtime, the system expects a face asset, typically a GLB, plus Vizij-authored metadata that can include:
 
-## Mapping The Maintained Route To The Platform
+1. rig structure,
+2. pose information,
+3. animation information,
+4. graph-driven behavior or related runtime definitions.
 
-### Experience and Control
+This is why authoring matters. It produces a face that is not only visible, but controllable and portable.
 
-These buckets are mostly taught through maintained apps and guidebook language.
+### 2. Runtime control
 
-The strongest maintained anchors are:
+The runtime is the part that turns authored structure into live behavior.
 
-1. `tutorial-fullscreen-face` for the minimal runtime shell,
-2. `tutorial-agent-face` for the richer optional branch,
-3. `@vizij/runtime-react` for the provider and hook surface.
+The current architecture stays intentionally small:
 
-### Customize
+1. the `renderer` applies values to the visible face,
+2. the `orchestrator` coordinates execution and merges writes,
+3. graph and animation controllers generate or transform values,
+4. the `blackboard` holds shared typed state between controllers.
 
-This bucket is still learner-facing, but its strongest implementation truth lives in `vizij-web/apps/vizij-authoring` and its local docs.
+The important learner-level point is that Vizij does not treat a face as a passive clip player. It treats the face as something live controllers can drive frame by frame.
 
-The guidebook teaches the route through import, rigging, poses, animations, procedural programs, and export.
+### 3. Integration surfaces
 
-The app and local authoring docs own the fine-grained implementation behavior.
+An integration surface is the application shell that loads a face and exposes it in a usable app context.
 
-### Integrate
+That shell is not the same thing as the asset and not the same thing as the runtime contracts underneath it.
 
-This bucket teaches runtime provider, embedding, application shells, and richer app patterns.
+Its job is usually to:
 
-The concrete implementation truth lives mostly in:
+1. load the asset and its bundle,
+2. boot the runtime,
+3. render the face,
+4. expose the controls, state, or interactions the app actually needs.
 
-1. `vizij-web/packages/@vizij/runtime-react`,
-2. `vizij-web/apps/demo-vizij-player`,
-3. `vizij-web/apps/tutorial-fullscreen-face`,
-4. `vizij-web/apps/tutorial-agent-face`.
+### 4. Deployment surfaces
 
-### Deploy
+A deployment surface is where the integrated system is actually run for an end user or operator.
 
-This bucket teaches the endpoint and operator model.
+In the current docs and roadmap, that includes browser/runtime deployments and the standalone branch.
 
-Its deeper current truth is spread across:
+Deployment is therefore a real endpoint of the builder path, not just another demo.
 
-1. `vizij-web/apps/vizij-standalone`,
-2. the related standalone source,
-3. `vizij-docs` runtime and deployment planning docs.
+## One Face, Multiple Layers
 
-## When To Stay In The Guidebook
+A useful sentence to keep in mind is:
 
-Stay in the guidebook when your main question is:
+`the asset carries structure, the runtime executes behavior, the app exposes a use case, and deployment makes that use case real`
 
-1. what does this concept mean,
-2. what should I learn next,
-3. what artifact am I touching,
-4. how does this bucket connect to the larger route.
+That sentence prevents several later confusions:
 
-## When To Leave The Guidebook
+1. a player is not the same thing as the face,
+2. a runtime provider is not the same thing as authoring,
+3. deployment is not merely "opening the demo somewhere else."
 
-Leave the guidebook when your main question becomes:
+### Comparison of Layers
 
-1. which repo or package owns this behavior,
-2. what is the current code contract,
-3. what does this app or package actually implement,
-4. where is the authoritative implementation detail.
+| Layer | Primary Role | Key Artifact | Stability |
+| :--- | :--- | :--- | :--- |
+| **Asset** | Structure & Metadata | GLB / Vizij Bundle | Foundational |
+| **Runtime** | Execution & Logic | Orchestrator / WASM | Predictable |
+| **App Shell** | Use Case & UI | React Component / Shell | Context-Specific |
+| **Deployment** | Endpoint & Operator | Executable / Web URL | Operational |
 
-For the maintained route, that usually means switching to repo-local docs before switching to raw source files.
+This separation ensures that a face can move from a simple tutorial into a high-stakes deployment without changing the underlying architecture.
+
+## The Runtime Contracts That Stay Stable
+
+Later pages go deeper into control vocabulary, but this page should name the contracts that make the whole system coherent.
+
+### Typed paths
+
+Vizij addresses values through stable paths.
+
+In the architecture docs, this contract is named `TypedPath`.
+
+A path says what a value means and where it belongs in the system. Graphs, animations, runtime inputs, and renderer-facing writes all rely on that idea.
+
+This is one reason later control pages care so much about path shape: paths are the shared addressing system.
+
+### Values and shapes
+
+Vizij moves typed values through the runtime rather than untyped loose payloads.
+
+At a learner level:
+
+1. a `Value` is the actual typed payload,
+2. a `Shape` is the expected structure of that payload,
+3. a `TypedPath` tells the runtime what semantic slot that value belongs to.
+
+You do not need every encoding detail yet. You do need to know that Vizij depends on these typed contracts to keep authoring, runtime, and integration aligned.
+
+### The blackboard
+
+The blackboard is the shared runtime state where controllers read and write typed-path values.
+
+You can think of it as the coordination surface between authored behavior and the visible renderer:
+
+1. controllers write there,
+2. the orchestrator schedules and merges those writes,
+3. the renderer ultimately applies the resulting values.
+
+That is why the blackboard matters conceptually even if you never inspect it directly in early workflows.
+
+## Where Authoring Fits
+
+Authoring belongs before integration because it defines the controllable structure a later runtime can load.
+
+At a fundamentals level, the key idea is simple:
+
+1. rigs define what can be controlled,
+2. poses define named states over those controls,
+3. animations define authored motion over time,
+4. procedural or graph-driven behavior defines computed behavior,
+5. export packages the result into an artifact later runtime surfaces can use.
+
+This page does not teach how to perform those steps. It only gives the conceptual placement of authoring inside the larger system.
+
+For that vocabulary in more detail, the next page is usually [Customization Concepts Primer](https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/introduction/customization-concepts-primer.md).
+
+## Where Control Fits
+
+Control is the bridge between authored capability and live behavior.
+
+If authoring answers "what can this face do?", control answers "what values are being driven right now?"
+
+That includes:
+
+1. standard controls,
+2. pose weights,
+3. animation playback,
+4. other typed runtime inputs.
+
+This page intentionally does not teach the detailed control taxonomy. It only establishes that control is not a separate world from authoring or rendering. It is the live use of the authored structure through shared runtime contracts.
+
+## Where The Public Route Fits
+
+One helpful public builder spine is:
+
+`Hello Face -> Authoring -> Player -> Deployment`
+
+This page should help you interpret that route correctly:
+
+1. `Hello Face` proves the runtime is real,
+2. `Authoring` changes the artifact and its behavior definitions,
+3. `Player` shows the runtime inside an application shell,
+4. `Deployment` makes that application usable in a real operating context.
+
+The route is a teaching sequence, not the literal architecture diagram.
+
+## Misunderstandings This Page Should Prevent
+
+1. thinking the first demo or player surface is the whole system,
+2. confusing the face asset with the application shell that hosts it,
+3. treating authoring concepts as separate from runtime control,
+4. assuming deployment is only a UI packaging step,
+5. assuming the guidebook buckets are the same thing as engineering boundaries.
 
 ## Recommended Next Steps
 
-1. If you want to return to learner-facing system framing, go to [System Mental Model](https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/introduction/system-mental-model.md).
-2. If you want the route-first builder path, go to [How To Use This Guidebook](/docs/getting-started/) and then [Hello Face Quickstart](/tutorials/hello-face/).
-3. If you need stable vocabulary before leaving the guidebook, go to [Glossary and Terminology Bridge](https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/support/glossary-and-terminology-bridge.md).
+1. If you want the customization vocabulary behind rigs, poses, animations, and export, continue to [Customization Concepts Primer](https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/introduction/customization-concepts-primer.md).
+2. If you want the control vocabulary behind runtime addresses and standard controls, continue to [Paths and Standard Controls](/docs/rigging-and-control-model/).

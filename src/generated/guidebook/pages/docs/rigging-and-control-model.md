@@ -117,22 +117,9 @@ hasMermaid: true
 
 ## Module Notes
 
-### Intended Audience
+This page is for readers who have already seen a face working and now need the mental model underneath it. It is especially useful after [Hello Face Quickstart](/tutorials/hello-face/).
 
-This page is for readers who have already seen a face working and now need the mental model underneath it.
-
-It is especially useful after [Hello Face Quickstart](/tutorials/hello-face/).
-
-### Artifact Being Touched
-
-The artifact here is the control vocabulary itself:
-
-1. runtime input paths,
-2. standard control paths,
-3. pose-weight paths,
-4. speech-facing pose labels and blend groups that still write through the same pose path family.
-
-These are the stable handles that let different Vizij surfaces stay aligned.
+The artifact here is the control vocabulary itself: runtime input paths, standard control paths, pose-weight paths, and speech-facing pose labels that still write through the same pose path family. These are the stable handles that let different Vizij surfaces stay aligned.
 
 ## What You Need
 
@@ -291,23 +278,39 @@ You will see these ideas repeated across Vizij:
 
 ## Current Useful Visual
 
-### Path Anatomy
+### Runtime Path Families
 
-Understanding the segments of a path helps you navigate any Vizij face:
+Understanding the two main runtime path families is more useful than trying to memorize every concrete path string first.
 
 <pre class="guidebook-mermaid mermaid">
 flowchart LR
-    p[&quot;rig / {face} / {category} / {channel} / {track} / {attribute}&quot;]
-    
-    subgraph Anatomy [&quot;Path Segments&quot;]
-        direction LR
-        cat[&quot;Category\n(standard/poses)&quot;]
-        chan[&quot;Channel\n(left_eye/smile)&quot;]
-        track[&quot;Track\n(pos/weight)&quot;]
-        attr[&quot;Attribute\n(x/y/z)&quot;]
-    end
-    
-    p --- Anatomy
+    classDef runtime fill:#eef7ee,stroke:#2f855a,stroke-width:1.5px
+    classDef note fill:#f4f5f7,stroke:#6b7280,stroke-width:1.2px
+
+    std[&quot;Standard control runtime path\nrig/{faceId}/standard/{channel}/{track}/{attribute}&quot;]
+    pose[&quot;Pose-weight runtime path\nrig/{faceId}/poses/{poseSlug}.weight&quot;]
+    speech[&quot;Hotkeys, speech systems, and pose UIs\nstill write canonical pose-weight paths&quot;]
+    note[&quot;Read the semantic family first:\nstandard = reusable rig channel\nposes = named authored state&quot;]
+
+    speech --&gt; pose
+    std -. compare with .-&gt; pose
+    note -. use this question when reading any path .-&gt; std
+
+    class std,pose runtime
+    class note,speech note
+</pre>
+
+### Deployment Slot Mapping
+
+<pre class="guidebook-mermaid mermaid">
+flowchart LR
+    classDef runtime fill:#eef7ee,stroke:#2f855a,stroke-width:1.5px
+    classDef deploy fill:#fdf1f3,stroke:#c05670,stroke-width:1.5px
+
+    slot[&quot;Deployment slot name\nstandard/{channel}/{track}/{attribute}&quot;] --&gt; bridge[&quot;Standalone bridge\nrestores rig/{faceId}/... internally&quot;] --&gt; std[&quot;Standard control runtime path\nrig/{faceId}/standard/{channel}/{track}/{attribute}&quot;]
+
+    class slot,bridge deploy
+    class std runtime
 </pre>
 
 The best wave-1 visual is still the existing `tutorial-fullscreen-face` screenshot plus the code in:

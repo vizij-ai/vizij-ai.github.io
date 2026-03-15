@@ -9,7 +9,7 @@ routeSlug: getting-started
 canonicalPath: /docs/getting-started/
 routeRole: orientation
 routeRoleLabel: Path chooser
-title: Getting Started
+title: Guide
 summary: Get oriented, choose a learning path, and know when to switch from
   overview pages to implementation references.
 moduleType: decision guide
@@ -82,9 +82,10 @@ context:
     - label: Glossary and Terminology Bridge
       href: https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/support/glossary-and-terminology-bridge.md
 next:
-  label: Architecture
+  label: System Mental Model
   href: /docs/architecture/
-  description: Map the public route back to the real cross-repo implementation surfaces.
+  description: Separate the stable Vizij system layers before you move into
+    runtime path and value semantics.
 implementationAnchors:
   - label: Docs source overview
     href: https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/README.md
@@ -101,19 +102,9 @@ hasMermaid: true
 
 ## Module Notes
 
-### Intended Audience
+This page is for newcomers who want the shortest path to a working Vizij face, builders who want to know where customization fits, and contributors who need the docs map before going deeper.
 
-This page is for:
-
-1. newcomers who want the shortest path to a working Vizij face,
-2. builders who want to know where customization fits,
-3. contributors who need to understand the docs map before going deeper.
-
-### Artifact Being Touched
-
-The artifact here is the reader-facing docs map.
-
-Use it to decide what to learn next. It is not the same thing as the internal architecture of the platform.
+The artifact here is the reader-facing docs map. Use it to decide what to learn next, not as a substitute for the internal architecture of the platform.
 
 ## What You Need
 
@@ -141,18 +132,37 @@ Each bucket supports three depth levels:
 3. `Advanced`
    - go deeper into ownership, extension, or more complex implementation patterns
 
+### Route Choice
+
 <pre class="guidebook-mermaid mermaid">
 flowchart LR
-    intro[&quot;Introduction&quot;] --&gt; exp[&quot;Experience&quot;]
-    exp --&gt; control[&quot;Control&quot;]
-    control --&gt; customize[&quot;Customize&quot;]
-    control --&gt; integrate[&quot;Integrate&quot;]
-    customize --&gt; integrate
-    integrate --&gt; deploy[&quot;Deploy&quot;]
+    classDef choice fill:#fff4cc,stroke:#b7791f,stroke-width:1.5px
+    classDef bucket fill:#eef4ff,stroke:#4e79a7,stroke-width:1.5px
+    classDef note fill:#f4f5f7,stroke:#6b7280,stroke-width:1.2px
 
-    surface[&quot;Surface\nfirst success&quot;] --- intro
-    fundamentals[&quot;Fundamentals\nmental model + stable contracts&quot;] --- control
-    advanced[&quot;Advanced\nownership + implementation bridges&quot;] --- deploy
+    goal{&quot;What do you need first?&quot;}
+    fast[&quot;Fast deployment route\nIntroduction -&gt; Experience -&gt; Control -&gt; Integrate -&gt; Deploy&quot;]
+    custom[&quot;Customization route\nIntroduction -&gt; Experience -&gt; Control -&gt; Customize -&gt; Integrate -&gt; Deploy&quot;]
+    jump[&quot;Single-bucket jump-in\nOpen the bucket that matches the immediate problem&quot;]
+
+    goal --&gt;|&quot;prove it, control it, embed it, deploy it&quot;| fast
+    goal --&gt;|&quot;change the face before integrating it&quot;| custom
+    goal --&gt;|&quot;I only need one concept right now&quot;| jump
+
+    class goal choice
+    class fast,custom bucket
+    class jump note
+</pre>
+
+### Depth Ladder
+
+<pre class="guidebook-mermaid mermaid">
+flowchart LR
+    classDef depth fill:#f4f5f7,stroke:#6b7280,stroke-width:1.2px
+
+    surface[&quot;Surface\nfirst success&quot;] --&gt; fundamentals[&quot;Fundamentals\nstable mental model + practical basics&quot;] --&gt; advanced[&quot;Advanced\nownership + implementation bridge&quot;]
+
+    class surface,fundamentals,advanced depth
 </pre>
 
 Use the path to choose *where to learn next*.

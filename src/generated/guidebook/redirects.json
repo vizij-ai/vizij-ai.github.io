@@ -2,13 +2,19 @@
   {
     "from": "how-to-use-this-guidebook",
     "surface": "docs",
-    "title": "Getting Started",
+    "title": "Guide",
     "to": "/docs/getting-started/"
   },
   {
     "from": "architecture-bridge",
     "surface": "docs",
-    "title": "Architecture",
+    "title": "System Mental Model",
+    "to": "/docs/architecture/"
+  },
+  {
+    "from": "system-mental-model",
+    "surface": "docs",
+    "title": "System Mental Model",
     "to": "/docs/architecture/"
   },
   {

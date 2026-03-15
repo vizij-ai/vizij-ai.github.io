@@ -203,29 +203,65 @@ const nextLink = next ? { label: next.label, href: next.href, description: next.
 							const getThemeVariables = (theme) =>
 								theme === "dark"
 									? {
+											darkMode: true,
 											background: "#171b22",
 											primaryColor: "#232933",
-											primaryBorderColor: "#f0b36b",
-											primaryTextColor: "#f4ede3",
-											lineColor: "#c8c0b4",
+											primaryBorderColor: "#8ea0b3",
+											primaryTextColor: "#eef3f8",
+											textColor: "#e4ebf3",
+											labelColor: "#e4ebf3",
+											lineColor: "#aeb8c4",
 											secondaryColor: "#1b1f27",
 											tertiaryColor: "#101317",
 										}
 									: {
+											darkMode: false,
 											background: "#fffdf7",
 											primaryColor: "#efe1cd",
-											primaryBorderColor: "#c78732",
-											primaryTextColor: "#211b16",
-											lineColor: "#5d5247",
+											primaryBorderColor: "#6b7280",
+											primaryTextColor: "#1f2937",
+											textColor: "#1f2937",
+											labelColor: "#1f2937",
+											lineColor: "#5b6472",
 											secondaryColor: "#f7f1e7",
 											tertiaryColor: "#fff8ef",
 										};
+							const adaptGuidebookMermaidSource = (source, theme) => {
+								if (theme !== "dark") return source;
+								const darkPalette = new Map([
+									["#fff4e5", "#2b241b"],
+									["#c97a00", "#f0b36b"],
+									["#eef7ee", "#1d2a22"],
+									["#2f855a", "#73c591"],
+									["#eef4ff", "#1f2734"],
+									["#4e79a7", "#93b9e5"],
+									["#fdf1f3", "#2d2025"],
+									["#c05670", "#e28aa0"],
+									["#fff4cc", "#332816"],
+									["#b7791f", "#e0a85b"],
+									["#f4f5f7", "#232831"],
+									["#6b7280", "#a0a8b6"],
+								]);
+								let adapted = source;
+								for (const [lightColor, darkColor] of darkPalette.entries()) {
+									adapted = adapted.replaceAll(lightColor, darkColor);
+								}
+								return adapted;
+							};
 							const renderDiagrams = async () => {
 								const theme = getThemeName();
+								if ("fonts" in document) {
+									try {
+										await document.fonts.ready;
+									} catch {
+										// If font loading metadata is unavailable, render with the current metrics.
+									}
+								}
 								mermaid.initialize({
 									startOnLoad: false,
 									securityLevel: "loose",
 									theme: "base",
+									htmlLabels: false,
 									themeVariables: getThemeVariables(theme),
 								});
 								for (const [index, diagram] of Array.from(diagrams).entries()) {
@@ -233,8 +269,12 @@ const nextLink = next ? { label: next.label, href: next.href, description: next.
 										diagram.dataset.mermaidSource ?? diagram.textContent?.trim();
 									if (!source) continue;
 									diagram.dataset.mermaidSource = source;
+									const themedSource = adaptGuidebookMermaidSource(source, theme);
 									const renderId = `guidebook-mermaid-${theme}-${index}`;
-									const { svg, bindFunctions } = await mermaid.render(renderId, source);
+									const { svg, bindFunctions } = await mermaid.render(
+										renderId,
+										themedSource,
+									);
 									diagram.innerHTML = svg;
 									diagram.setAttribute("data-processed", "true");
 									bindFunctions?.(diagram);
@@ -288,5 +328,6 @@ const nextLink = next ? { label: next.label, href: next.href, description: next.
 	article :global(.guidebook-mermaid svg) {
 		max-width: 100%;
 		height: auto;
+		overflow: visible;
 	}
 </style>

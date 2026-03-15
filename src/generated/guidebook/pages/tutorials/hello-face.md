@@ -80,7 +80,7 @@ context:
     - label: Troubleshooting Matrix
       href: https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/support/troubleshooting-matrix.md
 prev:
-  label: Getting Started
+  label: Guide
   href: /docs/getting-started/
   description: Choose the route before you run the first app.
 next:

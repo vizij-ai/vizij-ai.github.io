@@ -46,6 +46,9 @@ headings:
     slug: walkthrough
     text: Walkthrough
   - depth: 2
+    slug: persisting-speech-keys-with-env
+    text: Persisting Speech Keys with .env
+  - depth: 2
     slug: the-smallest-useful-operator-checklist
     text: The Smallest Useful Operator Checklist
   - depth: 2
@@ -165,6 +168,8 @@ Example CLI form from the app README:
 pnpm --filter vizij-standalone dev -- -- --glb /path/to/avatar.glb --fullscreen
 ```
 
+For the full list of CLI options — display selection, port override, web control panel toggle, speech flags, and ROS2 surface options — see the [vizij-standalone README](https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/deploy/vizij-web/apps/vizij-standalone/README.md).
+
 Expected result:
 
 1. the face loads without the app hiding its intermediate states
@@ -179,19 +184,31 @@ The default local control endpoint is:
 ws://127.0.0.1:9000
 ```
 
-Unless disabled, the built-in browser control panel is served from the same host and port.
+Unless disabled, the built-in browser control panel is served on the same port over HTTP:
+
+```text
+http://127.0.0.1:9000
+```
+
+The server binds to `0.0.0.0`, so the control panel is also reachable from any device on the same network. If you want to drive the face from a phone or another machine, open:
+
+```text
+http://<machine-ip>:9000
+```
+
+No extra tooling or installation required on the controlling device.
 
 What to confirm:
 
 1. the app surfaces the port or connection state clearly
 2. the runtime is ready before you expect remote or browser-side control to work
-3. the same-host operator path is believable even before you think about LAN or hardware setups
+3. the browser control panel is reachable from a phone or another machine on the same network
 
-This localhost-first boundary is the maintained current truth for the first deployment route.
+This is the maintained current truth for the first deployment route. Only expose the port on trusted networks — the server does not restrict access beyond the Arora exclusive-client policy.
 
 ### 4. Prove that operator control reaches the face
 
-Use the built-in control panel or another same-host client to drive one visible change.
+Use the built-in control panel, a phone on the same network, or another same-host client to drive one visible change.
 
 Expected result:
 
@@ -218,6 +235,55 @@ What each layer owns:
 
 That separation is why this is a deployment surface and not just a richer player app.
 
+## Persisting Speech Keys with .env
+
+Passing `--deepgram-key`, `--openai-key`, and `--api-url` on every launch is tedious. The standalone app reads those values from a `.env` file in `src-tauri/` that Tauri loads automatically at dev and build time.
+
+### Where the file lives
+
+```text
+apps/vizij-standalone/src-tauri/.env
+```
+
+Copy the provided example to get started:
+
+```bash
+cp apps/vizij-standalone/src-tauri/.env.example apps/vizij-standalone/src-tauri/.env
+```
+
+Then fill in your keys:
+
+```env
+VITE_API_URL="https://us-central1-semio-vizij.cloudfunctions.net/api"
+VITE_DEEPGRAM_API_KEY=your_deepgram_key_here
+VITE_OPENAI_API_KEY=your_openai_key_here
+```
+
+### What each variable does
+
+| Variable | Purpose |
+| --- | --- |
+| `VITE_API_URL` | TTS API base URL. Defaults to the hosted Semio endpoint. Override for a local TTS server. |
+| `VITE_DEEPGRAM_API_KEY` | Deepgram STT key. Required for microphone input when speech is enabled. |
+| `VITE_OPENAI_API_KEY` | OpenAI key. Required for `conversation` speech mode. |
+
+The `VITE_` prefix is required. Tauri forwards those variables to the Vite frontend where the speech hooks read them. Variables without that prefix are not visible to the React layer.
+
+### Precedence
+
+CLI flags always win. The resolution order for each speech value is:
+
+1. CLI flag (`--deepgram-key`, `--openai-key`, `--api-url`, `--speech-mode`)
+2. `.env` variable or localStorage value
+3. Bundle `speechConfig` metadata
+4. Hook default
+
+If speech looks half-configured, check both the `.env` file and the CLI flags before debugging the runtime layer.
+
+### The file is gitignored
+
+`src-tauri/.env` is listed in the workspace `.gitignore`. Do not add it to version control. Use `src-tauri/.env.example` as the committed template.
+
 ## The Smallest Useful Operator Checklist
 
 Call the deployment healthy only when all of these are true:
@@ -239,7 +305,7 @@ Use this checklist when you want one compact pass/fail loop instead of rereading
 | pre-flight | start the app with `pnpm run dev:vizij-standalone` or `pnpm --filter vizij-standalone dev -- -- --glb /path/to/avatar.glb --fullscreen` | desktop window opens and stays up | process fails early or the port is already in use |
 | pre-flight | load one face | the face becomes visible or the app leaves `No model loaded` | file picker returns but the app stays empty or enters an error state |
 | pre-flight | confirm endpoint identity | the app reports the local control port and the default route is still `ws://127.0.0.1:9000` unless you changed `--port` | you are guessing the port or the app still looks like it is starting |
-| post-flight | prove one same-host control path | built-in web control or another same-host client connects and the face changes visibly | the client connects but no visible change reaches the face |
+| post-flight | prove one operator control path | built-in web control panel connects (from same host or phone/LAN at `http://<machine-ip>:9000`) and the face changes visibly | the client connects but no visible change reaches the face |
 | post-flight | prove recoverability | reset returns the face toward its defaults and the endpoint stays healthy | the face stays stuck or recovery leaves the endpoint in an unclear state |
 
 ## Fast Recovery If It Fails

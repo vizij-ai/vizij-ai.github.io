@@ -168,13 +168,32 @@ This page does not treat poses as obsolete. In current Vizij authoring, poses an
 ## Clips, Tracks, and Keyframes
 
 <pre class="guidebook-mermaid mermaid">
-flowchart TD
-    clip[&quot;Clip\n(id, name, duration)&quot;] --&gt; trackA[&quot;Track A\n(one targeted control path)&quot;]
-    clip --&gt; trackB[&quot;Track B\n(one targeted control path)&quot;]
-    trackA --&gt; keyA1[&quot;Keyframe\n(time + value)&quot;]
-    trackA --&gt; keyA2[&quot;Keyframe\n(time + value)&quot;]
-    trackB --&gt; keyB1[&quot;Keyframe\n(time + value)&quot;]
-    clip --&gt; transport[&quot;Transport\n(play / pause / stop / seek / loop)&quot;]
+flowchart LR
+    classDef clip fill:#fff4e5,stroke:#c97a00,stroke-width:1.5px
+    classDef transport fill:#eef7ee,stroke:#2f855a,stroke-width:1.5px
+    classDef source fill:#eef4ff,stroke:#4e79a7,stroke-width:1.5px
+
+    authored[&quot;Authored clip&quot;] --&gt; clip[&quot;Clip\nid, name, duration&quot;]
+    imported[&quot;Imported clip&quot;] --&gt; clip
+
+    subgraph Structure [&quot;What the clip contains&quot;]
+        direction TB
+        clip --&gt; tracks[&quot;Tracks\none targeted control path per track&quot;]
+        tracks --&gt; keys[&quot;Keyframes\ntime, value, interpolation&quot;]
+    end
+
+    subgraph Preview [&quot;How the clip is previewed&quot;]
+        direction TB
+        transport[&quot;Transport\nplay, pause, stop, seek,\nloop, speed&quot;]
+        runtime[&quot;Runtime-bound preview\nplays the current clip on the face&quot;]
+        transport --&gt; runtime
+    end
+
+    clip --&gt;|&quot;selected for preview&quot;| transport
+
+    class authored,imported source
+    class clip,tracks,keys clip
+    class transport,runtime transport
 </pre>
 
 The authoring UI and store separate animation into a few learner-friendly parts.

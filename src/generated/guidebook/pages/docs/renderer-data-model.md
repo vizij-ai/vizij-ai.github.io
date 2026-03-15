@@ -85,9 +85,10 @@ context:
     - label: Glossary and Terminology Bridge
       href: https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/support/glossary-and-terminology-bridge.md
 prev:
-  label: Architecture
+  label: System Mental Model
   href: /docs/architecture/
-  description: Return to the repo map and bundle lifecycle.
+  description: Return to the stable Vizij layer model before you go back into
+    runtime path semantics.
 next:
   label: Rigging and Control Model
   href: /docs/rigging-and-control-model/
@@ -105,19 +106,9 @@ hasMermaid: true
 
 ## Module Notes
 
-### Intended Audience
-
 This page is for readers who already understand the basic path vocabulary from [Paths and Standard Controls](/docs/rigging-and-control-model/) and now need the next layer of runtime reasoning.
 
-### Artifact Being Touched
-
-The artifact here is not a single app screen. It is the runtime contract that multiple Vizij surfaces rely on:
-
-1. typed paths,
-2. typed values,
-3. staged runtime inputs,
-4. blackboard reads and writes,
-5. output paths that can later be observed or rendered.
+The artifact here is not a single app screen. It is the runtime contract that multiple Vizij surfaces rely on: typed paths, typed values, staged runtime inputs, blackboard reads and writes, and output paths that can later be observed or rendered.
 
 ## What You Need
 
@@ -248,17 +239,55 @@ That question usually clarifies whether the reader is dealing with:
 
 ## Current Useful Diagram
 
-### The Semantic Chain
+### Semantic Entry Points
 
-Visible face behavior follows a structured multi-layer evaluation:
+Different surfaces can begin the same semantic write:
 
 <pre class="guidebook-mermaid mermaid">
 flowchart LR
-    app[&quot;App / Hook\n(Write Path)&quot;] --&gt; staged[&quot;Staged Input\n(Un-evaluated)&quot;]
-    staged --&gt; orch[&quot;Orchestrator\n(Advanced Step)&quot;]
-    orch --&gt; controllers[&quot;Controllers\n(Merge Values)&quot;]
-    controllers --&gt; render[&quot;Renderer Output\n(Ready to Draw)&quot;]
-    render --&gt; face[&quot;Visible Face\n(Success)&quot;]
+    classDef source fill:#eef4ff,stroke:#4e79a7,stroke-width:1.5px
+    classDef runtime fill:#eef7ee,stroke:#2f855a,stroke-width:1.5px
+
+    hook[&quot;App hook or UI event&quot;]
+    speech[&quot;Speech or agent behavior&quot;]
+    operator[&quot;Deployment client or discovered slot&quot;]
+    authored[&quot;Animation or procedural controller&quot;]
+    staged[&quot;Staged input\npath + value + shape&quot;]
+    orch[&quot;Orchestrator step&quot;]
+
+    hook --&gt; staged
+    speech --&gt; staged
+    operator --&gt; staged
+    authored --&gt; orch
+    staged --&gt; orch
+
+    class hook,speech,operator,authored source
+    class staged,orch runtime
+</pre>
+
+### Runtime Resolution And Observation
+
+After entry, the runtime resolves those writes through the same shared chain:
+
+<pre class="guidebook-mermaid mermaid">
+flowchart TB
+    classDef runtime fill:#eef7ee,stroke:#2f855a,stroke-width:1.5px
+    classDef observe fill:#fdf1f3,stroke:#c05670,stroke-width:1.5px
+
+    orch[&quot;Orchestrator step&quot;]
+    board[&quot;Blackboard\nshared typed state&quot;]
+    merged[&quot;Merged output writes&quot;]
+    render[&quot;Renderer applies resolved values&quot;]
+    diag[&quot;Diagnostics\noutputPaths, frame data, target snapshots&quot;]
+    face[&quot;Visible face behavior&quot;]
+
+    orch --&gt; board --&gt; merged
+    merged --&gt; render --&gt; face
+    merged --&gt; diag
+    board --&gt; diag
+
+    class orch,board,merged runtime
+    class render,diag,face observe
 </pre>
 
 The screenshot shows the "ready" state where the face is active and responding to standard control writes.

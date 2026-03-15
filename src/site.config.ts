@@ -66,14 +66,11 @@ export type NavCollections = Partial<
 
 function buildGuidebookMenuSections(basePath: "/docs/" | "/tutorials/"): Section[] {
 	const hub = basePath === "/docs/" ? guidebookHubs.docs : guidebookHubs.tutorials;
-	return [
-		{ kind: "link", title: "Overview", href: `${basePath}#hero` },
-		...hub.routeStages.map((stage) => ({
-			kind: "link" as const,
-			title: stage.title,
-			href: `${stage.href}#hero`,
-		})),
-	];
+	return hub.routeStages.map((stage) => ({
+		kind: "link" as const,
+		title: stage.title,
+		href: `${stage.href}#hero`,
+	}));
 }
 
 // Used to generate links in both the Header & Footer.
@@ -91,14 +88,11 @@ export const menuLinks: {
 		inHeader: true,
 		dropdownSubtitle: "Interactive runtime demos and focused route-by-route previews",
 		sections: [
-			{ kind: "link", title: "Overview", href: "/demos/" },
 			...DEMO_PAGES.map((demo) => ({
 				kind: "link" as const,
 				title: demo.label,
 				href: getDemoPageHref(demo),
 			})),
-			{ kind: "link", title: "Architecture", href: "/demos/#architecture" },
-			{ kind: "link", title: "Community", href: "/demos/#community" },
 		],
 	},
 	{

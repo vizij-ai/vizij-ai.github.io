@@ -6,7 +6,7 @@
     "presentationStyle": "atlas",
     "actions": [
       {
-        "label": "Open Getting Started",
+        "label": "Open Guide",
         "href": "/docs/getting-started/",
         "variant": "primary"
       },
@@ -42,14 +42,14 @@
       }
     ],
     "progressSteps": [
-      "Start with Getting Started if you need help choosing a learning path or deciding what to open next.",
+      "Start with Guide if you need help choosing a learning path or deciding what to open next.",
       "Use architecture and control-model pages when you need the mental model behind the demos and tutorials.",
       "Move to animation and deployment pages when the question shifts from concepts to motion, runtime ownership, and delivery."
     ],
     "routeStages": [
       {
         "eyebrow": "Stage 1",
-        "title": "Getting Started",
+        "title": "Guide",
         "description": "Get oriented, choose a learning path, and know when to switch from overview pages to implementation references.",
         "href": "/docs/getting-started/",
         "implementation": "Docs source overview",
@@ -57,11 +57,11 @@
       },
       {
         "eyebrow": "Stage 2",
-        "title": "Architecture",
-        "description": "Connect the docs overview to the real Vizij repos, packages, apps, assets, and deployment surfaces.",
+        "title": "System Mental Model",
+        "description": "Understand the stable Vizij layers: authored assets, runtime control, integration surfaces, and deployment surfaces.",
         "href": "/docs/architecture/",
-        "implementation": "Cross-repo architecture",
-        "outcome": "After this page, you should be able to explain:"
+        "implementation": "Guidebook introduction bucket",
+        "outcome": "After this page, you should be able to explain the major parts of Vizij, how authored assets and runtime control relate, and which conceptual contracts stay stable as a face moves from authoring into integration and deployment."
       },
       {
         "eyebrow": "Stage 3",
@@ -104,7 +104,7 @@
         "cards": [
           {
             "id": "docs-getting-started",
-            "title": "Getting Started",
+            "title": "Guide",
             "description": "Get oriented, choose a learning path, and know when to switch from overview pages to implementation references.",
             "href": "/docs/getting-started/",
             "meta": "Path chooser",
@@ -122,11 +122,11 @@
           },
           {
             "id": "docs-architecture",
-            "title": "Architecture",
-            "description": "Connect the docs overview to the real Vizij repos, packages, apps, assets, and deployment surfaces.",
+            "title": "System Mental Model",
+            "description": "Understand the stable Vizij layers: authored assets, runtime control, integration surfaces, and deployment surfaces.",
             "href": "/docs/architecture/",
-            "meta": "Architecture bridge",
-            "badge": "Reference Bridge",
+            "meta": "System mental model",
+            "badge": "Concept Page",
             "detailRows": [
               {
                 "label": "Bucket",
@@ -134,7 +134,7 @@
               },
               {
                 "label": "Depth",
-                "value": "Advanced"
+                "value": "Fundamentals"
               }
             ]
           }
