@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://vizij.ai/pr-preview/pr-17/sitemap-index.xml
