@@ -261,30 +261,6 @@
 	/* font-display: swap; */
 }
 
-#main-header #main-header-panel {
-	--vizij-nav-dropdown-shell-offset: 0px;
-	--vizij-nav-dropdown-content-offset: 0px;
-}
-
-#main-header #main-header-panel > .pointer-events-auto > .mx-auto {
-	position: relative;
-	left: var(--vizij-nav-dropdown-shell-offset);
-	transition: left 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-#main-header #main-header-panel .animate-navPanelContentIn {
-	position: relative;
-	left: var(--vizij-nav-dropdown-content-offset);
-	transition: left 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-#main-header #main-header-panel .animate-navPanelContentIn > div:nth-child(2) > div:first-child {
-	display: none !important;
-}
-
-#main-header #main-header-panel .animate-navPanelContentIn > div:nth-child(2) > div:last-child {
-	margin-top: 0;
-}
 
 @font-face {
 	font-family: "CascadiaCode";
