@@ -13,12 +13,14 @@ import { siteConfig } from "./src/site.config";
 
 // Remark plugins
 import remarkDirective from "remark-directive"; /* handle ::: directives as nodes */
+import remarkGfm from "remark-gfm";
 import { remarkAdmonitions } from "./src/plugins/remark-admonitions"; /* add admonitions */
 import { remarkReadingTime } from "./src/plugins/remark-reading-time";
 
 // Rehype plugins
 import rehypeExternalLinks from "rehype-external-links";
 import rehypeUnwrapImages from "rehype-unwrap-images";
+import { rehypeBasePathContent } from "./src/plugins/rehype-base-path-content";
 
 import {
   transformerMetaHighlight,
@@ -84,7 +86,12 @@ export default defineConfig({
   markdown: {
     syntaxHighlight: false,
 
-    remarkPlugins: [remarkReadingTime, remarkDirective, remarkAdmonitions],
+    remarkPlugins: [
+      remarkGfm,
+      remarkReadingTime,
+      remarkDirective,
+      remarkAdmonitions,
+    ],
     remarkRehype: {
       footnoteLabelProperties: {
         className: [""],
@@ -100,6 +107,7 @@ export default defineConfig({
           target: "_blank",
         },
       ],
+      [rehypeBasePathContent, { basePath: process.env.PR_PREVIEW_PATH || "/" }],
 
       [
         rehypePrettyCode,

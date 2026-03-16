@@ -1,7 +1,6 @@
 ---
 import SiteShell from "@/layouts/SiteShell.astro";
 import DemosPage from "@/react-pages/demos/DemosPage";
-import { siteConfig } from "@/site.config";
 
 const meta = {
   title: "Vizij Demos",
@@ -10,12 +9,11 @@ const meta = {
 };
 ---
 
-    <SiteShell
+<SiteShell
   title={meta.title}
   description={meta.description}
   ogImage="/og/demos.png"
+  containerClassName="!max-w-6xl"
 >
-      <DemosPage client:only="react" />
-    </SiteShell>
-  </body>
-</html>
+  <DemosPage client:only="react" />
+</SiteShell>

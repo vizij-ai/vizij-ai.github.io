@@ -1,113 +1,123 @@
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { RefObject } from "react";
 import { useVizijRuntime } from "@vizij/runtime-react";
-import { type RefObject, useEffect, useRef, useState } from "react";
-
-const STANDARD_PATHS = {
-	leftX: "standard/left_eye/pos/x",
-	leftY: "standard/left_eye/pos/y",
-	rightX: "standard/right_eye/pos/x",
-	rightY: "standard/right_eye/pos/y",
-} as const;
+import {
+  mapNormalizedControlValue,
+  resolveFaceControls,
+} from "@/demo-lib/faceControls";
 
 const POINTER_IDLE_TIMEOUT_MS = 1400;
+const POINTER_Y_SCALE = 3;
 
 function clamp(value: number, min = -1, max = 1) {
-	return Math.min(Math.max(value, min), max);
+  return Math.min(Math.max(value, min), max);
 }
 
 export type MouseGazeHandle = {
-	ref: RefObject<HTMLDivElement | null>;
-	isPointerActive: boolean;
+  ref: RefObject<HTMLDivElement | null>;
+  isPointerActive: boolean;
 };
 
 export function useMouseGaze(enabled: boolean): MouseGazeHandle {
-	const { setInput, faceId: runtimeFaceId } = useVizijRuntime();
-	const faceId = (runtimeFaceId ?? "face").toLowerCase();
-	const ref = useRef<HTMLDivElement>(null);
-	const [isPointerActive, setPointerActive] = useState(false);
-	const pointerActiveRef = useRef(false);
-	const idleTimeoutRef = useRef<number | null>(null);
+  const {
+    setInput,
+    faceId: runtimeFaceId,
+    assetBundle,
+    inputConstraints,
+  } = useVizijRuntime();
+  const ref = useRef<HTMLDivElement>(null);
+  const [isPointerActive, setPointerActive] = useState(false);
+  const pointerActiveRef = useRef(false);
+  const idleTimeoutRef = useRef<number | null>(null);
+  const controls = useMemo(
+    () => resolveFaceControls(assetBundle, runtimeFaceId, inputConstraints),
+    [assetBundle, inputConstraints, runtimeFaceId],
+  );
 
-	const updatePointerActive = (next: boolean) => {
-		if (pointerActiveRef.current === next) {
-			return;
-		}
-		pointerActiveRef.current = next;
-		setPointerActive(next);
-	};
+  const updatePointerActive = (next: boolean) => {
+    if (pointerActiveRef.current === next) {
+      return;
+    }
+    pointerActiveRef.current = next;
+    setPointerActive(next);
+  };
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: updatePointerActive is a stable ref-based callback
-	useEffect(() => {
-		if (!enabled) {
-			updatePointerActive(false);
-			return;
-		}
-		const target = ref.current;
-		if (!target) {
-			return;
-		}
+  useEffect(() => {
+    if (!enabled) {
+      updatePointerActive(false);
+      return;
+    }
+    const target = ref.current;
+    if (!target) {
+      return;
+    }
 
-		const clearIdleTimeout = () => {
-			if (idleTimeoutRef.current) {
-				window.clearTimeout(idleTimeoutRef.current);
-				idleTimeoutRef.current = null;
-			}
-		};
+    const clearIdleTimeout = () => {
+      if (idleTimeoutRef.current) {
+        window.clearTimeout(idleTimeoutRef.current);
+        idleTimeoutRef.current = null;
+      }
+    };
 
-		const scheduleIdleTimeout = () => {
-			clearIdleTimeout();
-			idleTimeoutRef.current = window.setTimeout(() => {
-				updatePointerActive(false);
-				idleTimeoutRef.current = null;
-			}, POINTER_IDLE_TIMEOUT_MS);
-		};
+    const scheduleIdleTimeout = () => {
+      clearIdleTimeout();
+      idleTimeoutRef.current = window.setTimeout(() => {
+        updatePointerActive(false);
+        idleTimeoutRef.current = null;
+      }, POINTER_IDLE_TIMEOUT_MS);
+    };
 
-		const setEye = (path: string, value: number) => {
-			const fullPath = `rig/${faceId}/${path}`;
-			// console.log(fullPath, { float: clamp(value) })
-			setInput(fullPath, { float: clamp(value) });
-		};
+    const setEye = (path: keyof typeof controls.eyes, value: number) => {
+      const control = controls.eyes[path];
+      if (!control) {
+        return;
+      }
+      setInput(control.path, {
+        float: mapNormalizedControlValue(control, clamp(value)),
+      });
+    };
 
-		const handlePointer = (event: PointerEvent) => {
-			const rect = target.getBoundingClientRect();
-			if (rect.width === 0 || rect.height === 0) {
-				return;
-			}
-			const xRatio = (event.clientX - rect.left) / rect.width;
-			const yRatio = (event.clientY - rect.top) / rect.height;
-			const normalizedX = clamp(xRatio * 2 - 1);
-			const normalizedY = ((1 - yRatio) * 2 - 1) * 3;
+    const handlePointer = (event: PointerEvent) => {
+      const rect = target.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) {
+        return;
+      }
+      const xRatio = (event.clientX - rect.left) / rect.width;
+      const yRatio = (event.clientY - rect.top) / rect.height;
+      const normalizedX = clamp(xRatio * 2 - 1);
+      const normalizedY = clamp(((1 - yRatio) * 2 - 1) * POINTER_Y_SCALE);
 
-			setEye(STANDARD_PATHS.leftX, normalizedX);
-			setEye(STANDARD_PATHS.rightX, normalizedX);
-			setEye(STANDARD_PATHS.leftY, normalizedY);
-			setEye(STANDARD_PATHS.rightY, normalizedY);
-			updatePointerActive(true);
-			scheduleIdleTimeout();
-		};
+      setEye("leftX", normalizedX);
+      setEye("rightX", normalizedX);
+      setEye("leftY", normalizedY);
+      setEye("rightY", normalizedY);
+      updatePointerActive(true);
+      scheduleIdleTimeout();
+    };
 
-		const reset = () => {
-			setEye(STANDARD_PATHS.leftX, 0);
-			setEye(STANDARD_PATHS.leftY, 0);
-			setEye(STANDARD_PATHS.rightX, 0);
-			setEye(STANDARD_PATHS.rightY, 0);
-			updatePointerActive(false);
-			clearIdleTimeout();
-		};
+    const reset = () => {
+      setEye("leftX", 0);
+      setEye("leftY", 0);
+      setEye("rightX", 0);
+      setEye("rightY", 0);
+      updatePointerActive(false);
+      clearIdleTimeout();
+    };
 
-		target.addEventListener("pointermove", handlePointer);
-		target.addEventListener("pointerdown", handlePointer);
-		target.addEventListener("pointerleave", reset);
-		target.addEventListener("pointerup", reset);
+    target.addEventListener("pointermove", handlePointer);
+    target.addEventListener("pointerdown", handlePointer);
+    target.addEventListener("pointerleave", reset);
+    target.addEventListener("pointerup", reset);
 
-		return () => {
-			target.removeEventListener("pointermove", handlePointer);
-			target.removeEventListener("pointerdown", handlePointer);
-			target.removeEventListener("pointerleave", reset);
-			target.removeEventListener("pointerup", reset);
-			clearIdleTimeout();
-			updatePointerActive(false);
-		};
-	}, [enabled, faceId, setInput]);
+    return () => {
+      target.removeEventListener("pointermove", handlePointer);
+      target.removeEventListener("pointerdown", handlePointer);
+      target.removeEventListener("pointerleave", reset);
+      target.removeEventListener("pointerup", reset);
+      clearIdleTimeout();
+      updatePointerActive(false);
+    };
+  }, [controls, enabled, setInput]);
 
-	return { ref, isPointerActive };
+  return { ref, isPointerActive };
 }

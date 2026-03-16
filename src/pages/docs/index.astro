@@ -1,0 +1,16 @@
+---
+import HubPage from "@/components/guides/HubPage";
+import { buildGuidebookHubContent } from "@/lib/guidebook";
+import SiteShell from "@/layouts/SiteShell.astro";
+
+const content = await buildGuidebookHubContent("docs");
+---
+
+<SiteShell
+	title={content.eyebrow}
+	description={content.description}
+	ogImage="/og/home.png"
+	containerClassName="max-w-6xl"
+>
+	<HubPage content={content} />
+</SiteShell>

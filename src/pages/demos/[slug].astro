@@ -1,0 +1,31 @@
+---
+import SiteShell from "@/layouts/SiteShell.astro";
+import DemosPage from "@/react-pages/demos/DemosPage";
+import { DEMO_PAGES, getDemoPageBySlug } from "@/react-pages/demos/demoPages";
+
+export function getStaticPaths() {
+  return DEMO_PAGES.map((demo) => ({
+    params: { slug: demo.slug },
+  }));
+}
+
+const demo = getDemoPageBySlug(Astro.params.slug ?? "");
+
+if (!demo) {
+  throw new Error(`Unknown demos route: ${Astro.params.slug}`);
+}
+
+const meta = {
+  title: `Vizij ${demo.label} Demo`,
+  description: demo.description,
+};
+---
+
+<SiteShell
+  title={meta.title}
+  description={meta.description}
+  ogImage="/og/demos.png"
+  containerClassName="!max-w-6xl"
+>
+  <DemosPage client:only="react" demoId={demo.id} />
+</SiteShell>

@@ -136,6 +136,30 @@ npm run content:sync:hub   # sync all collections from the hub
 
 The sync script filters entries by the `sites` field in each MDX file — only entries tagged `vizij` are copied here. Asset paths that don't exist locally are stripped.
 
+### Guidebook public docs flow
+
+The guidebook-backed `/docs` and `/tutorials` routes do not come from `src/content/`.
+
+They are generated from the canonical guidebook in the sibling `vizij-docs` repo:
+
+- source markdown: `../vizij-docs/current_documentation/guidebook/`
+- route metadata: `../vizij-docs/current_documentation/guidebook/public_projection_manifest.json`
+- generated output in this repo:
+  - `src/generated/guidebook/pages/`
+  - `src/generated/guidebook/hubs.json`
+  - `src/generated/guidebook/redirects.json`
+  - `public/guidebook-assets/`
+
+To refresh the public guidebook projection locally:
+
+```bash
+npm run content:sync:guidebook
+```
+
+That command runs `scripts/sync-guidebook-public.mjs`, rewrites guidebook links for the public site, regenerates the checked-in page files, and recopies guidebook assets.
+
+Do not hand-edit `src/generated/guidebook/` as the normal workflow. If a public guidebook page is wrong, fix the guidebook source or the projection manifest and rerun the sync.
+
 ### Authoring content
 
 Edit or add MDX files in `ecosystem-content-hub/content/<type>/`, then run the sync. Key frontmatter fields:

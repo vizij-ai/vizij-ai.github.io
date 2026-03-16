@@ -1,7 +1,6 @@
 import type { VisemeData } from "@/demo-lib/polly";
+import { fetchVisemeData } from "@/demo-lib/pollyApi";
 import { useState } from "react";
-
-import { fetchVisemeData } from "@/react-pages/showcase/services/pollyApi";
 
 export const usePollyTTS = () => {
 	const [spokenSentences, setSpokenSentences] = useState<VisemeData["sentences"]>([]);

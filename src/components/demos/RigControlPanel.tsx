@@ -1,3 +1,4 @@
+import { buildRigInputPath } from "@/demo-lib/posePaths";
 import { useVizijRuntime } from "@vizij/runtime-react";
 import { type ChangeEvent, useCallback, useId, useMemo, useRef, useState } from "react";
 
@@ -10,23 +11,39 @@ type RigInputOption = {
 	defaultValue?: number;
 };
 
+type InputMetadataLike = {
+	path: string;
+	label?: string;
+	defaultValue?: number;
+	range?: {
+		min?: number;
+		max?: number;
+	};
+};
+
 export function RigControlPanel({
 	unstyled = false,
 }: {
 	unstyled?: boolean;
 } = {}) {
-	const { ready, assetBundle, setInput, step } = useVizijRuntime();
-	const rigSpec = assetBundle.rig?.spec;
-	const runtimeNamespace = assetBundle.namespace ?? "vizij";
+	const {
+		ready,
+		assetBundle,
+		setInput,
+		step,
+		inputConstraints,
+		faceId: runtimeFaceId,
+	} = useVizijRuntime();
+	const faceId = assetBundle.faceId ?? assetBundle.pose?.config?.faceId ?? runtimeFaceId ?? null;
 	const rigInputOptions = useMemo(
-		() => extractRigInputOptions(rigSpec, runtimeNamespace),
-		[rigSpec, runtimeNamespace],
+		() => extractRigInputOptions(assetBundle.rig?.inputMetadata ?? [], inputConstraints, faceId),
+		[assetBundle.rig?.inputMetadata, faceId, inputConstraints],
 	);
 
 	const handleStageValue = useCallback(
 		(path: string, value: number) => {
 			setInput(path, { float: value });
-			step(1 / 30);
+			step(1 / 30, { forceRuntime: true });
 		},
 		[setInput, step],
 	);
@@ -53,12 +70,33 @@ function countWithConstraints(options: RigInputOption[]): {
 	return { total, resolved };
 }
 
-function namespaceTypedPath(path: string, namespace: string): string {
-	const trimmed = path.trim();
-	if (!trimmed) return trimmed;
-	const prefix = `${namespace}/`;
-	if (trimmed.startsWith(prefix)) return trimmed;
-	return `${prefix}${trimmed}`;
+function normalizeInputPath(path: string | null | undefined): string | null {
+	const trimmed = path?.trim() ?? "";
+	if (!trimmed) {
+		return null;
+	}
+	if (trimmed.startsWith("/")) {
+		return trimmed;
+	}
+	const rigMatch = trimmed.match(/^rig\/[^/]+(\/.*)$/);
+	if (rigMatch?.[1]) {
+		return rigMatch[1];
+	}
+	return `/${trimmed}`;
+}
+
+function findConstraint(
+	inputConstraints: Record<string, { min?: number; max?: number; defaultValue?: number }>,
+	absolutePath: string,
+	relativePath: string,
+) {
+	const normalizedRelative = relativePath.replace(/^\/+/, "");
+	return (
+		inputConstraints[absolutePath] ??
+		inputConstraints[relativePath] ??
+		inputConstraints[normalizedRelative] ??
+		null
+	);
 }
 
 type InputStagerProps = {
@@ -78,6 +116,8 @@ function InputStager({ inputs, disabled, onStage, constraintsCount, unstyled }: 
 	const [stagedValues, setStagedValues] = useState<Record<string, number>>({});
 	const [valueDraft, setValueDraft] = useState("");
 	const listId = useId();
+	const queryInputId = useId();
+	const valueInputId = useId();
 	const warnedMissingRef = useRef<Set<string>>(new Set());
 
 	const getBounds = useCallback(
@@ -229,7 +269,7 @@ function InputStager({ inputs, disabled, onStage, constraintsCount, unstyled }: 
 			className={
 				unstyled
 					? "space-y-4"
-					: "rounded-xl border border-accent-base/20 bg-surface-lighter/40 p-4 backdrop-blur-md"
+					: "rounded-xl border border-[#ead7c3] bg-white/74 p-4 backdrop-blur-md dark:border-white/10 dark:bg-[#171b22]/82"
 			}
 		>
 			<div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
@@ -237,18 +277,18 @@ function InputStager({ inputs, disabled, onStage, constraintsCount, unstyled }: 
 					<p className="text-xs font-semibold uppercase tracking-wider text-accent-base/80">
 						Direct feature overrides
 					</p>
-					<p className="mt-2 text-sm text-color-500">
+					<p className="mt-2 text-sm text-color-500 dark:text-[#c8c0b4]">
 						Search any path on the face and set exact values for transforms, colors, or blend
 						parameters.
 					</p>
-					<p className="mt-2 text-xs text-color-500/90">
+					<p className="mt-2 text-xs text-color-500/90 dark:text-[#b9b0a4]">
 						Authored ranges resolved for {constraintsCount.resolved} of {constraintsCount.total}{" "}
 						inputs.
 					</p>
 				</div>
 				<button
 					type="button"
-					className="rounded-md border border-accent-base/25 bg-surface px-3 py-1.5 text-sm text-foreground transition-colors hover:border-accent-base/45 hover:bg-accent-base/10 disabled:cursor-not-allowed disabled:opacity-50"
+					className="rounded-md border border-[#ead7c3] bg-white/84 px-3 py-1.5 text-sm text-foreground transition-colors hover:border-accent-base/45 hover:bg-accent-base/10 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/10 dark:bg-[#0f1318] dark:hover:bg-white/6"
 					onClick={handleResetAll}
 					disabled={disabled || Object.keys(stagedValues).length === 0}
 				>
@@ -256,12 +296,17 @@ function InputStager({ inputs, disabled, onStage, constraintsCount, unstyled }: 
 				</button>
 			</div>
 
-			<label className="mt-4 block text-xs font-semibold uppercase tracking-wider text-accent-base/80">
+			<label
+				className="mt-4 block text-xs font-semibold uppercase tracking-wider text-accent-base/80"
+				htmlFor={queryInputId}
+			>
 				<span>Rig input path</span>
 				<input
+					id={queryInputId}
+					name="rig-input-path"
 					type="search"
 					list={listId}
-					className="mt-2 w-full rounded-md border border-accent-base/20 bg-surface px-3 py-2 text-sm text-foreground outline-none transition-colors focus:border-accent-base/50"
+					className="mt-2 w-full rounded-md border border-[#ead7c3] bg-white/84 px-3 py-2 text-sm text-foreground outline-none transition-colors focus:border-accent-base/50 dark:border-white/10 dark:bg-[#0f1318]"
 					placeholder={
 						inputs.length > 0
 							? "Search feature path (e.g. rig/face/smile_left)"
@@ -282,11 +327,16 @@ function InputStager({ inputs, disabled, onStage, constraintsCount, unstyled }: 
 
 			{selectedPath && (
 				<div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-end">
-					<label className="grow text-xs font-semibold uppercase tracking-wider text-accent-base/80">
+					<label
+						className="grow text-xs font-semibold uppercase tracking-wider text-accent-base/80"
+						htmlFor={valueInputId}
+					>
 						<span>Value for {selectedLabel || selectedPath}</span>
 						<input
+							id={valueInputId}
+							name="rig-input-value"
 							type="number"
-							className="mt-2 w-full rounded-md border border-accent-base/20 bg-surface px-3 py-2 text-sm text-foreground outline-none transition-colors focus:border-accent-base/50"
+							className="mt-2 w-full rounded-md border border-[#ead7c3] bg-white/84 px-3 py-2 text-sm text-foreground outline-none transition-colors focus:border-accent-base/50 dark:border-white/10 dark:bg-[#0f1318]"
 							step="0.01"
 							value={valueDraft}
 							onChange={handleValueChange}
@@ -295,7 +345,7 @@ function InputStager({ inputs, disabled, onStage, constraintsCount, unstyled }: 
 					</label>
 					<button
 						type="button"
-						className="rounded-md border border-accent-base/25 bg-surface px-3 py-2 text-sm text-foreground transition-colors hover:border-accent-base/45 hover:bg-accent-base/10 disabled:cursor-not-allowed disabled:opacity-50"
+						className="rounded-md border border-[#ead7c3] bg-white/84 px-3 py-2 text-sm text-foreground transition-colors hover:border-accent-base/45 hover:bg-accent-base/10 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/10 dark:bg-[#0f1318] dark:hover:bg-white/6"
 						onClick={() => handleReset(selectedPath)}
 						disabled={disabled}
 					>
@@ -311,14 +361,18 @@ function InputStager({ inputs, disabled, onStage, constraintsCount, unstyled }: 
 					</p>
 					<ul className="mt-2 space-y-2">
 						{Object.entries(stagedValues).map(([path, value]) => (
-							<li key={path} className="rounded-md border border-accent-base/15 bg-surface/70 p-3">
-								<div className="flex flex-wrap items-center gap-2 text-xs text-color-500">
+							<li
+								key={path}
+								className="rounded-md border border-[#ead7c3] bg-white/70 p-3 dark:border-white/10 dark:bg-[#1b1f27]/86"
+							>
+								<div className="flex flex-wrap items-center gap-2 text-xs text-color-500 dark:text-[#c8c0b4]">
 									<strong className="text-foreground">{path}</strong>
 									<span>→ {value.toFixed(2)}</span>
 								</div>
 								<div className="mt-2 flex items-center gap-3">
 									<input
 										type="range"
+										name={`staged-${path}`}
 										className="h-2 w-full accent-accent-base"
 										min={getBounds(path).min}
 										max={getBounds(path).max}
@@ -329,7 +383,7 @@ function InputStager({ inputs, disabled, onStage, constraintsCount, unstyled }: 
 									/>
 									<button
 										type="button"
-										className="rounded-md border border-accent-base/20 bg-surface px-2 py-1 text-xs text-foreground transition-colors hover:border-accent-base/45 hover:bg-accent-base/10 disabled:cursor-not-allowed disabled:opacity-50"
+										className="rounded-md border border-[#ead7c3] bg-white/84 px-2 py-1 text-xs text-foreground transition-colors hover:border-accent-base/45 hover:bg-accent-base/10 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/10 dark:bg-[#0f1318] dark:hover:bg-white/6"
 										onClick={() => handleReset(path)}
 										disabled={disabled}
 									>
@@ -346,82 +400,48 @@ function InputStager({ inputs, disabled, onStage, constraintsCount, unstyled }: 
 }
 
 function extractRigInputOptions(
-	spec: unknown,
-	namespace: string,
-	constraints: Record<string, { min?: number; max?: number; defaultValue?: number }> = {},
+	metadata: InputMetadataLike[],
+	inputConstraints: Record<string, { min?: number; max?: number; defaultValue?: number }>,
+	faceId: string | null,
 ): RigInputOption[] {
-	if (!spec || typeof spec !== "object") {
+	if (!faceId) {
 		return [];
 	}
-	const nodes = Array.isArray((spec as { nodes?: unknown }).nodes)
-		? ((spec as { nodes?: unknown }).nodes as unknown[])
-		: [];
-	const options: RigInputOption[] = [];
-	for (const node of nodes) {
-		if (!node || typeof node !== "object") {
-			continue;
-		}
-		const type = String((node as { type?: unknown }).type ?? "").toLowerCase();
-		if (type !== "input") {
-			continue;
-		}
-		const params = (node as { params?: unknown }).params;
-		const path =
-			params && typeof params === "object" ? (params as { path?: unknown }).path : undefined;
-		if (typeof path !== "string") {
-			continue;
-		}
-		const trimmed = path.trim();
-		if (!trimmed) {
-			continue;
-		}
-		const label =
-			typeof (node as { label?: unknown }).label === "string"
-				? ((node as { label?: string }).label as string)
-				: trimmed;
-		const numericOrUndefined = (val: unknown): number | undefined => {
-			const num = Number(val);
-			return Number.isFinite(num) ? num : undefined;
-		};
-		const namespaced = namespaceTypedPath(trimmed, namespace);
-		const stripped =
-			trimmed.startsWith("rig/") && trimmed.split("/").length > 2
-				? trimmed.split("/").slice(2).join("/")
-				: trimmed.startsWith("/")
-					? trimmed.slice(1)
-					: trimmed;
-		const namespacedStripped = namespaceTypedPath(stripped, namespace);
-		const fromConstraints =
-			constraints[trimmed] ??
-			constraints[namespaced] ??
-			constraints[stripped] ??
-			constraints[namespacedStripped];
-		options.push({
-			path: trimmed,
-			label,
-			id:
-				typeof (node as { id?: unknown }).id === "string"
-					? String((node as { id?: unknown }).id)
-					: undefined,
-			min:
-				fromConstraints?.min ??
-				(params && typeof params === "object"
-					? numericOrUndefined((params as { min?: unknown }).min)
-					: undefined),
-			max:
-				fromConstraints?.max ??
-				(params && typeof params === "object"
-					? numericOrUndefined((params as { max?: unknown }).max)
-					: undefined),
-			defaultValue:
-				fromConstraints?.defaultValue ??
-				(params && typeof params === "object"
-					? numericOrUndefined(
-							(params as { default?: unknown; value?: unknown }).default ??
-								(params as { value?: unknown }).value,
-						)
-					: undefined),
-		});
-	}
-	return options.sort((a, b) => a.path.localeCompare(b.path));
+	return metadata
+		.flatMap((entry): RigInputOption[] => {
+			const relativePath = normalizeInputPath(entry.path);
+			if (!relativePath) {
+				return [];
+			}
+
+			const absolutePath = buildRigInputPath(faceId, relativePath);
+			const constraint = findConstraint(inputConstraints, absolutePath, relativePath);
+			const label =
+				typeof entry.label === "string" && entry.label.trim().length > 0
+					? entry.label
+					: absolutePath;
+
+			return [
+				{
+					path: absolutePath,
+					label,
+					min:
+						constraint?.min ??
+						(Number.isFinite(Number(entry.range?.min))
+							? Number(entry.range?.min)
+							: undefined),
+					max:
+						constraint?.max ??
+						(Number.isFinite(Number(entry.range?.max))
+							? Number(entry.range?.max)
+							: undefined),
+					defaultValue:
+						constraint?.defaultValue ??
+						(Number.isFinite(Number(entry.defaultValue))
+							? Number(entry.defaultValue)
+							: undefined),
+				},
+			];
+		})
+		.sort((a, b) => a.path.localeCompare(b.path));
 }

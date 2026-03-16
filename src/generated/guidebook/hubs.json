@@ -1,0 +1,518 @@
+{
+  "docs": {
+    "eyebrow": "Vizij Docs",
+    "title": "Get oriented, choose a learning path, and understand the core Vizij models.",
+    "description": "Use docs when you want the concepts behind the workflows: what the main parts are, how they connect, and which page to open next.",
+    "presentationStyle": "atlas",
+    "actions": [
+      {
+        "label": "Open Guide",
+        "href": "/docs/getting-started/",
+        "variant": "primary"
+      },
+      {
+        "label": "Follow Tutorials",
+        "href": "/tutorials/",
+        "variant": "secondary"
+      },
+      {
+        "label": "Explore Demos",
+        "href": "/demos/",
+        "variant": "tertiary"
+      }
+    ],
+    "decisionPanels": [
+      {
+        "title": "Need the overview first?",
+        "description": "Start here when you want the big picture: what Vizij is, how the concepts connect, and where to begin.",
+        "label": "Orientation",
+        "href": "/docs/getting-started/"
+      },
+      {
+        "title": "Need the hands-on path?",
+        "description": "Open tutorials when you want concrete steps, checkpoints, and a visible result you can verify.",
+        "label": "Tutorial path",
+        "href": "/tutorials/"
+      },
+      {
+        "title": "Need to watch behavior first?",
+        "description": "The demos page stays experiential. Use it to watch the runtime, then come back here to understand what you saw.",
+        "label": "Behavior first",
+        "href": "/demos/"
+      }
+    ],
+    "progressSteps": [
+      "Start with Guide if you need help choosing a learning path or deciding what to open next.",
+      "Use architecture and control-model pages when you need the mental model behind the demos and tutorials.",
+      "Move to animation and deployment pages when the question shifts from concepts to motion, runtime ownership, and delivery."
+    ],
+    "routeStages": [
+      {
+        "eyebrow": "Stage 1",
+        "title": "Guide",
+        "description": "Get oriented, choose a learning path, and know when to switch from overview pages to implementation references.",
+        "href": "/docs/getting-started/",
+        "implementation": "Docs source overview",
+        "outcome": "After this page, you should be able to choose the right learning path for your goal, pick the right depth, and know when to switch from overview pages to repo-local implementation docs."
+      },
+      {
+        "eyebrow": "Stage 2",
+        "title": "System Mental Model",
+        "description": "Understand the stable Vizij layers: authored assets, runtime control, integration surfaces, and deployment surfaces.",
+        "href": "/docs/architecture/",
+        "implementation": "Guidebook introduction bucket",
+        "outcome": "After this page, you should be able to explain the major parts of Vizij, how authored assets and runtime control relate, and which conceptual contracts stay stable as a face moves from authoring into integration and deployment."
+      },
+      {
+        "eyebrow": "Stage 3",
+        "title": "Renderer Data Model",
+        "description": "Understand the typed input model, path semantics, and visible runtime behavior behind the first maintained interactions.",
+        "href": "/docs/renderer-data-model/",
+        "implementation": "Runtime React package",
+        "outcome": "After this page, you should be able to explain what a Vizij runtime input is, how it relates to typed paths and values, and how visible behavior on a face maps to a more stable runtime meaning underneath."
+      },
+      {
+        "eyebrow": "Stage 4",
+        "title": "Rigging and Control Model",
+        "description": "Learn the standard control vocabulary, path families, and portable control abstractions behind public-facing rig behavior.",
+        "href": "/docs/rigging-and-control-model/",
+        "implementation": "Renderer and rigging reference",
+        "outcome": "After this page, you should be able to read common Vizij control paths, distinguish standard controls from pose-weight paths, and connect visible face behavior to the runtime values being written underneath it."
+      },
+      {
+        "eyebrow": "Stage 5",
+        "title": "Animation Model",
+        "description": "Understand how animation authoring fits the broader Vizij workflow before you move into runtime playback and richer motion behavior.",
+        "href": "/docs/animation-model/",
+        "implementation": "Animation, integration, and deployment reference",
+        "outcome": "After this page, you should be able to explain what an animation is in Vizij, what a clip, track, and keyframe mean in the current authoring model, and how playback state and transport help you preview authored motion before export."
+      },
+      {
+        "eyebrow": "Stage 6",
+        "title": "Deployment Model",
+        "description": "Compare browser and standalone delivery, operator expectations, and the deployment tradeoffs behind the maintained tutorials.",
+        "href": "/docs/deployment-model/",
+        "implementation": "Standalone app",
+        "outcome": "After this page, you should be able to explain the operational shape of the first Vizij deployment endpoint: what is running, who controls it, what signals move through it, and what counts as a healthy operator path."
+      }
+    ],
+    "sections": [
+      {
+        "id": "orientation",
+        "title": "Foundations",
+        "subtitle": "Use these pages when you are getting oriented or choosing where to start.",
+        "cards": [
+          {
+            "id": "docs-getting-started",
+            "title": "Guide",
+            "description": "Get oriented, choose a learning path, and know when to switch from overview pages to implementation references.",
+            "href": "/docs/getting-started/",
+            "meta": "Path chooser",
+            "badge": "Decision Guide",
+            "detailRows": [
+              {
+                "label": "Bucket",
+                "value": "Introduction"
+              },
+              {
+                "label": "Depth",
+                "value": "Surface"
+              }
+            ]
+          },
+          {
+            "id": "docs-architecture",
+            "title": "System Mental Model",
+            "description": "Understand the stable Vizij layers: authored assets, runtime control, integration surfaces, and deployment surfaces.",
+            "href": "/docs/architecture/",
+            "meta": "System mental model",
+            "badge": "Concept Page",
+            "detailRows": [
+              {
+                "label": "Bucket",
+                "value": "Introduction"
+              },
+              {
+                "label": "Depth",
+                "value": "Fundamentals"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "control-models",
+        "title": "Core Models",
+        "subtitle": "Use these pages when you need the mental model behind runtime inputs, control paths, and rigging vocabulary.",
+        "cards": [
+          {
+            "id": "docs-renderer-data-model",
+            "title": "Renderer Data Model",
+            "description": "Understand the typed input model, path semantics, and visible runtime behavior behind the first maintained interactions.",
+            "href": "/docs/renderer-data-model/",
+            "meta": "Runtime semantics",
+            "badge": "Concept Page",
+            "detailRows": [
+              {
+                "label": "Bucket",
+                "value": "Control"
+              },
+              {
+                "label": "Depth",
+                "value": "Fundamentals"
+              }
+            ]
+          },
+          {
+            "id": "docs-rigging-and-control-model",
+            "title": "Rigging and Control Model",
+            "description": "Learn the standard control vocabulary, path families, and portable control abstractions behind public-facing rig behavior.",
+            "href": "/docs/rigging-and-control-model/",
+            "meta": "Control vocabulary",
+            "badge": "Concept Page",
+            "detailRows": [
+              {
+                "label": "Bucket",
+                "value": "Control"
+              },
+              {
+                "label": "Depth",
+                "value": "Fundamentals"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "integration-and-delivery",
+        "title": "Integration And Delivery",
+        "subtitle": "Use these pages when the question shifts from understanding to motion, operations, and delivery decisions.",
+        "cards": [
+          {
+            "id": "docs-animation-model",
+            "title": "Animation Model",
+            "description": "Understand how animation authoring fits the broader Vizij workflow before you move into runtime playback and richer motion behavior.",
+            "href": "/docs/animation-model/",
+            "meta": "Motion system",
+            "badge": "Concept Page",
+            "detailRows": [
+              {
+                "label": "Bucket",
+                "value": "Customize"
+              },
+              {
+                "label": "Depth",
+                "value": "Fundamentals"
+              }
+            ]
+          },
+          {
+            "id": "docs-deployment-model",
+            "title": "Deployment Model",
+            "description": "Compare browser and standalone delivery, operator expectations, and the deployment tradeoffs behind the maintained tutorials.",
+            "href": "/docs/deployment-model/",
+            "meta": "Deployment framing",
+            "badge": "Concept Page",
+            "detailRows": [
+              {
+                "label": "Bucket",
+                "value": "Deploy"
+              },
+              {
+                "label": "Depth",
+                "value": "Fundamentals"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "tutorials": {
+    "eyebrow": "Vizij Tutorials",
+    "title": "A maintained tutorial pathway from first proof to runtime delivery.",
+    "description": "Use tutorials when you want to build something in sequence, validate each step, and know exactly what to do next.",
+    "presentationStyle": "spine",
+    "heroFigure": {
+      "src": "/guidebook-assets/gifs/fullscreen-demo.gif",
+      "alt": "Animated Vizij fullscreen demo used as the tutorial hub hero",
+      "title": "Start with a visible win",
+      "caption": "The tutorial pathway is staged: prove the runtime, understand the first interactions, then move into authoring, integration, and delivery."
+    },
+    "actions": [
+      {
+        "label": "Start With Hello Face",
+        "href": "/tutorials/hello-face/",
+        "variant": "primary"
+      },
+      {
+        "label": "See Docs",
+        "href": "/docs/",
+        "variant": "secondary"
+      },
+      {
+        "label": "Explore Demos",
+        "href": "/demos/",
+        "variant": "tertiary"
+      }
+    ],
+    "decisionPanels": [
+      {
+        "title": "Need the first visible win?",
+        "description": "Start with Hello Face when you want the smallest maintained proof that Vizij is actually alive.",
+        "label": "First step",
+        "href": "/tutorials/hello-face/"
+      },
+      {
+        "title": "Need orientation first?",
+        "description": "Open docs if you want the concepts and page map before you keep building.",
+        "label": "Get oriented",
+        "href": "/docs/"
+      },
+      {
+        "title": "Need to feel the runtime?",
+        "description": "Use demos when you want to observe finished behavior before reproducing it yourself.",
+        "label": "Behavior probe",
+        "href": "/demos/"
+      }
+    ],
+    "progressSteps": [
+      "Start with Hello Face and do not leave until you can prove the runtime is alive.",
+      "Only move on when the previous page's artifact or proof state is complete.",
+      "Treat authoring and advanced integration as branches off the main tutorial pathway, not mandatory first steps."
+    ],
+    "routeStages": [
+      {
+        "eyebrow": "Stage 1",
+        "title": "Hello Face",
+        "description": "Launch the smallest maintained Vizij runtime app, prove the face is live, and connect the visible behavior back to the runtime skeleton.",
+        "href": "/tutorials/hello-face/",
+        "implementation": "tutorial-fullscreen-face",
+        "outcome": "After this page, you should be able to launch the maintained Hello Face app, confirm that the runtime is actually live, trigger visible behavior with the mouse and keyboard, and point to the small runtime skeleton that makes the app work."
+      },
+      {
+        "eyebrow": "Stage 2",
+        "title": "Renderer Data Model",
+        "description": "Use the first maintained runtime interactions to make path writes, cause and effect, and visible control semantics concrete.",
+        "href": "/tutorials/renderer-data-model/",
+        "implementation": "Control bucket reference",
+        "outcome": "After this page, you should be able to use the maintained fullscreen tutorial to trigger two different kinds of control, explain how their behavior differs, and connect each visible interaction to the code that stages it."
+      },
+      {
+        "eyebrow": "Stage 3",
+        "title": "Authoring",
+        "description": "Take the lowest-friction authoring path first: tweak a maintained face, validate the visible change, and carry that proof into the next tutorial step.",
+        "href": "/tutorials/authoring/",
+        "implementation": "vizij-authoring",
+        "outcome": "After this page, you should be able to open a maintained preset face in vizij-authoring, make one small visible change to the loaded face, and explain why that already counts as real customization work."
+      },
+      {
+        "eyebrow": "Stage 4",
+        "title": "Rigging And Control",
+        "description": "Follow the deeper customization pathway through authoring, control structure, export discipline, and validation against a real runtime surface.",
+        "href": "/tutorials/rigging-and-control/",
+        "implementation": "Authoring docs",
+        "outcome": "After this page, you should be able to carry one believable face package through a full advanced customization pass:"
+      },
+      {
+        "eyebrow": "Stage 5",
+        "title": "Minimal Player",
+        "description": "Load the authored face into the smallest useful player shell and keep the runtime surface honest.",
+        "href": "/tutorials/minimal-player/",
+        "implementation": "Minimal web player walkthrough",
+        "outcome": "After this page, you should be able to launch the maintained player-stage app, explain what makes it a trustworthy runtime shell instead of just another demo, and identify the code shape you would reuse in your own first player."
+      },
+      {
+        "eyebrow": "Stage 6",
+        "title": "Animations",
+        "description": "Understand the authored motion branch before you move into live integrations and heavier runtime behavior.",
+        "href": "/tutorials/animations/",
+        "implementation": "Animation reference bridge",
+        "outcome": "After this page, you should be able to explain what an animation is in Vizij, what a clip, track, and keyframe mean in the current authoring model, and how playback state and transport help you preview authored motion before export."
+      },
+      {
+        "eyebrow": "Stage 7",
+        "title": "Agent Face",
+        "description": "Build the richer API-backed interactive branch with explicit live-service boundaries, runtime checkpoints, and recovery paths.",
+        "href": "/tutorials/agent-face/",
+        "implementation": "tutorial-agent-face",
+        "outcome": "After this page, you should be able to run the maintained richer integration example, separate runtime readiness from session readiness, and explain how an external service loop becomes visible face behavior through a tool bridge instead of bypassing the Vizij runtime."
+      },
+      {
+        "eyebrow": "Stage 8",
+        "title": "Deployment",
+        "description": "Launch the cleanest maintained standalone deployment path and treat operator handoff as part of the tutorial pathway, not an afterthought.",
+        "href": "/tutorials/deployment/",
+        "implementation": "vizij-standalone",
+        "outcome": "After this page, you should be able to launch the maintained standalone runtime surface, load a face into it, confirm that its local control endpoint is alive, and explain why this counts as a deployment-shaped result rather than another local demo."
+      }
+    ],
+    "sections": [
+      {
+        "id": "foundations",
+        "title": "Foundations",
+        "subtitle": "Use these pages to prove the runtime and understand the first maintained interaction surface.",
+        "cards": [
+          {
+            "id": "tutorials-hello-face",
+            "title": "Hello Face",
+            "description": "Launch the smallest maintained Vizij runtime app, prove the face is live, and connect the visible behavior back to the runtime skeleton.",
+            "href": "/tutorials/hello-face/",
+            "meta": "First visible win",
+            "badge": "Walkthrough",
+            "detailRows": [
+              {
+                "label": "Bucket",
+                "value": "Experience"
+              },
+              {
+                "label": "Depth",
+                "value": "Surface"
+              }
+            ]
+          },
+          {
+            "id": "tutorials-renderer-data-model",
+            "title": "Renderer Data Model",
+            "description": "Use the first maintained runtime interactions to make path writes, cause and effect, and visible control semantics concrete.",
+            "href": "/tutorials/renderer-data-model/",
+            "meta": "Control lab",
+            "badge": "Walkthrough",
+            "detailRows": [
+              {
+                "label": "Bucket",
+                "value": "Control"
+              },
+              {
+                "label": "Depth",
+                "value": "Surface"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "authoring",
+        "title": "Authoring",
+        "subtitle": "Use these pages when you want to adapt or deepen a maintained face rather than starting from a blank slate.",
+        "cards": [
+          {
+            "id": "tutorials-authoring",
+            "title": "Authoring",
+            "description": "Take the lowest-friction authoring path first: tweak a maintained face, validate the visible change, and carry that proof into the next tutorial step.",
+            "href": "/tutorials/authoring/",
+            "meta": "Authoring basics",
+            "badge": "Walkthrough",
+            "detailRows": [
+              {
+                "label": "Bucket",
+                "value": "Customize"
+              },
+              {
+                "label": "Depth",
+                "value": "Surface"
+              }
+            ]
+          },
+          {
+            "id": "tutorials-rigging-and-control",
+            "title": "Rigging And Control",
+            "description": "Follow the deeper customization pathway through authoring, control structure, export discipline, and validation against a real runtime surface.",
+            "href": "/tutorials/rigging-and-control/",
+            "meta": "Deep customization",
+            "badge": "Walkthrough",
+            "detailRows": [
+              {
+                "label": "Bucket",
+                "value": "Customize"
+              },
+              {
+                "label": "Depth",
+                "value": "Advanced"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "runtime-and-deployment",
+        "title": "Runtime And Deployment",
+        "subtitle": "Use these pages when you need to move from authored assets into runtime shells, integrations, and operator-facing delivery.",
+        "cards": [
+          {
+            "id": "tutorials-minimal-player",
+            "title": "Minimal Player",
+            "description": "Load the authored face into the smallest useful player shell and keep the runtime surface honest.",
+            "href": "/tutorials/minimal-player/",
+            "meta": "Runtime shell",
+            "badge": "Walkthrough",
+            "detailRows": [
+              {
+                "label": "Bucket",
+                "value": "Integrate"
+              },
+              {
+                "label": "Depth",
+                "value": "Surface"
+              }
+            ]
+          },
+          {
+            "id": "tutorials-animations",
+            "title": "Animations",
+            "description": "Understand the authored motion branch before you move into live integrations and heavier runtime behavior.",
+            "href": "/tutorials/animations/",
+            "meta": "Motion branch",
+            "badge": "Concept Page",
+            "detailRows": [
+              {
+                "label": "Bucket",
+                "value": "Customize"
+              },
+              {
+                "label": "Depth",
+                "value": "Fundamentals"
+              }
+            ]
+          },
+          {
+            "id": "tutorials-agent-face",
+            "title": "Agent Face",
+            "description": "Build the richer API-backed interactive branch with explicit live-service boundaries, runtime checkpoints, and recovery paths.",
+            "href": "/tutorials/agent-face/",
+            "meta": "Live integration",
+            "badge": "Walkthrough",
+            "detailRows": [
+              {
+                "label": "Bucket",
+                "value": "Integrate"
+              },
+              {
+                "label": "Depth",
+                "value": "Advanced"
+              }
+            ]
+          },
+          {
+            "id": "tutorials-deployment",
+            "title": "Deployment",
+            "description": "Launch the cleanest maintained standalone deployment path and treat operator handoff as part of the tutorial pathway, not an afterthought.",
+            "href": "/tutorials/deployment/",
+            "meta": "Operator delivery",
+            "badge": "Walkthrough",
+            "detailRows": [
+              {
+                "label": "Bucket",
+                "value": "Deploy"
+              },
+              {
+                "label": "Depth",
+                "value": "Surface"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

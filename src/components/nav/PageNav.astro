@@ -1,0 +1,59 @@
+---
+import { resolveSitePath } from "@/utils/url";
+
+export interface PageNavLink {
+	label: string;
+	href: string;
+	description?: string;
+}
+
+interface Props {
+	prev?: PageNavLink;
+	next?: PageNavLink;
+	class?: string;
+}
+
+const { prev, next, class: className } = Astro.props;
+const hasPrev = Boolean(prev);
+const hasNext = Boolean(next);
+const show = hasPrev || hasNext;
+---
+
+{show && (
+	<nav aria-label="Page navigation" class={`grid grid-cols-1 gap-4 sm:grid-cols-2 ${className ?? ""}`}>
+		{hasPrev ? (
+			<a
+				href={resolveSitePath(prev!.href)}
+				class="group flex flex-col gap-2 rounded-lg border border-accent-base/15 bg-special-lighter p-5 transition-colors hover:border-accent-two/30"
+			>
+				<span class="flex items-center gap-1.5 text-xs font-medium uppercase tracking-widest text-color-500">
+					<svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle opacity="0.5" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" /><path d="M13.5 9L10.5 12L13.5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+					Previous
+				</span>
+				<span class="text-base font-semibold text-foreground">{prev!.label}</span>
+				{prev!.description && (
+					<span class="text-sm text-color-500 line-clamp-2">{prev!.description}</span>
+				)}
+			</a>
+		) : (
+			<div />
+		)}
+		{hasNext ? (
+			<a
+				href={resolveSitePath(next!.href)}
+				class="group flex flex-col gap-2 rounded-lg border border-accent-base/15 bg-special-lighter p-5 text-right transition-colors hover:border-accent-two/30"
+			>
+				<span class="flex items-center justify-end gap-1.5 text-xs font-medium uppercase tracking-widest text-color-500">
+					Next
+					<svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle opacity="0.5" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" /><path d="M10.5 9L13.5 12L10.5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+				</span>
+				<span class="text-base font-semibold text-foreground">{next!.label}</span>
+				{next!.description && (
+					<span class="text-sm text-color-500 line-clamp-2">{next!.description}</span>
+				)}
+			</a>
+		) : (
+			<div />
+		)}
+	</nav>
+)}

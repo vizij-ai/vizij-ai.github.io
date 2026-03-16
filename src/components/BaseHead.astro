@@ -26,7 +26,7 @@ const socialImageURL = resolveOgImageUrl(ogImage, Astro.site?.href ?? "/");
   import.meta.env.PROD && (
     <>
       {/* Favicon & Apple Icon */}
-      <link rel="icon" href={url("favicon-32x32.png")} type="image/png" />
+      <link rel="icon" href={url("icon.svg")} type="image/svg+xml" />
       <link href={url("icons/apple-touch-icon.png")} rel="apple-touch-icon" />
       {/* Manifest */}
       <link href={url("manifest.webmanifest")} rel="manifest" />

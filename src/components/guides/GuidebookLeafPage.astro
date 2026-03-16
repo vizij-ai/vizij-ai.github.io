@@ -1,0 +1,333 @@
+---
+import type { CollectionEntry } from "astro:content";
+import MDXContent from "@/components/mdx/MDXContent.astro";
+import PageNav from "@/components/nav/PageNav.astro";
+import { resolveSitePath } from "@/utils/url";
+
+interface Props {
+	entry: CollectionEntry<"guidebookPages">;
+}
+
+const { entry } = Astro.props as Props;
+const hasLab = Astro.slots.has("lab");
+const {
+	title,
+	summary,
+	surface,
+	outcome,
+	prerequisites,
+	successCheck,
+	headings,
+	prev,
+	next,
+	implementationAnchors,
+	demoLinks,
+	hasMermaid,
+	context,
+} = entry.data;
+
+const hubLabel = surface === "docs" ? "Docs" : "Tutorials";
+const hubHref = `/${surface}/`;
+
+const prevLink = prev ? { label: prev.label, href: prev.href, description: prev.description } : undefined;
+const nextLink = next ? { label: next.label, href: next.href, description: next.description } : undefined;
+---
+
+<div class="space-y-8 pt-4">
+	<!-- Top navigation -->
+	<nav class="flex items-center justify-between text-sm">
+		<a
+			href={resolveSitePath(hubHref)}
+			class="inline-flex items-center gap-1.5 text-color-500 transition-colors hover:text-accent-two"
+		>
+			<svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle opacity="0.5" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" /><path d="M13.5 9L10.5 12L13.5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+			Back to {hubLabel}
+		</a>
+		<div class="flex items-center gap-4">
+			{prevLink && (
+				<a
+					href={resolveSitePath(prevLink.href)}
+					class="inline-flex items-center gap-1.5 text-color-500 transition-colors hover:text-accent-two"
+				>
+					<svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle opacity="0.5" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" /><path d="M13.5 9L10.5 12L13.5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+					{prevLink.label}
+				</a>
+			)}
+			{nextLink && (
+				<a
+					href={resolveSitePath(nextLink.href)}
+					class="inline-flex items-center gap-1.5 text-color-500 transition-colors hover:text-accent-two"
+				>
+					{nextLink.label}
+					<svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle opacity="0.5" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" /><path d="M10.5 9L13.5 12L10.5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+				</a>
+			)}
+		</div>
+	</nav>
+
+	<!-- Header -->
+	<header class="space-y-4">
+		<h1 class="text-3xl font-bold text-foreground sm:text-4xl">{title}</h1>
+		<p class="max-w-3xl text-base leading-relaxed text-color-500">{summary}</p>
+		{outcome ? (
+			<div class="rounded-lg border border-accent-two/25 bg-special-lighter p-5">
+				<p class="text-xs font-semibold uppercase tracking-widest text-accent-two">Reader outcome</p>
+				<p class="mt-3 text-sm leading-7 text-color-500">{outcome}</p>
+			</div>
+		) : null}
+	</header>
+
+	<!-- Prerequisites and success checks -->
+	{(prerequisites.length > 0 || successCheck.length > 0) && (
+		<div class="grid gap-4 sm:grid-cols-2">
+			{prerequisites.length > 0 && (
+				<div class="rounded-lg border border-accent-base/15 bg-special-lighter p-5">
+					<p class="text-xs font-semibold uppercase tracking-widest text-accent-two">What you need</p>
+					<ul class="mt-3 space-y-2 text-sm leading-6 text-color-500">
+						{prerequisites.map((item) => (
+							<li class="flex gap-2">
+								<span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-two" />
+								<span>{item}</span>
+							</li>
+						))}
+					</ul>
+				</div>
+			)}
+			{successCheck.length > 0 && (
+				<div class="rounded-lg border border-accent-base/15 bg-special-lighter p-5">
+					<p class="text-xs font-semibold uppercase tracking-widest text-accent-two">Proof state</p>
+					<ul class="mt-3 space-y-2 text-sm leading-6 text-color-500">
+						{successCheck.map((item) => (
+							<li class="flex gap-2">
+								<span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-two" />
+								<span>{item}</span>
+							</li>
+						))}
+					</ul>
+				</div>
+			)}
+		</div>
+	)}
+
+	<!-- Interactive lab -->
+	{hasLab && (
+		<section class="overflow-hidden rounded-lg border border-accent-base/15 bg-special-lighter">
+			<div class="border-b border-accent-base/10 px-5 py-4">
+				<p class="text-xs font-semibold uppercase tracking-widest text-accent-two">Interactive reference</p>
+				<p class="mt-1 text-sm text-color-500">
+					The source docs remain the canonical lesson. Use this interactive surface when it strengthens the page.
+				</p>
+			</div>
+			<div class="p-4 sm:p-6">
+				<slot name="lab" />
+			</div>
+		</section>
+	)}
+
+	<!-- Content area with sidebar -->
+	<div class="grid gap-8 lg:grid-cols-[minmax(0,0.25fr)_minmax(0,0.75fr)]">
+		<aside class="space-y-4 lg:sticky lg:top-24 lg:self-start">
+			{headings.length > 0 && (
+				<div class="rounded-lg border border-accent-base/15 bg-special-lighter p-4">
+					<p class="text-xs font-semibold uppercase tracking-widest text-accent-two">On this page</p>
+					<ul class="mt-3 space-y-1">
+						{headings.map((heading, index) => (
+							<li>
+								<a
+									href={`#${heading.slug}`}
+									class="flex items-start gap-2 rounded-md px-2 py-1.5 text-sm text-color-500 transition-colors hover:bg-accent-base/8 hover:text-foreground"
+								>
+									<span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-accent-two/25 bg-accent-two/10 text-[10px] font-semibold text-accent-two">
+										{index + 1}
+									</span>
+									<span>{heading.text}</span>
+								</a>
+							</li>
+						))}
+					</ul>
+				</div>
+			)}
+
+			{implementationAnchors.length > 0 && (
+				<div class="rounded-lg border border-accent-base/15 bg-special-lighter p-4">
+					<p class="text-xs font-semibold uppercase tracking-widest text-accent-two">Implementation anchors</p>
+					<div class="mt-3 space-y-2">
+						{implementationAnchors.map((anchor) => (
+							<a
+								href={resolveSitePath(anchor.href)}
+								class="block rounded-md border border-accent-base/10 px-3 py-2 text-sm text-color-500 transition-colors hover:border-accent-two/30 hover:text-foreground"
+							>
+								<div class="font-medium text-foreground">{anchor.label}</div>
+								{anchor.description && <div class="mt-0.5 text-color-500">{anchor.description}</div>}
+							</a>
+						))}
+					</div>
+				</div>
+			)}
+
+			{context?.referenceBridges?.length ? (
+				<div class="rounded-lg border border-accent-base/15 bg-special-lighter p-4">
+					<p class="text-xs font-semibold uppercase tracking-widest text-accent-two">Reference bridges</p>
+					<div class="mt-3 space-y-2">
+						{context.referenceBridges.map((bridge) => (
+							<a
+								href={resolveSitePath(bridge.href)}
+								class="block rounded-md border border-accent-base/10 px-3 py-2 text-sm text-color-500 transition-colors hover:border-accent-two/30 hover:text-foreground"
+							>
+								<div class="font-medium text-foreground">{bridge.label}</div>
+								{bridge.description && <div class="mt-0.5 text-color-500">{bridge.description}</div>}
+							</a>
+						))}
+					</div>
+				</div>
+			) : null}
+		</aside>
+
+		<div class="min-w-0">
+			<article class="prose prose-neutral max-w-none dark:prose-invert">
+				<MDXContent entry={entry} variant="guidebook" />
+			</article>
+
+			{hasMermaid && (
+				<script is:inline>
+					(async () => {
+						const diagrams = document.querySelectorAll(".guidebook-mermaid.mermaid");
+						if (!diagrams.length) return;
+						try {
+							const mermaidModule = await import("https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs");
+							const mermaid = mermaidModule.default;
+							const getThemeName = () =>
+								document.documentElement.getAttribute("data-theme") === "light"
+									? "light"
+									: "dark";
+							const getThemeVariables = (theme) =>
+								theme === "dark"
+									? {
+											darkMode: true,
+											background: "#171b22",
+											primaryColor: "#232933",
+											primaryBorderColor: "#8ea0b3",
+											primaryTextColor: "#eef3f8",
+											textColor: "#e4ebf3",
+											labelColor: "#e4ebf3",
+											lineColor: "#aeb8c4",
+											secondaryColor: "#1b1f27",
+											tertiaryColor: "#101317",
+										}
+									: {
+											darkMode: false,
+											background: "#fffdf7",
+											primaryColor: "#efe1cd",
+											primaryBorderColor: "#6b7280",
+											primaryTextColor: "#1f2937",
+											textColor: "#1f2937",
+											labelColor: "#1f2937",
+											lineColor: "#5b6472",
+											secondaryColor: "#f7f1e7",
+											tertiaryColor: "#fff8ef",
+										};
+							const adaptGuidebookMermaidSource = (source, theme) => {
+								if (theme !== "dark") return source;
+								const darkPalette = new Map([
+									["#fff4e5", "#2b241b"],
+									["#c97a00", "#f0b36b"],
+									["#eef7ee", "#1d2a22"],
+									["#2f855a", "#73c591"],
+									["#eef4ff", "#1f2734"],
+									["#4e79a7", "#93b9e5"],
+									["#fdf1f3", "#2d2025"],
+									["#c05670", "#e28aa0"],
+									["#fff4cc", "#332816"],
+									["#b7791f", "#e0a85b"],
+									["#f4f5f7", "#232831"],
+									["#6b7280", "#a0a8b6"],
+								]);
+								let adapted = source;
+								for (const [lightColor, darkColor] of darkPalette.entries()) {
+									adapted = adapted.replaceAll(lightColor, darkColor);
+								}
+								return adapted;
+							};
+							const renderDiagrams = async () => {
+								const theme = getThemeName();
+								if ("fonts" in document) {
+									try {
+										await document.fonts.ready;
+									} catch {
+										// If font loading metadata is unavailable, render with the current metrics.
+									}
+								}
+								mermaid.initialize({
+									startOnLoad: false,
+									securityLevel: "loose",
+									theme: "base",
+									htmlLabels: false,
+									themeVariables: getThemeVariables(theme),
+								});
+								for (const [index, diagram] of Array.from(diagrams).entries()) {
+									const source =
+										diagram.dataset.mermaidSource ?? diagram.textContent?.trim();
+									if (!source) continue;
+									diagram.dataset.mermaidSource = source;
+									const themedSource = adaptGuidebookMermaidSource(source, theme);
+									const renderId = `guidebook-mermaid-${theme}-${index}`;
+									const { svg, bindFunctions } = await mermaid.render(
+										renderId,
+										themedSource,
+									);
+									diagram.innerHTML = svg;
+									diagram.setAttribute("data-processed", "true");
+									bindFunctions?.(diagram);
+								}
+							};
+							await renderDiagrams();
+							document.addEventListener("theme-change", () => {
+								void renderDiagrams();
+							});
+						} catch (error) {
+							console.error("Failed to render guidebook mermaid diagram", error);
+						}
+					})();
+				</script>
+			)}
+
+			<!-- Demo cross-links -->
+			{demoLinks.length > 0 && (
+				<div class="mt-8 rounded-lg border border-accent-base/15 bg-special-lighter p-5">
+					<p class="text-xs font-semibold uppercase tracking-widest text-accent-two">Related demos</p>
+					<div class="mt-3 space-y-2">
+						{demoLinks.map((link) => (
+							<a
+								href={resolveSitePath(link.href)}
+								class="block rounded-md border border-accent-base/10 px-3 py-2 text-sm text-color-500 transition-colors hover:border-accent-two/30 hover:text-foreground"
+							>
+								<div class="font-medium text-foreground">{link.label}</div>
+								{link.description && <div class="mt-0.5 text-color-500">{link.description}</div>}
+							</a>
+						))}
+					</div>
+				</div>
+			)}
+
+			<!-- Full prev/next navigation -->
+			<div class="mt-8">
+				<PageNav prev={prevLink} next={nextLink} />
+			</div>
+		</div>
+	</div>
+</div>
+
+<style>
+	article :global(.guidebook-mermaid) {
+		margin-block: 2rem;
+		overflow-x: auto;
+		border-radius: 0.5rem;
+		padding: 1rem;
+	}
+
+	article :global(.guidebook-mermaid svg) {
+		max-width: 100%;
+		height: auto;
+		overflow: visible;
+	}
+</style>

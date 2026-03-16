@@ -1,0 +1,80 @@
+[
+  {
+    "from": "how-to-use-this-guidebook",
+    "surface": "docs",
+    "title": "Guide",
+    "to": "/docs/getting-started/"
+  },
+  {
+    "from": "architecture-bridge",
+    "surface": "docs",
+    "title": "System Mental Model",
+    "to": "/docs/architecture/"
+  },
+  {
+    "from": "system-mental-model",
+    "surface": "docs",
+    "title": "System Mental Model",
+    "to": "/docs/architecture/"
+  },
+  {
+    "from": "runtime-inputs-and-semantics",
+    "surface": "docs",
+    "title": "Renderer Data Model",
+    "to": "/docs/renderer-data-model/"
+  },
+  {
+    "from": "paths-and-standard-controls",
+    "surface": "docs",
+    "title": "Rigging and Control Model",
+    "to": "/docs/rigging-and-control-model/"
+  },
+  {
+    "from": "operator-and-deployment-model",
+    "surface": "docs",
+    "title": "Deployment Model",
+    "to": "/docs/deployment-model/"
+  },
+  {
+    "from": "hello-face-quickstart",
+    "surface": "tutorials",
+    "title": "Hello Face",
+    "to": "/tutorials/hello-face/"
+  },
+  {
+    "from": "first-control-interactions",
+    "surface": "tutorials",
+    "title": "Renderer Data Model",
+    "to": "/tutorials/renderer-data-model/"
+  },
+  {
+    "from": "tweak-an-existing-face",
+    "surface": "tutorials",
+    "title": "Authoring",
+    "to": "/tutorials/authoring/"
+  },
+  {
+    "from": "deep-custom-pipeline",
+    "surface": "tutorials",
+    "title": "Rigging And Control",
+    "to": "/tutorials/rigging-and-control/"
+  },
+  {
+    "from": "minimal-web-player",
+    "surface": "tutorials",
+    "title": "Minimal Player",
+    "to": "/tutorials/minimal-player/"
+  },
+  {
+    "from": "api-backed-interactive-application",
+    "surface": "tutorials",
+    "title": "Agent Face",
+    "to": "/tutorials/agent-face/"
+  },
+  {
+    "from": "easiest-standalone-deployment",
+    "surface": "tutorials",
+    "title": "Deployment",
+    "to": "/tutorials/deployment/"
+  }
+]

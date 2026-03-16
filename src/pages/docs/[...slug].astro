@@ -1,0 +1,47 @@
+---
+import GuidebookLeafPage from "@/components/guides/GuidebookLeafPage.astro";
+import RedirectPage from "@/components/util/RedirectPage.astro";
+import type { GuidebookRedirect } from "@/lib/guidebook-content";
+import { getGuidebookPages, getGuidebookRedirects } from "@/lib/guidebook";
+import SiteShell from "@/layouts/SiteShell.astro";
+
+export async function getStaticPaths() {
+	const pages = await getGuidebookPages("docs");
+	const redirects = getGuidebookRedirects("docs");
+
+	return [
+		...pages.map((entry) => ({
+			params: { slug: entry.data.routeSlug },
+			props: { entry },
+		})),
+		...redirects.map((redirect) => ({
+			params: { slug: redirect.from },
+			props: { redirect },
+		})),
+	];
+}
+
+const { entry, redirect } = Astro.props as {
+	entry?: Awaited<ReturnType<typeof getGuidebookPages>>[number];
+	redirect?: GuidebookRedirect;
+};
+---
+
+{
+	redirect ? (
+		<RedirectPage
+			to={redirect.to}
+			title={`Redirecting to ${redirect.title}`}
+			description={`This Vizij docs route now lives at ${redirect.to}. Redirecting you there.`}
+		/>
+	) : (
+		<SiteShell
+			title={`Vizij Docs: ${entry!.data.title}`}
+			description={entry!.data.summary}
+			ogImage="/og/home.png"
+			containerClassName="max-w-6xl"
+		>
+			<GuidebookLeafPage entry={entry!} />
+		</SiteShell>
+	)
+}

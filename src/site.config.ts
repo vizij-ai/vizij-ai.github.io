@@ -1,4 +1,9 @@
-import type { SiteConfig } from "@/types";
+import guidebookHubsData from "./generated/guidebook/hubs.json";
+import type { GuidebookHubMap } from "./lib/guidebook-content";
+import { DEMO_PAGES, getDemoPageHref } from "./react-pages/demos/demoPages";
+import type { SiteConfig } from "./types";
+
+const guidebookHubs = guidebookHubsData as GuidebookHubMap;
 
 export const siteConfig: SiteConfig = {
 	// Used as both a meta property (src/components/BaseHead.astro L:31 + L:49) & the generated satori png (src/pages/og-image/[slug].png.ts)
@@ -59,6 +64,15 @@ export type NavCollections = Partial<
 	>
 >;
 
+function buildGuidebookMenuSections(basePath: "/docs/" | "/tutorials/"): Section[] {
+	const hub = basePath === "/docs/" ? guidebookHubs.docs : guidebookHubs.tutorials;
+	return hub.routeStages.map((stage) => ({
+		kind: "link" as const,
+		title: stage.title,
+		href: `${stage.href}#hero`,
+	}));
+}
+
 // Used to generate links in both the Header & Footer.
 export const menuLinks: {
 	path: string;
@@ -72,16 +86,28 @@ export const menuLinks: {
 		path: "/demos/",
 		title: "Demos",
 		inHeader: true,
-		dropdownSubtitle: "Interactive runtime demos and section shortcuts",
+		dropdownSubtitle: "Interactive runtime demos and focused route-by-route previews",
 		sections: [
-			{ kind: "link", title: "Overview", href: "/demos/#hero" },
-			{ kind: "link", title: "Rig Controls", href: "/demos/#controls" },
-			{ kind: "link", title: "Expressions", href: "/demos/#expressions" },
-			{ kind: "link", title: "Gaze", href: "/demos/#gaze" },
-			{ kind: "link", title: "Voice", href: "/demos/#voice" },
-			{ kind: "link", title: "Architecture", href: "/demos/#architecture" },
-			{ kind: "link", title: "Community", href: "/demos/#community" },
+			...DEMO_PAGES.map((demo) => ({
+				kind: "link" as const,
+				title: demo.label,
+				href: getDemoPageHref(demo),
+			})),
 		],
+	},
+	{
+		path: "/docs/",
+		title: "Docs",
+		inHeader: true,
+		dropdownSubtitle: "Core concepts, architecture, and deployment guidance",
+		sections: buildGuidebookMenuSections("/docs/"),
+	},
+	{
+		path: "/tutorials/",
+		title: "Tutorials",
+		inHeader: true,
+		dropdownSubtitle: "Concept-first walkthroughs and phase-1 runnable labs",
+		sections: buildGuidebookMenuSections("/tutorials/"),
 	},
 	{
 		path: "/events/",
