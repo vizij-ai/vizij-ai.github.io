@@ -338,7 +338,7 @@ function ControlsDemoSection() {
           {view.hasEntered ? (
             <ShowcaseRuntime
               namespace="controls"
-              asset="hugoCurrentExtended"
+              asset="quoriCurrentExtended"
               active={view.hasEntered}
               visible={view.isVisible}
               autostart={view.isVisible}
@@ -402,7 +402,7 @@ function ExpressionsDemoSection() {
       <Section
         id="expressions"
         title="Expressions"
-        subtitle="Trigger pose presets and preview the resulting expression on both Quori and Hugo outputs."
+        subtitle="Trigger pose presets and preview the resulting expression on a live Quori output."
         variant="secondary"
       >
         <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 md:grid-cols-2">
@@ -431,13 +431,6 @@ function ExpressionsDemoSection() {
                     label: "Expression preview · Quori",
                     description: "Pose presets update Quori in real time.",
                     drive: true,
-                  },
-                  {
-                    namespace: "expressions-hugo-face",
-                    asset: "hugoCurrentExtended" as const,
-                    label: "Expression preview · Hugo",
-                    description: "The same presets are mirrored to Hugo.",
-                    drive: false,
                   },
                 ] as const
               ).map((face) => (
@@ -484,18 +477,6 @@ function ExpressionsDemoSection() {
                 </div>
                 <div className="p-5 text-sm text-color-500">
                   Scroll to load Quori preview.
-                </div>
-              </article>
-              <article className={PREVIEW_CARD_CLASS}>
-                <div className={PREVIEW_MEDIA_CLASS}>
-                  <FaceFramePlaceholder
-                    variant="md"
-                    label="Expression preview · Hugo"
-                    subtitle="Runtime activates when this section is in view"
-                  />
-                </div>
-                <div className="p-5 text-sm text-color-500">
-                  Scroll to load Hugo preview.
                 </div>
               </article>
             </>

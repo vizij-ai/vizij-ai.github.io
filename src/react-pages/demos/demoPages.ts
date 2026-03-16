@@ -42,9 +42,9 @@ export const DEMO_PAGES: DemoPageMeta[] = [
     teaser: "Canonical pose weights",
     title: "Expressions Demo",
     subtitle:
-      "Trigger pose presets and preview the resulting expression on both Quori and Hugo outputs.",
+      "Trigger pose presets and preview the resulting expression on a live Quori output.",
     description:
-      "Use canonical pose-weight writes to compare how one expression contract maps cleanly across different rendered faces.",
+      "Use canonical pose-weight writes to inspect how one expression contract maps cleanly onto a rendered face.",
     learnHref: "/tutorials/rigging-and-control/",
     learnLabel: "Learn rigging and control",
     variant: "secondary",
