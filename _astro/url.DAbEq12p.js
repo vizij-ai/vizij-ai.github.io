@@ -1,0 +1,2 @@
+function a(t="",r){if(n(t)||t.startsWith("#")||t.startsWith("?"))return t;const s=r??"/",i=t.startsWith("/")?t.slice(1):t;return`${s.endsWith("/")?s:`${s}/`}${i}`}function u(){return"/"}const e=/^[a-zA-Z][a-zA-Z\d+.-]*:/,o=/^\/(?:home|Users|private|var|tmp|mnt|opt|etc)(?:\/|$)|^\/[a-zA-Z]:\//;function f(t){return!t||n(t)||e.test(t)||t.startsWith("#")||t.startsWith("?")||!t.startsWith("/")?!1:!o.test(t)}function l(t,r){return f(t)?a(t,r):t}function n(t){return e.test(t)||t.startsWith("//")}export{u as h,l as r,a as u};
+//# sourceMappingURL=url.DAbEq12p.js.map

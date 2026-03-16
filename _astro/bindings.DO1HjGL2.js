@@ -1,0 +1,2 @@
+import"./usePoseHotkeys.DQZ8F2qG.js";import{g as c}from"./useSectionInView.QARy6Yav.js";function i(e){return`${c(e.pose)??""} ${e.pose.name??e.pose.id}`.toLowerCase()}function m(e,r=3){const s=e.filter(o=>i(o).includes("emotion")),t=e.filter(o=>i(o).includes("viseme")),n=e.filter(o=>!s.includes(o)&&!t.includes(o));return[...s,...n,...t].slice(0,r)}export{m as p};
+//# sourceMappingURL=bindings.DO1HjGL2.js.map

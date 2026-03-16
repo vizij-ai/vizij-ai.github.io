@@ -1,0 +1,245 @@
+<!DOCTYPE html><html class="overflow-x-hidden grid scroll-pt-18 scroll-smooth font-sans text-text text-xl md:text-base antialiased" lang="en-US"> <head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><title>Vizij Tutorial: Deployment • Vizij</title><link href="/brand.svg" rel="icon" type="image/svg+xml"><link rel="icon" href="/icon.svg" type="image/svg+xml"><link href="/icons/apple-touch-icon.png" rel="apple-touch-icon"><link href="/manifest.webmanifest" rel="manifest"><link href="https://vizij.ai/tutorials/deployment/" rel="canonical"><meta content="Vizij Tutorial: Deployment • Vizij" name="title"><meta content="Launch the cleanest maintained standalone deployment path and treat operator handoff as part of the tutorial pathway, not an afterthought." name="description"><meta content="Vizij" name="author"><meta content="" name="theme-color"><meta content="website" property="og:type"><meta content="Vizij Tutorial: Deployment" property="og:title"><meta content="Launch the cleanest maintained standalone deployment path and treat operator handoff as part of the tutorial pathway, not an afterthought." property="og:description"><meta content="https://vizij.ai/tutorials/deployment/" property="og:url"><meta content="Vizij" property="og:site_name"><meta content="en_US" property="og:locale"><meta content="https://vizij.ai/og/home.png" property="og:image"><meta content="1200" property="og:image:width"><meta content="630" property="og:image:height"><meta content="summary_large_image" property="twitter:card"><meta content="https://vizij.ai/tutorials/deployment/" property="twitter:url"><meta content="Vizij Tutorial: Deployment" property="twitter:title"><meta content="Launch the cleanest maintained standalone deployment path and treat operator handoff as part of the tutorial pathway, not an afterthought." property="twitter:description"><meta content="https://vizij.ai/og/home.png" property="twitter:image"><link href="/sitemap-index.xml" rel="sitemap"><link href="/rss.xml" rel="alternate" title="Vizij" type="application/rss+xml"><meta content="Astro v5.18.1" name="generator"><link rel="stylesheet" href="/_astro/_slug_.C950vkvY.css">
+<style>article[data-astro-cid-cfpwghs5] .guidebook-mermaid{margin-block:2rem;overflow-x:auto;border-radius:.5rem;padding:1rem}article[data-astro-cid-cfpwghs5] .guidebook-mermaid svg{max-width:100%;height:auto;overflow:visible}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.DgpfmLNk.css"><script type="module" src="/_astro/page.D1uwR3nK.js"></script></head> <body class="relative min-h-screen w-full bg-surface"> <script>
+const lightModePref = window.matchMedia("(prefers-color-scheme: light)");
+function getUserPref() {
+  const storedTheme = typeof localStorage !== "undefined" && localStorage.getItem("theme");
+  return storedTheme || (lightModePref.matches ? "light" : "dark");
+}
+function setTheme(newTheme) {
+  if (newTheme !== "light" && newTheme !== "dark") {
+    return console.warn(
+      `Invalid theme value '${newTheme}' received. Expected 'light' or 'dark'.`
+    );
+  }
+  const root = document.documentElement;
+  if (newTheme === root.getAttribute("data-theme")) return;
+  root.setAttribute("data-theme", newTheme);
+  const colorThemeMetaTag = document.querySelector("meta[name='theme-color']");
+  if (colorThemeMetaTag) {
+    const bgColor = getComputedStyle(document.body).getPropertyValue("--theme-bg");
+    colorThemeMetaTag.setAttribute("content", `hsl(${bgColor})`);
+  }
+  if (typeof localStorage !== "undefined") {
+    localStorage.setItem("theme", newTheme);
+  }
+}
+setTheme(getUserPref());
+document.addEventListener("astro:after-swap", () => setTheme(getUserPref()));
+document.addEventListener("theme-change", (e) => {
+  setTheme(e.detail.theme);
+});
+lightModePref.addEventListener("change", (e) =>
+  setTheme(e.matches ? "light" : "dark")
+);
+</script> <a class="sr-only focus:not-sr-only focus:fixed focus:start-1 focus:top-1.5" href="#main">skip to content</a> <style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var e=async t=>{await(await t())()};(self.Astro||(self.Astro={})).load=e;window.dispatchEvent(new Event("astro:load"));})();</script><script>(()=>{var A=Object.defineProperty;var g=(i,o,a)=>o in i?A(i,o,{enumerable:!0,configurable:!0,writable:!0,value:a}):i[o]=a;var d=(i,o,a)=>g(i,typeof o!="symbol"?o+"":o,a);{let i={0:t=>m(t),1:t=>a(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(a(t)),5:t=>new Set(a(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>1/0*t},o=t=>{let[l,e]=t;return l in i?i[l](e):void 0},a=t=>t.map(o),m=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([l,e])=>[l,o(e)]));class y extends HTMLElement{constructor(){super(...arguments);d(this,"Component");d(this,"hydrator");d(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let c=this.querySelectorAll("astro-slot"),n={},h=this.querySelectorAll("template[data-astro-template]");for(let r of h){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("data-astro-template")||"default"]=r.innerHTML,r.remove())}for(let r of c){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("name")||"default"]=r.innerHTML)}let p;try{p=this.hasAttribute("props")?m(JSON.parse(this.getAttribute("props"))):{}}catch(r){let s=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(s+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${s}`,this.getAttribute("props"),r),r}let u;await this.hydrator(this)(this.Component,p,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});d(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),c.disconnect(),this.childrenConnectedCallback()},c=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});c.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}async start(){let e=JSON.parse(this.getAttribute("opts")),c=this.getAttribute("client");if(Astro[c]===void 0){window.addEventListener(`astro:${c}`,()=>this.start(),{once:!0});return}try{await Astro[c](async()=>{let n=this.getAttribute("renderer-url"),[h,{default:p}]=await Promise.all([import(this.getAttribute("component-url")),n?import(n):()=>()=>{}]),u=this.getAttribute("component-export")||"default";if(!u.includes("."))this.Component=h[u];else{this.Component=h;for(let f of u.split("."))this.Component=this.Component[f]}return this.hydrator=p,this.hydrate},e,this)}catch(n){console.error(`[astro-island] Error hydrating ${this.getAttribute("component-url")}`,n)}}attributeChangedCallback(){this.hydrate()}}d(y,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",y)}})();</script><astro-island uid="ZUUoFL" prefix="r6" component-url="/_astro/Header.2dK5W-KG.js" component-export="default" renderer-url="/_astro/client.B5Wd42NC.js" props="{&quot;currentPath&quot;:[0,&quot;/tutorials/deployment/&quot;],&quot;navCollections&quot;:[0,{}]}" ssr client="load" opts="{&quot;name&quot;:&quot;Header&quot;,&quot;value&quot;:true}" await-children><link rel="preload" as="image" href="/brand.svg"/><header id="main-header" class="fixed left-0 right-0 top-0 z-50 w-full overflow-hidden bg-surface/80 backdrop-blur-xl shadow-[0_2px_8px_-3px_rgba(0,0,0,0.07)] dark:shadow-[0_2px_8px_-3px_rgba(0,0,0,0.3)]"><div class="w-full h-[72px] xl:max-w-6xl xl:mx-auto px-2 sm:px-4 md:px-6 lg:px-8 flex items-center justify-between"><a aria-label="Vizij" class="group flex items-center sm:relative h-8 w-8 md:p-2 rounded-lg justify-center hover:bg-accent-base/10 transition-colors lg:w-auto lg:justify-start" href="/"><div title="Vizij"><img src="/brand.svg" class="size-5" alt=""/></div><strong class="max-[320px]:hidden lowercase text-base hidden lg:block z-10 mb-0.5 ms-2 lg:text-base xl:text-xl hover:opacity-90 whitespace-nowrap text-foreground">Vizij</strong></a><nav class="hidden md:flex ml-auto mr-2 lg:mr-6 items-center"><div class="relative z-10"><ul class="flex list-none items-center justify-center gap-0.5 md:gap-1"><li><a href="/demos/" class="group inline-flex select-none items-center gap-0.5 md:gap-1 rounded-lg px-2 md:px-3 py-1.5 md:py-2 text-xs sm:text-sm font-medium leading-none outline-none transition-colors whitespace-nowrap text-foreground hover:text-accent-base focus:text-accent-base">Demos<svg class="h-3 w-3 transition-transform duration-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></a></li><li><a href="/docs/" class="group inline-flex select-none items-center gap-0.5 md:gap-1 rounded-lg px-2 md:px-3 py-1.5 md:py-2 text-xs sm:text-sm font-medium leading-none outline-none transition-colors whitespace-nowrap text-foreground hover:text-accent-base focus:text-accent-base">Docs<svg class="h-3 w-3 transition-transform duration-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></a></li><li><a href="/tutorials/" class="group inline-flex select-none items-center gap-0.5 md:gap-1 rounded-lg px-2 md:px-3 py-1.5 md:py-2 text-xs sm:text-sm font-medium leading-none outline-none transition-colors whitespace-nowrap text-accent-one">Tutorials<svg class="h-3 w-3 transition-transform duration-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></a></li><li><a href="/events/" class="group inline-flex select-none items-center gap-0.5 md:gap-1 rounded-lg px-2 md:px-3 py-1.5 md:py-2 text-xs sm:text-sm font-medium leading-none outline-none transition-colors whitespace-nowrap text-foreground hover:text-accent-base focus:text-accent-base">Events<svg class="h-3 w-3 transition-transform duration-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></a></li></ul></div></nav><div class="flex items-center gap-x-1 md:gap-x-2"><div id="buttons-panel" class="hidden md:flex space-x-1 md:space-x-2"><button class="hidden md:flex relative items-center justify-center select-none rounded-lg transition-colors bg-color-100 text-accent-base hover:bg-accent-base/10 focus:outline-2 focus:outline-accent-two outline-offset-2 h-8 w-8" type="button" aria-label="Toggle theme"><svg aria-hidden="true" class="absolute w-5 h-5 opacity-100 scale-100 transition-all dark:opacity-0 dark:scale-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"></circle><line x1="12" y1="2" x2="12" y2="5" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line><line x1="12" y1="19" x2="12" y2="22" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line><line x1="2" y1="12" x2="5" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line><line x1="19" y1="12" x2="22" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line><line x1="4.22" y1="4.22" x2="6.34" y2="6.34" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line><line x1="17.66" y1="17.66" x2="19.78" y2="19.78" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line><line x1="17.66" y1="6.34" x2="19.78" y2="4.22" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line><line x1="4.22" y1="19.78" x2="6.34" y2="17.66" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line></svg><svg aria-hidden="true" class="absolute w-5 h-5 opacity-0 scale-0 transition-all dark:opacity-100 dark:scale-100" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79Z" stroke="currentColor" stroke-width="2" fill="none"></path></svg></button></div><div class="flex items-center gap-x-1 md:gap-x-2 "><div class="hidden md:flex"><button type="button" aria-label="Open search" title="Open search" class="relative inline-flex items-center justify-center select-none rounded-lg transition-colors focus:outline-2 outline-offset-2 focus:outline-accent-one disabled:opacity-50 disabled:cursor-not-allowed h-8 w-8 bg-color-100 text-accent-base hover:bg-accent-base/10" data-active="false"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"></circle><line x1="16.65" y1="16.65" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line></svg></button></div><div class="md:hidden"><div class="md:hidden ml-auto flex items-center gap-2"><span class="text-sm font-medium text-foreground/80 truncate max-w-[40vw] text-right">Tutorials</span><button type="button" aria-label="Open navigation menu" title="Open navigation menu" class="relative inline-flex items-center justify-center select-none rounded-lg transition-colors focus:outline-2 outline-offset-2 focus:outline-accent-one disabled:opacity-50 disabled:cursor-not-allowed h-8 w-8 bg-color-100 text-accent-base hover:bg-accent-base/10" data-active="false" aria-haspopup="dialog" aria-expanded="false" aria-controls="radix-_r6R_jd_" data-state="closed"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line><line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line><line x1="3" y1="18" x2="21" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line></svg></button></div></div></div></div></div><div id="main-header-panel" class="hidden md:block"></div></header><!--astro:end--></astro-island> <div class="relative flex min-h-screen w-full flex-col"> <div class="relative flex min-h-screen w-full flex-1 m-auto max-w-6xl"> <div id="container" class="relative m-auto max-w-4xl grow w-full min-w-0 max-w-6xl"> <div class="m-auto grid grid-cols-1 min-h-screen grid-rows-[1fr_auto] px-4 md:px-8 w-full min-w-0 pt-18"> <main id="main" class="relative grow" data-pagefind-body> <div class="space-y-8 pt-4" data-astro-cid-cfpwghs5> <!-- Top navigation --> <nav class="flex items-center justify-between text-sm" data-astro-cid-cfpwghs5> <a href="/tutorials/" class="inline-flex items-center gap-1.5 text-color-500 transition-colors hover:text-accent-two" data-astro-cid-cfpwghs5> <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" aria-hidden="true" data-astro-cid-cfpwghs5><circle opacity="0.5" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" data-astro-cid-cfpwghs5></circle><path d="M13.5 9L10.5 12L13.5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-cfpwghs5></path></svg>
+Back to Tutorials </a> <div class="flex items-center gap-4" data-astro-cid-cfpwghs5> <a href="/tutorials/agent-face/" class="inline-flex items-center gap-1.5 text-color-500 transition-colors hover:text-accent-two" data-astro-cid-cfpwghs5> <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" aria-hidden="true" data-astro-cid-cfpwghs5><circle opacity="0.5" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" data-astro-cid-cfpwghs5></circle><path d="M13.5 9L10.5 12L13.5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-cfpwghs5></path></svg> Agent Face </a> <a href="/docs/deployment-model/" class="inline-flex items-center gap-1.5 text-color-500 transition-colors hover:text-accent-two" data-astro-cid-cfpwghs5> Deployment Model <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" aria-hidden="true" data-astro-cid-cfpwghs5><circle opacity="0.5" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" data-astro-cid-cfpwghs5></circle><path d="M10.5 9L13.5 12L10.5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-cfpwghs5></path></svg> </a> </div> </nav> <!-- Header --> <header class="space-y-4" data-astro-cid-cfpwghs5> <h1 class="text-3xl font-bold text-foreground sm:text-4xl" data-astro-cid-cfpwghs5>Deployment</h1> <p class="max-w-3xl text-base leading-relaxed text-color-500" data-astro-cid-cfpwghs5>Launch the cleanest maintained standalone deployment path and treat operator handoff as part of the tutorial pathway, not an afterthought.</p> <div class="rounded-lg border border-accent-two/25 bg-special-lighter p-5" data-astro-cid-cfpwghs5> <p class="text-xs font-semibold uppercase tracking-widest text-accent-two" data-astro-cid-cfpwghs5>Reader outcome</p> <p class="mt-3 text-sm leading-7 text-color-500" data-astro-cid-cfpwghs5>After this page, you should be able to launch the maintained standalone runtime surface, load a face into it, confirm that its local control endpoint is alive, and explain why this counts as a deployment-shaped result rather than another local demo.</p> </div> </header> <!-- Prerequisites and success checks --> <div class="grid gap-4 sm:grid-cols-2" data-astro-cid-cfpwghs5> <div class="rounded-lg border border-accent-base/15 bg-special-lighter p-5" data-astro-cid-cfpwghs5> <p class="text-xs font-semibold uppercase tracking-widest text-accent-two" data-astro-cid-cfpwghs5>What you need</p> <ul class="mt-3 space-y-2 text-sm leading-6 text-color-500" data-astro-cid-cfpwghs5> <li class="flex gap-2" data-astro-cid-cfpwghs5> <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-two" data-astro-cid-cfpwghs5></span> <span data-astro-cid-cfpwghs5>Use the vizij-web workspace root:</span> </li> </ul> </div> <div class="rounded-lg border border-accent-base/15 bg-special-lighter p-5" data-astro-cid-cfpwghs5> <p class="text-xs font-semibold uppercase tracking-widest text-accent-two" data-astro-cid-cfpwghs5>Proof state</p> <ul class="mt-3 space-y-2 text-sm leading-6 text-color-500" data-astro-cid-cfpwghs5> <li class="flex gap-2" data-astro-cid-cfpwghs5> <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-two" data-astro-cid-cfpwghs5></span> <span data-astro-cid-cfpwghs5>vizij-standalone launches locally</span> </li><li class="flex gap-2" data-astro-cid-cfpwghs5> <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-two" data-astro-cid-cfpwghs5></span> <span data-astro-cid-cfpwghs5>you can load a face into it</span> </li><li class="flex gap-2" data-astro-cid-cfpwghs5> <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-two" data-astro-cid-cfpwghs5></span> <span data-astro-cid-cfpwghs5>you can name the default local control endpoint</span> </li><li class="flex gap-2" data-astro-cid-cfpwghs5> <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-two" data-astro-cid-cfpwghs5></span> <span data-astro-cid-cfpwghs5>you can confirm that a same-host operator path can drive the face</span> </li><li class="flex gap-2" data-astro-cid-cfpwghs5> <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-two" data-astro-cid-cfpwghs5></span> <span data-astro-cid-cfpwghs5>you can explain why this is a deployment endpoint instead of another tutorial app</span> </li> </ul> </div> </div> <!-- Interactive lab --> <section class="overflow-hidden rounded-lg border border-accent-base/15 bg-special-lighter" data-astro-cid-cfpwghs5> <div class="border-b border-accent-base/10 px-5 py-4" data-astro-cid-cfpwghs5> <p class="text-xs font-semibold uppercase tracking-widest text-accent-two" data-astro-cid-cfpwghs5>Interactive reference</p> <p class="mt-1 text-sm text-color-500" data-astro-cid-cfpwghs5>
+The source docs remain the canonical lesson. Use this interactive surface when it strengthens the page.
+</p> </div> <div class="p-4 sm:p-6" data-astro-cid-cfpwghs5>  </div> </section> <!-- Content area with sidebar --> <div class="grid gap-8 lg:grid-cols-[minmax(0,0.25fr)_minmax(0,0.75fr)]" data-astro-cid-cfpwghs5> <aside class="space-y-4 lg:sticky lg:top-24 lg:self-start" data-astro-cid-cfpwghs5> <div class="rounded-lg border border-accent-base/15 bg-special-lighter p-4" data-astro-cid-cfpwghs5> <p class="text-xs font-semibold uppercase tracking-widest text-accent-two" data-astro-cid-cfpwghs5>On this page</p> <ul class="mt-3 space-y-1" data-astro-cid-cfpwghs5> <li data-astro-cid-cfpwghs5> <a href="#starting-state" class="flex items-start gap-2 rounded-md px-2 py-1.5 text-sm text-color-500 transition-colors hover:bg-accent-base/8 hover:text-foreground" data-astro-cid-cfpwghs5> <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-accent-two/25 bg-accent-two/10 text-[10px] font-semibold text-accent-two" data-astro-cid-cfpwghs5> 1 </span> <span data-astro-cid-cfpwghs5>Starting State</span> </a> </li><li data-astro-cid-cfpwghs5> <a href="#preflight" class="flex items-start gap-2 rounded-md px-2 py-1.5 text-sm text-color-500 transition-colors hover:bg-accent-base/8 hover:text-foreground" data-astro-cid-cfpwghs5> <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-accent-two/25 bg-accent-two/10 text-[10px] font-semibold text-accent-two" data-astro-cid-cfpwghs5> 2 </span> <span data-astro-cid-cfpwghs5>Preflight</span> </a> </li><li data-astro-cid-cfpwghs5> <a href="#what-this-first-deployment-must-prove" class="flex items-start gap-2 rounded-md px-2 py-1.5 text-sm text-color-500 transition-colors hover:bg-accent-base/8 hover:text-foreground" data-astro-cid-cfpwghs5> <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-accent-two/25 bg-accent-two/10 text-[10px] font-semibold text-accent-two" data-astro-cid-cfpwghs5> 3 </span> <span data-astro-cid-cfpwghs5>What This First Deployment Must Prove</span> </a> </li><li data-astro-cid-cfpwghs5> <a href="#walkthrough" class="flex items-start gap-2 rounded-md px-2 py-1.5 text-sm text-color-500 transition-colors hover:bg-accent-base/8 hover:text-foreground" data-astro-cid-cfpwghs5> <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-accent-two/25 bg-accent-two/10 text-[10px] font-semibold text-accent-two" data-astro-cid-cfpwghs5> 4 </span> <span data-astro-cid-cfpwghs5>Walkthrough</span> </a> </li><li data-astro-cid-cfpwghs5> <a href="#persisting-speech-keys-with-env" class="flex items-start gap-2 rounded-md px-2 py-1.5 text-sm text-color-500 transition-colors hover:bg-accent-base/8 hover:text-foreground" data-astro-cid-cfpwghs5> <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-accent-two/25 bg-accent-two/10 text-[10px] font-semibold text-accent-two" data-astro-cid-cfpwghs5> 5 </span> <span data-astro-cid-cfpwghs5>Persisting Speech Keys with .env</span> </a> </li><li data-astro-cid-cfpwghs5> <a href="#the-smallest-useful-operator-checklist" class="flex items-start gap-2 rounded-md px-2 py-1.5 text-sm text-color-500 transition-colors hover:bg-accent-base/8 hover:text-foreground" data-astro-cid-cfpwghs5> <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-accent-two/25 bg-accent-two/10 text-[10px] font-semibold text-accent-two" data-astro-cid-cfpwghs5> 6 </span> <span data-astro-cid-cfpwghs5>The Smallest Useful Operator Checklist</span> </a> </li><li data-astro-cid-cfpwghs5> <a href="#pre-flight-and-post-flight-checklist" class="flex items-start gap-2 rounded-md px-2 py-1.5 text-sm text-color-500 transition-colors hover:bg-accent-base/8 hover:text-foreground" data-astro-cid-cfpwghs5> <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-accent-two/25 bg-accent-two/10 text-[10px] font-semibold text-accent-two" data-astro-cid-cfpwghs5> 7 </span> <span data-astro-cid-cfpwghs5>Pre-Flight And Post-Flight Checklist</span> </a> </li><li data-astro-cid-cfpwghs5> <a href="#fast-recovery-if-it-fails" class="flex items-start gap-2 rounded-md px-2 py-1.5 text-sm text-color-500 transition-colors hover:bg-accent-base/8 hover:text-foreground" data-astro-cid-cfpwghs5> <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-accent-two/25 bg-accent-two/10 text-[10px] font-semibold text-accent-two" data-astro-cid-cfpwghs5> 8 </span> <span data-astro-cid-cfpwghs5>Fast Recovery If It Fails</span> </a> </li><li data-astro-cid-cfpwghs5> <a href="#recommended-next-steps" class="flex items-start gap-2 rounded-md px-2 py-1.5 text-sm text-color-500 transition-colors hover:bg-accent-base/8 hover:text-foreground" data-astro-cid-cfpwghs5> <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-accent-two/25 bg-accent-two/10 text-[10px] font-semibold text-accent-two" data-astro-cid-cfpwghs5> 9 </span> <span data-astro-cid-cfpwghs5>Recommended Next Steps</span> </a> </li> </ul> </div> <div class="rounded-lg border border-accent-base/15 bg-special-lighter p-4" data-astro-cid-cfpwghs5> <p class="text-xs font-semibold uppercase tracking-widest text-accent-two" data-astro-cid-cfpwghs5>Implementation anchors</p> <div class="mt-3 space-y-2" data-astro-cid-cfpwghs5> <a href="https://github.com/vizij-ai/vizij-web/tree/main/apps/vizij-standalone" class="block rounded-md border border-accent-base/10 px-3 py-2 text-sm text-color-500 transition-colors hover:border-accent-two/30 hover:text-foreground" data-astro-cid-cfpwghs5> <div class="font-medium text-foreground" data-astro-cid-cfpwghs5>vizij-standalone</div> <div class="mt-0.5 text-color-500" data-astro-cid-cfpwghs5>Current operator-facing standalone surface.</div> </a> </div> </div> <div class="rounded-lg border border-accent-base/15 bg-special-lighter p-4" data-astro-cid-cfpwghs5> <p class="text-xs font-semibold uppercase tracking-widest text-accent-two" data-astro-cid-cfpwghs5>Reference bridges</p> <div class="mt-3 space-y-2" data-astro-cid-cfpwghs5> <a href="https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/reference/animation-integration-and-deployment-reference.md" class="block rounded-md border border-accent-base/10 px-3 py-2 text-sm text-color-500 transition-colors hover:border-accent-two/30 hover:text-foreground" data-astro-cid-cfpwghs5> <div class="font-medium text-foreground" data-astro-cid-cfpwghs5>Animation, Integration, and Deployment Reference</div>  </a><a href="https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/support/validation-checkpoints.md" class="block rounded-md border border-accent-base/10 px-3 py-2 text-sm text-color-500 transition-colors hover:border-accent-two/30 hover:text-foreground" data-astro-cid-cfpwghs5> <div class="font-medium text-foreground" data-astro-cid-cfpwghs5>Validation Checkpoints</div>  </a><a href="https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/support/troubleshooting-matrix.md" class="block rounded-md border border-accent-base/10 px-3 py-2 text-sm text-color-500 transition-colors hover:border-accent-two/30 hover:text-foreground" data-astro-cid-cfpwghs5> <div class="font-medium text-foreground" data-astro-cid-cfpwghs5>Troubleshooting Matrix</div>  </a> </div> </div> </aside> <div class="min-w-0" data-astro-cid-cfpwghs5> <article class="prose prose-neutral max-w-none dark:prose-invert" data-astro-cid-cfpwghs5> <div class="mdx-content mdx-content--guidebook max-w-none text-color-800 dark:text-color-100 leading-7 md:leading-8"> <h2 id="starting-state">Starting State</h2>
+<p>Use the <code>vizij-web</code> workspace root:</p>
+<figure data-rehype-pretty-code-figure=""><pre style="--shiki-light:#575279;--shiki-dark:#e0def4;--shiki-light-bg:#faf4ed;--shiki-dark-bg:#191724" tabindex="0" data-language="bash" data-theme="rose-pine-dawn rose-pine"><code data-language="bash" data-theme="rose-pine-dawn rose-pine" style="display: grid;"><span data-line=""><span style="--shiki-light:#B4637A;--shiki-light-font-style:italic;--shiki-dark:#EB6F92;--shiki-dark-font-style:italic">cd</span><span style="--shiki-light:#EA9D34;--shiki-dark:#F6C177"> /home/chris/Code/Semio/vizij_ws/vizij-web</span></span>
+<span data-line=""><span style="--shiki-light:#D7827E;--shiki-dark:#EBBCBA">pnpm</span><span style="--shiki-light:#EA9D34;--shiki-dark:#F6C177"> run</span><span style="--shiki-light:#EA9D34;--shiki-dark:#F6C177"> dev:vizij-standalone</span></span></code></pre></figure>
+<p>This walkthrough uses <code>apps/vizij-standalone</code>, the maintained desktop runtime shell for first deployment work.</p>
+<h2 id="preflight">Preflight</h2>
+<p>Before you run the standalone path, confirm these assumptions:</p>
+<ol>
+<li><code>pnpm install</code> has already completed successfully in <code>vizij-web</code>,</li>
+<li>your machine can already launch the Tauri dev shell for <code>vizij-standalone</code>,</li>
+<li>you have one known-good bundled GLB available if you do not want to rely on the file picker,</li>
+<li>if you plan to launch fullscreen on a specific monitor, you can inspect displays first from the app-local README.</li>
+</ol>
+<p>If the desktop shell itself does not start, stop here and use <a href="/home/chris/Code/Semio/vizij_ws/vizij-web/apps/vizij-standalone/README.md">vizij-web/apps/vizij-standalone/README.md</a> as the implementation authority before debugging runtime behavior.</p>
+<h2 id="what-this-first-deployment-must-prove">What This First Deployment Must Prove</h2>
+<p>For this route, deployment means more than <code>a face rendered</code>.</p>
+<p>The standalone surface has to make these things true:</p>
+<ol>
+<li>a face can be loaded into the runtime endpoint</li>
+<li>runtime status is visible</li>
+<li>a local control surface is exposed</li>
+<li>an operator on the same host can connect and drive the face</li>
+</ol>
+<p>That is the bar for a first believable deployment endpoint.</p>
+<p>Current deployable floor:</p>
+<p><code>vizij-standalone</code> plus one same-host control path.</p>
+<p>This page is not yet claiming LAN-first, ROS-first, or multi-device deployment as the maintained baseline.</p>
+<h2 id="walkthrough">Walkthrough</h2>
+<h3 id="1-launch-the-standalone-app-in-development">1. Launch the standalone app in development</h3>
+<p>Run:</p>
+<figure data-rehype-pretty-code-figure=""><pre style="--shiki-light:#575279;--shiki-dark:#e0def4;--shiki-light-bg:#faf4ed;--shiki-dark-bg:#191724" tabindex="0" data-language="bash" data-theme="rose-pine-dawn rose-pine"><code data-language="bash" data-theme="rose-pine-dawn rose-pine" style="display: grid;"><span data-line=""><span style="--shiki-light:#D7827E;--shiki-dark:#EBBCBA">pnpm</span><span style="--shiki-light:#EA9D34;--shiki-dark:#F6C177"> run</span><span style="--shiki-light:#EA9D34;--shiki-dark:#F6C177"> dev:vizij-standalone</span></span></code></pre></figure>
+<p>If the app starts without a face already loaded, use the file picker to choose a bundled GLB or launch again later with <code>--glb</code>.</p>
+<p>Expected result:</p>
+<ol>
+<li>the app opens as a desktop runtime surface rather than a browser-only demo</li>
+<li>if no model is loaded, the app makes that state explicit</li>
+<li>once a model is loaded, the runtime transitions into a visible active state</li>
+</ol>
+<p>An explicit <code>no model loaded</code> state is part of healthy deployment behavior, not a failure in itself.</p>
+<h3 id="2-load-a-face-and-wait-for-the-runtime-to-settle">2. Load a face and wait for the runtime to settle</h3>
+<p>Use one of these paths:</p>
+<ol>
+<li>interactive file picker in the desktop app</li>
+<li>a CLI launch with a known GLB path</li>
+</ol>
+<p>Example CLI form from the app README:</p>
+<figure data-rehype-pretty-code-figure=""><pre style="--shiki-light:#575279;--shiki-dark:#e0def4;--shiki-light-bg:#faf4ed;--shiki-dark-bg:#191724" tabindex="0" data-language="bash" data-theme="rose-pine-dawn rose-pine"><code data-language="bash" data-theme="rose-pine-dawn rose-pine" style="display: grid;"><span data-line=""><span style="--shiki-light:#D7827E;--shiki-dark:#EBBCBA">pnpm</span><span style="--shiki-light:#286983;--shiki-dark:#31748F"> --filter</span><span style="--shiki-light:#EA9D34;--shiki-dark:#F6C177"> vizij-standalone</span><span style="--shiki-light:#EA9D34;--shiki-dark:#F6C177"> dev</span><span style="--shiki-light:#286983;--shiki-dark:#31748F"> --</span><span style="--shiki-light:#286983;--shiki-dark:#31748F"> --</span><span style="--shiki-light:#286983;--shiki-dark:#31748F"> --glb</span><span style="--shiki-light:#EA9D34;--shiki-dark:#F6C177"> /path/to/avatar.glb</span><span style="--shiki-light:#286983;--shiki-dark:#31748F"> --fullscreen</span></span></code></pre></figure>
+<p>For the full list of CLI options — display selection, port override, web control panel toggle, speech flags, and ROS2 surface options — see the <a href="https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/deploy/vizij-web/apps/vizij-standalone/README.md" rel="nofollow noreferrer" target="_blank">vizij-standalone README</a>.</p>
+<p>Expected result:</p>
+<ol>
+<li>the face loads without the app hiding its intermediate states</li>
+<li>runtime health becomes visible in the app UI</li>
+<li>the surface now looks like an endpoint that can be operated, not only inspected</li>
+</ol>
+<h3 id="3-confirm-the-local-control-endpoint">3. Confirm the local control endpoint</h3>
+<p>The default local control endpoint is:</p>
+<figure data-rehype-pretty-code-figure=""><pre style="--shiki-light:#575279;--shiki-dark:#e0def4;--shiki-light-bg:#faf4ed;--shiki-dark-bg:#191724" tabindex="0" data-language="text" data-theme="rose-pine-dawn rose-pine"><code data-language="text" data-theme="rose-pine-dawn rose-pine" style="display: grid;"><span data-line=""><span>ws://127.0.0.1:9000</span></span></code></pre></figure>
+<p>Unless disabled, the built-in browser control panel is served on the same port over HTTP:</p>
+<figure data-rehype-pretty-code-figure=""><pre style="--shiki-light:#575279;--shiki-dark:#e0def4;--shiki-light-bg:#faf4ed;--shiki-dark-bg:#191724" tabindex="0" data-language="text" data-theme="rose-pine-dawn rose-pine"><code data-language="text" data-theme="rose-pine-dawn rose-pine" style="display: grid;"><span data-line=""><span>http://127.0.0.1:9000</span></span></code></pre></figure>
+<p>The server binds to <code>0.0.0.0</code>, so the control panel is also reachable from any device on the same network. If you want to drive the face from a phone or another machine, open:</p>
+<figure data-rehype-pretty-code-figure=""><pre style="--shiki-light:#575279;--shiki-dark:#e0def4;--shiki-light-bg:#faf4ed;--shiki-dark-bg:#191724" tabindex="0" data-language="text" data-theme="rose-pine-dawn rose-pine"><code data-language="text" data-theme="rose-pine-dawn rose-pine" style="display: grid;"><span data-line=""><span>http://&#x3C;machine-ip>:9000</span></span></code></pre></figure>
+<p>No extra tooling or installation required on the controlling device.</p>
+<p>What to confirm:</p>
+<ol>
+<li>the app surfaces the port or connection state clearly</li>
+<li>the runtime is ready before you expect remote or browser-side control to work</li>
+<li>the browser control panel is reachable from a phone or another machine on the same network</li>
+</ol>
+<p>This is the maintained current truth for the first deployment route. Only expose the port on trusted networks — the server does not restrict access beyond the Arora exclusive-client policy.</p>
+<h3 id="4-prove-that-operator-control-reaches-the-face">4. Prove that operator control reaches the face</h3>
+<p>Use the built-in control panel, a phone on the same network, or another same-host client to drive one visible change.</p>
+<p>Expected result:</p>
+<ol>
+<li>the client can connect to the standalone endpoint</li>
+<li>the face responds to control input</li>
+<li>the runtime remains healthy while the control path is active</li>
+</ol>
+<p>At that point, the app has crossed from <code>demo-shaped</code> to <code>deployment-shaped</code>.</p>
+<h3 id="5-inspect-the-code-layers-that-make-deployment-work">5. Inspect the code layers that make deployment work</h3>
+<p>Open:</p>
+<ol>
+<li><code>vizij-web/apps/vizij-standalone/README.md</code></li>
+<li><code>vizij-web/apps/vizij-standalone/src/App.tsx</code></li>
+<li><code>vizij-web/apps/vizij-standalone/src/hooks/useWebSocketSync.ts</code></li>
+<li><code>vizij-web/apps/vizij-standalone/src-tauri/src/lib.rs</code></li>
+</ol>
+<p>What each layer owns:</p>
+<ol>
+<li><code>App.tsx</code> mounts the runtime-react surface in the desktop shell</li>
+<li><code>useWebSocketSync.ts</code> bridges runtime inputs and transport state</li>
+<li><code>src-tauri/src/lib.rs</code> owns the CLI flags and endpoint startup</li>
+</ol>
+<p>That separation is why this is a deployment surface and not just a richer player app.</p>
+<h2 id="persisting-speech-keys-with-env">Persisting Speech Keys with .env</h2>
+<p>Passing <code>--deepgram-key</code>, <code>--openai-key</code>, and <code>--api-url</code> on every launch is tedious. The standalone app reads those values from a <code>.env</code> file in <code>src-tauri/</code> that Tauri loads automatically at dev and build time.</p>
+<h3 id="where-the-file-lives">Where the file lives</h3>
+<figure data-rehype-pretty-code-figure=""><pre style="--shiki-light:#575279;--shiki-dark:#e0def4;--shiki-light-bg:#faf4ed;--shiki-dark-bg:#191724" tabindex="0" data-language="text" data-theme="rose-pine-dawn rose-pine"><code data-language="text" data-theme="rose-pine-dawn rose-pine" style="display: grid;"><span data-line=""><span>apps/vizij-standalone/src-tauri/.env</span></span></code></pre></figure>
+<p>Copy the provided example to get started:</p>
+<figure data-rehype-pretty-code-figure=""><pre style="--shiki-light:#575279;--shiki-dark:#e0def4;--shiki-light-bg:#faf4ed;--shiki-dark-bg:#191724" tabindex="0" data-language="bash" data-theme="rose-pine-dawn rose-pine"><code data-language="bash" data-theme="rose-pine-dawn rose-pine" style="display: grid;"><span data-line=""><span style="--shiki-light:#D7827E;--shiki-dark:#EBBCBA">cp</span><span style="--shiki-light:#EA9D34;--shiki-dark:#F6C177"> apps/vizij-standalone/src-tauri/.env.example</span><span style="--shiki-light:#EA9D34;--shiki-dark:#F6C177"> apps/vizij-standalone/src-tauri/.env</span></span></code></pre></figure>
+<p>Then fill in your keys:</p>
+<figure data-rehype-pretty-code-figure=""><pre style="--shiki-light:#575279;--shiki-dark:#e0def4;--shiki-light-bg:#faf4ed;--shiki-dark-bg:#191724" tabindex="0" data-language="env" data-theme="rose-pine-dawn rose-pine"><code data-language="env" data-theme="rose-pine-dawn rose-pine" style="display: grid;"><span data-line=""><span>VITE_API_URL="https://us-central1-semio-vizij.cloudfunctions.net/api"</span></span>
+<span data-line=""><span>VITE_DEEPGRAM_API_KEY=your_deepgram_key_here</span></span>
+<span data-line=""><span>VITE_OPENAI_API_KEY=your_openai_key_here</span></span></code></pre></figure>
+<h3 id="what-each-variable-does">What each variable does</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Variable</th><th>Purpose</th></tr></thead><tbody><tr><td><code>VITE_API_URL</code></td><td>TTS API base URL. Defaults to the hosted Semio endpoint. Override for a local TTS server.</td></tr><tr><td><code>VITE_DEEPGRAM_API_KEY</code></td><td>Deepgram STT key. Required for microphone input when speech is enabled.</td></tr><tr><td><code>VITE_OPENAI_API_KEY</code></td><td>OpenAI key. Required for <code>conversation</code> speech mode.</td></tr></tbody></table>
+<p>The <code>VITE_</code> prefix is required. Tauri forwards those variables to the Vite frontend where the speech hooks read them. Variables without that prefix are not visible to the React layer.</p>
+<h3 id="precedence">Precedence</h3>
+<p>CLI flags always win. The resolution order for each speech value is:</p>
+<ol>
+<li>CLI flag (<code>--deepgram-key</code>, <code>--openai-key</code>, <code>--api-url</code>, <code>--speech-mode</code>)</li>
+<li><code>.env</code> variable or localStorage value</li>
+<li>Bundle <code>speechConfig</code> metadata</li>
+<li>Hook default</li>
+</ol>
+<p>If speech looks half-configured, check both the <code>.env</code> file and the CLI flags before debugging the runtime layer.</p>
+<h3 id="the-file-is-gitignored">The file is gitignored</h3>
+<p><code>src-tauri/.env</code> is listed in the workspace <code>.gitignore</code>. Do not add it to version control. Use <code>src-tauri/.env.example</code> as the committed template.</p>
+<h2 id="the-smallest-useful-operator-checklist">The Smallest Useful Operator Checklist</h2>
+<p>Call the deployment healthy only when all of these are true:</p>
+<ol>
+<li>a face is loaded</li>
+<li>runtime status is visible and healthy</li>
+<li>the WebSocket endpoint is available</li>
+<li>a same-host control client can connect</li>
+<li>the face responds to control input predictably</li>
+</ol>
+<p>If any one of those is missing, keep treating the setup as unfinished.</p>
+<h2 id="pre-flight-and-post-flight-checklist">Pre-Flight And Post-Flight Checklist</h2>
+<p>Use this checklist when you want one compact pass/fail loop instead of rereading the whole walkthrough.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Phase</th><th>Check</th><th>Pass signal</th><th>Fail clue</th></tr></thead><tbody><tr><td>pre-flight</td><td>start the app with <code>pnpm run dev:vizij-standalone</code> or <code>pnpm --filter vizij-standalone dev -- -- --glb /path/to/avatar.glb --fullscreen</code></td><td>desktop window opens and stays up</td><td>process fails early or the port is already in use</td></tr><tr><td>pre-flight</td><td>load one face</td><td>the face becomes visible or the app leaves <code>No model loaded</code></td><td>file picker returns but the app stays empty or enters an error state</td></tr><tr><td>pre-flight</td><td>confirm endpoint identity</td><td>the app reports the local control port and the default route is still <code>ws://127.0.0.1:9000</code> unless you changed <code>--port</code></td><td>you are guessing the port or the app still looks like it is starting</td></tr><tr><td>post-flight</td><td>prove one operator control path</td><td>built-in web control panel connects (from same host or phone/LAN at <code>http://&#x3C;machine-ip>:9000</code>) and the face changes visibly</td><td>the client connects but no visible change reaches the face</td></tr><tr><td>post-flight</td><td>prove recoverability</td><td>reset returns the face toward its defaults and the endpoint stays healthy</td><td>the face stays stuck or recovery leaves the endpoint in an unclear state</td></tr></tbody></table>
+<h2 id="fast-recovery-if-it-fails">Fast Recovery If It Fails</h2>
+<p>Use these shortcuts:</p>
+<ol>
+<li>if the app opens with no face, use the file picker or relaunch with <code>--glb</code></li>
+<li>if the face loads but control does not connect, verify the port and local endpoint state first</li>
+<li>if the runtime appears unhealthy, use <a href="https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/support/validation-checkpoints.md" rel="nofollow noreferrer" target="_blank">Validation Checkpoints</a></li>
+<li>if the transport or control path is failing, use <a href="https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/support/troubleshooting-matrix.md" rel="nofollow noreferrer" target="_blank">Troubleshooting Matrix</a></li>
+</ol>
+<h2 id="recommended-next-steps">Recommended Next Steps</h2>
+<p>Continue to <a href="/docs/deployment-model/">Operator and Deployment Model</a> if you want the conceptual model behind this endpoint.</p>
+<p>Then continue to <a href="https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/deploy/deployment-checks-and-recovery.md" rel="nofollow noreferrer" target="_blank">Deployment Checks and Recovery</a> for the first operational validation loop.</p> </div>  </article>  <!-- Demo cross-links -->  <!-- Full prev/next navigation --> <div class="mt-8" data-astro-cid-cfpwghs5> <nav aria-label="Page navigation" class="grid grid-cols-1 gap-4 sm:grid-cols-2 "><a href="/tutorials/agent-face/" class="group flex flex-col gap-2 rounded-lg border border-accent-base/15 bg-special-lighter p-5 transition-colors hover:border-accent-two/30"><span class="flex items-center gap-1.5 text-xs font-medium uppercase tracking-widest text-color-500"><svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle opacity="0.5" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"></circle><path d="M13.5 9L10.5 12L13.5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+Previous
+</span><span class="text-base font-semibold text-foreground">Agent Face</span><span class="text-sm text-color-500 line-clamp-2">Return to the richer live integration branch.</span></a><a href="/docs/deployment-model/" class="group flex flex-col gap-2 rounded-lg border border-accent-base/15 bg-special-lighter p-5 text-right transition-colors hover:border-accent-two/30"><span class="flex items-center justify-end gap-1.5 text-xs font-medium uppercase tracking-widest text-color-500">
+Next
+<svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle opacity="0.5" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"></circle><path d="M10.5 9L13.5 12L10.5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></span><span class="text-base font-semibold text-foreground">Deployment Model</span><span class="text-sm text-color-500 line-clamp-2">Return to the conceptual deployment framing.</span></a></nav> </div> </div> </div> </div>  </main> <footer class="semibold mt-auto flex w-full flex-col items-center justify-center gap-y-3 sm:gap-y-2 pb-4 pt-8 text-center align-top text-accent sm:flex-row sm:justify-between text-xs sm:text-sm"><div class="me-0 font-semibold sm:me-4">© <!-- -->Vizij<!-- --> <!-- -->2026<!-- -->.</div><nav aria-label="More on this site" class="flex flex-wrap justify-center sm:justify-between gap-x-1.5 sm:gap-x-2 md:gap-x-3 gap-y-1 font-medium text-light w-full sm:w-auto max-w-full"><a class="underline-offset-2 hover:text-accent hover:underline text-xs sm:text-sm whitespace-nowrap" href="/demos/">Demos</a><a class="underline-offset-2 hover:text-accent hover:underline text-xs sm:text-sm whitespace-nowrap" href="/docs/">Docs</a><a class="underline-offset-2 hover:text-accent hover:underline text-xs sm:text-sm whitespace-nowrap" href="/tutorials/">Tutorials</a><a class="underline-offset-2 hover:text-accent hover:underline text-xs sm:text-sm whitespace-nowrap" href="/events/">Events</a></nav></footer> </div> </div> </div> </div> </body></html>
