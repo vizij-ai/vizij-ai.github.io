@@ -9,7 +9,6 @@ import {
   resolveNavCtaVariant,
   resolveNavHighlightVariant,
 } from "@semio-community/ecosystem-site-core";
-import { useEffect } from "react";
 
 export type HeaderProps = {
   currentPath: string;
@@ -43,118 +42,6 @@ export default function Header({ currentPath, navCollections }: HeaderProps) {
   const normalizedCurrentPath = normalizeCurrentPath(currentPath, urlPrefix);
   const resolveHref = (path: string) =>
     url(path, urlPrefix || import.meta.env.BASE_URL);
-
-  useEffect(() => {
-    const header = document.getElementById("main-header");
-    const panel = document.getElementById("main-header-panel");
-    const nav = header?.querySelector("nav");
-    if (!(header instanceof HTMLElement) || !(panel instanceof HTMLElement) || !(nav instanceof HTMLElement)) {
-      return;
-    }
-
-    const resetOffsets = () => {
-      panel.style.removeProperty("--vizij-nav-dropdown-shell-offset");
-      panel.style.removeProperty("--vizij-nav-dropdown-content-offset");
-    };
-
-    const dropdownLabels = new Set(
-      menuLinks.filter((link) => link.sections?.length).map((link) => link.title),
-    );
-
-    const scheduleUpdate = () => {
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          const panelShell = panel.querySelector(
-            ":scope > .pointer-events-auto > .mx-auto",
-          );
-          const panelContent = panel.querySelector(".animate-navPanelContentIn");
-          const panelTitle = panelContent?.querySelector(".font-semibold.text-sm");
-          const titleText = panelTitle?.textContent?.trim();
-          const activeLabel = titleText?.replace(/\s+Home$/, "");
-
-          if (!(panelShell instanceof HTMLElement) || !(panelContent instanceof HTMLElement) || !activeLabel) {
-            resetOffsets();
-            return;
-          }
-
-          const trigger = [...nav.querySelectorAll("a[href]")].find((link) => {
-            const label = link.textContent?.trim();
-            return label && dropdownLabels.has(label) && label === activeLabel;
-          });
-
-          if (!(trigger instanceof HTMLElement)) {
-            resetOffsets();
-            return;
-          }
-
-          resetOffsets();
-
-          const triggerRect = trigger.getBoundingClientRect();
-          const shellRect = panelShell.getBoundingClientRect();
-          const contentRect = panelContent.getBoundingClientRect();
-          const desiredOffset =
-            triggerRect.left +
-            triggerRect.width / 2 -
-            (contentRect.left + contentRect.width / 2);
-
-          const minViewportPadding = 16;
-          const minShellOffset = minViewportPadding - shellRect.left;
-          const maxShellOffset = window.innerWidth - minViewportPadding - shellRect.right;
-          const shellOffset = Math.max(
-            minShellOffset,
-            Math.min(desiredOffset, maxShellOffset),
-          );
-
-          const remainingOffset = desiredOffset - shellOffset;
-          const minContentOffset = shellRect.left - contentRect.left;
-          const maxContentOffset = shellRect.right - contentRect.right;
-          const contentOffset = Math.max(
-            minContentOffset,
-            Math.min(remainingOffset, maxContentOffset),
-          );
-
-          panel.style.setProperty(
-            "--vizij-nav-dropdown-shell-offset",
-            `${Math.round(shellOffset)}px`,
-          );
-          panel.style.setProperty(
-            "--vizij-nav-dropdown-content-offset",
-            `${Math.round(contentOffset)}px`,
-          );
-        });
-      });
-    };
-
-    const triggers = [...nav.querySelectorAll("a[href]")].filter((link) => {
-      const label = link.textContent?.trim();
-      return !!label && dropdownLabels.has(label);
-    });
-
-    const observer = new MutationObserver(scheduleUpdate);
-    observer.observe(panel, {
-      childList: true,
-      subtree: true,
-    });
-
-    for (const trigger of triggers) {
-      trigger.addEventListener("mouseenter", scheduleUpdate);
-      trigger.addEventListener("focus", scheduleUpdate);
-      trigger.addEventListener("click", scheduleUpdate);
-    }
-
-    window.addEventListener("resize", scheduleUpdate);
-    scheduleUpdate();
-
-    return () => {
-      observer.disconnect();
-      window.removeEventListener("resize", scheduleUpdate);
-      for (const trigger of triggers) {
-        trigger.removeEventListener("mouseenter", scheduleUpdate);
-        trigger.removeEventListener("focus", scheduleUpdate);
-        trigger.removeEventListener("click", scheduleUpdate);
-      }
-    };
-  }, []);
 
   return (
     <SharedHeader
