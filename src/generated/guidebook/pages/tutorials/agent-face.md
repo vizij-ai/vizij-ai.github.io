@@ -86,9 +86,10 @@ prev:
   href: /tutorials/animations/
   description: Return to authored motion and runtime playback.
 next:
-  label: Deployment
-  href: /tutorials/deployment/
-  description: Finish in an operator-facing delivery surface.
+  label: Behind the Face
+  href: /tutorials/behind-the-face/
+  description: Unpack the maintained face stack from authoring leaves to
+    deployment surfaces.
 implementationAnchors:
   - label: tutorial-agent-face
     href: https://github.com/vizij-ai/vizij-web/tree/main/apps/tutorial-agent-face

@@ -79,9 +79,9 @@ context:
     - label: Troubleshooting Matrix
       href: https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/support/troubleshooting-matrix.md
 prev:
-  label: Agent Face
-  href: /tutorials/agent-face/
-  description: Return to the richer live integration branch.
+  label: Behind the Face
+  href: /tutorials/behind-the-face/
+  description: Return to the stack breakdown between authoring and deployment.
 next:
   label: Deployment Model
   href: /docs/deployment-model/

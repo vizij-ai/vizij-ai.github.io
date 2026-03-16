@@ -340,6 +340,14 @@
       },
       {
         "eyebrow": "Stage 8",
+        "title": "Behind the Face",
+        "description": "Start from the live agent demo and unpack the maintained face stack from Blender-exported animatables through orchestration and deployment.",
+        "href": "/tutorials/behind-the-face/",
+        "implementation": "tutorial-agent-face",
+        "outcome": "Start from the live agent demo and unpack the maintained face stack from Blender-exported animatables through orchestration and deployment."
+      },
+      {
+        "eyebrow": "Stage 9",
         "title": "Deployment",
         "description": "Launch the cleanest maintained standalone deployment path and treat operator handoff as part of the tutorial pathway, not an afterthought.",
         "href": "/tutorials/deployment/",
@@ -481,6 +489,24 @@
             "description": "Build the richer API-backed interactive branch with explicit live-service boundaries, runtime checkpoints, and recovery paths.",
             "href": "/tutorials/agent-face/",
             "meta": "Live integration",
+            "badge": "Walkthrough",
+            "detailRows": [
+              {
+                "label": "Bucket",
+                "value": "Integrate"
+              },
+              {
+                "label": "Depth",
+                "value": "Advanced"
+              }
+            ]
+          },
+          {
+            "id": "tutorials-behind-the-face",
+            "title": "Behind the Face",
+            "description": "Start from the live agent demo and unpack the maintained face stack from Blender-exported animatables through orchestration and deployment.",
+            "href": "/tutorials/behind-the-face/",
+            "meta": "Stack breakdown",
             "badge": "Walkthrough",
             "detailRows": [
               {
