@@ -44,14 +44,18 @@ function affiliationLabel(person: (typeof allPeople)[number]): string | undefine
   return aff ? orgNameById[aff.organizationId] || aff.organizationId : undefined;
 }
 
-const HIDE_BOARD_MEMBERS = true;
+// When true, the dedicated "Board Members" section is hidden and board
+// members are rolled into the Community Members list so they still appear.
+// When false, the Board Members section renders separately and is excluded
+// from the Community list to avoid duplication.
+const HIDE_BOARD_SECTION = true;
 const boardMembers = sortFeaturedFirst(
   allPeople.filter((p) => p.data.isContributor && p.data.boardMember),
 );
 const communityMembers = sortFeaturedFirst(
   allPeople.filter(
     (p) =>
-      p.data.isContributor && (HIDE_BOARD_MEMBERS ? true : !p.data.boardMember),
+      p.data.isContributor && (HIDE_BOARD_SECTION ? true : !p.data.boardMember),
   ),
 );
 
@@ -153,7 +157,7 @@ const heroIcon = React.createElement(UsersGroupTwoRounded, { className: "w-16 h-
 >
       <ContributorsPage
         meta={meta}
-        hideBoardMembers={HIDE_BOARD_MEMBERS}
+        hideBoardMembers={HIDE_BOARD_SECTION}
         boardMembers={mappedBoardMembers}
         communityMembers={mappedCommunityMembers}
         partnerSections={mappedPartnerSections}
