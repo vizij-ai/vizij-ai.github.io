@@ -1,0 +1,364 @@
+<!DOCTYPE html><html class="overflow-x-hidden grid scroll-pt-18 scroll-smooth font-sans text-text text-xl md:text-base antialiased" lang="en-US"> <head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><title>Vizij Docs: Renderer Data Model • Vizij</title><link href="/pr-preview/pr-20/brand.svg" rel="icon" type="image/svg+xml"><link rel="icon" href="/pr-preview/pr-20/icon.svg" type="image/svg+xml"><link href="/pr-preview/pr-20/icons/apple-touch-icon.png" rel="apple-touch-icon"><link href="/pr-preview/pr-20/manifest.webmanifest" rel="manifest"><link href="https://vizij.ai/pr-preview/pr-20/docs/renderer-data-model/" rel="canonical"><meta content="Vizij Docs: Renderer Data Model • Vizij" name="title"><meta content="Understand the typed input model, path semantics, and visible runtime behavior behind the first maintained interactions." name="description"><meta content="Vizij" name="author"><meta content="" name="theme-color"><meta content="website" property="og:type"><meta content="Vizij Docs: Renderer Data Model" property="og:title"><meta content="Understand the typed input model, path semantics, and visible runtime behavior behind the first maintained interactions." property="og:description"><meta content="https://vizij.ai/pr-preview/pr-20/docs/renderer-data-model/" property="og:url"><meta content="Vizij" property="og:site_name"><meta content="en_US" property="og:locale"><meta content="https://vizij.ai/pr-preview/pr-20/og/home.png" property="og:image"><meta content="1200" property="og:image:width"><meta content="630" property="og:image:height"><meta content="summary_large_image" property="twitter:card"><meta content="https://vizij.ai/pr-preview/pr-20/docs/renderer-data-model/" property="twitter:url"><meta content="Vizij Docs: Renderer Data Model" property="twitter:title"><meta content="Understand the typed input model, path semantics, and visible runtime behavior behind the first maintained interactions." property="twitter:description"><meta content="https://vizij.ai/pr-preview/pr-20/og/home.png" property="twitter:image"><link href="/pr-preview/pr-20/sitemap-index.xml" rel="sitemap"><link href="/pr-preview/pr-20/rss.xml" rel="alternate" title="Vizij" type="application/rss+xml"><meta content="Astro v5.18.1" name="generator"><link rel="stylesheet" href="/pr-preview/pr-20/_astro/_slug_.C950vkvY.css">
+<style>article[data-astro-cid-cfpwghs5] .guidebook-mermaid{margin-block:2rem;overflow-x:auto;border-radius:.5rem;padding:1rem}article[data-astro-cid-cfpwghs5] .guidebook-mermaid svg{max-width:100%;height:auto;overflow:visible}
+</style>
+<link rel="stylesheet" href="/pr-preview/pr-20/_astro/_slug_.BxMV-WLS.css"><script type="module" src="/pr-preview/pr-20/_astro/page.D1uwR3nK.js"></script></head> <body class="relative min-h-screen w-full bg-surface"> <script>
+const lightModePref = window.matchMedia("(prefers-color-scheme: light)");
+function getUserPref() {
+  const storedTheme = typeof localStorage !== "undefined" && localStorage.getItem("theme");
+  return storedTheme || (lightModePref.matches ? "light" : "dark");
+}
+function setTheme(newTheme) {
+  if (newTheme !== "light" && newTheme !== "dark") {
+    return console.warn(
+      `Invalid theme value '${newTheme}' received. Expected 'light' or 'dark'.`
+    );
+  }
+  const root = document.documentElement;
+  if (newTheme === root.getAttribute("data-theme")) return;
+  root.setAttribute("data-theme", newTheme);
+  const colorThemeMetaTag = document.querySelector("meta[name='theme-color']");
+  if (colorThemeMetaTag) {
+    const bgColor = getComputedStyle(document.body).getPropertyValue("--theme-bg");
+    colorThemeMetaTag.setAttribute("content", `hsl(${bgColor})`);
+  }
+  if (typeof localStorage !== "undefined") {
+    localStorage.setItem("theme", newTheme);
+  }
+}
+setTheme(getUserPref());
+document.addEventListener("astro:after-swap", () => setTheme(getUserPref()));
+document.addEventListener("theme-change", (e) => {
+  setTheme(e.detail.theme);
+});
+lightModePref.addEventListener("change", (e) =>
+  setTheme(e.matches ? "light" : "dark")
+);
+</script> <a class="sr-only focus:not-sr-only focus:fixed focus:start-1 focus:top-1.5" href="#main">skip to content</a> <style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var e=async t=>{await(await t())()};(self.Astro||(self.Astro={})).load=e;window.dispatchEvent(new Event("astro:load"));})();</script><script>(()=>{var A=Object.defineProperty;var g=(i,o,a)=>o in i?A(i,o,{enumerable:!0,configurable:!0,writable:!0,value:a}):i[o]=a;var d=(i,o,a)=>g(i,typeof o!="symbol"?o+"":o,a);{let i={0:t=>m(t),1:t=>a(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(a(t)),5:t=>new Set(a(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>1/0*t},o=t=>{let[l,e]=t;return l in i?i[l](e):void 0},a=t=>t.map(o),m=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([l,e])=>[l,o(e)]));class y extends HTMLElement{constructor(){super(...arguments);d(this,"Component");d(this,"hydrator");d(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let c=this.querySelectorAll("astro-slot"),n={},h=this.querySelectorAll("template[data-astro-template]");for(let r of h){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("data-astro-template")||"default"]=r.innerHTML,r.remove())}for(let r of c){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("name")||"default"]=r.innerHTML)}let p;try{p=this.hasAttribute("props")?m(JSON.parse(this.getAttribute("props"))):{}}catch(r){let s=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(s+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${s}`,this.getAttribute("props"),r),r}let u;await this.hydrator(this)(this.Component,p,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});d(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),c.disconnect(),this.childrenConnectedCallback()},c=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});c.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}async start(){let e=JSON.parse(this.getAttribute("opts")),c=this.getAttribute("client");if(Astro[c]===void 0){window.addEventListener(`astro:${c}`,()=>this.start(),{once:!0});return}try{await Astro[c](async()=>{let n=this.getAttribute("renderer-url"),[h,{default:p}]=await Promise.all([import(this.getAttribute("component-url")),n?import(n):()=>()=>{}]),u=this.getAttribute("component-export")||"default";if(!u.includes("."))this.Component=h[u];else{this.Component=h;for(let f of u.split("."))this.Component=this.Component[f]}return this.hydrator=p,this.hydrate},e,this)}catch(n){console.error(`[astro-island] Error hydrating ${this.getAttribute("component-url")}`,n)}}attributeChangedCallback(){this.hydrate()}}d(y,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",y)}})();</script><astro-island uid="aAADY" prefix="r6" component-url="/pr-preview/pr-20/_astro/Header.DVbBX6eJ.js" component-export="default" renderer-url="/pr-preview/pr-20/_astro/client.B5Wd42NC.js" props="{&quot;currentPath&quot;:[0,&quot;/pr-preview/pr-20/docs/renderer-data-model/&quot;],&quot;navCollections&quot;:[0,{}]}" ssr client="load" opts="{&quot;name&quot;:&quot;Header&quot;,&quot;value&quot;:true}" await-children><link rel="preload" as="image" href="/pr-preview/pr-20/brand.svg"/><header id="main-header" class="fixed left-0 right-0 top-0 z-50 w-full overflow-hidden bg-surface/80 backdrop-blur-xl shadow-[0_2px_8px_-3px_rgba(0,0,0,0.07)] dark:shadow-[0_2px_8px_-3px_rgba(0,0,0,0.3)]"><div class="w-full h-[72px] xl:max-w-6xl xl:mx-auto px-2 sm:px-4 md:px-6 lg:px-8 flex items-center justify-between"><a aria-label="Vizij" class="group flex items-center sm:relative h-8 w-8 md:p-2 rounded-lg justify-center hover:bg-accent-base/10 transition-colors lg:w-auto lg:justify-start" href="/pr-preview/pr-20/"><div title="Vizij"><img src="/pr-preview/pr-20/brand.svg" class="size-5" alt=""/></div><strong class="max-[320px]:hidden lowercase text-base hidden lg:block z-10 mb-0.5 ms-2 lg:text-base xl:text-xl hover:opacity-90 whitespace-nowrap text-foreground">Vizij</strong></a><nav class="hidden md:flex ml-auto mr-2 lg:mr-6 items-center"><div class="relative z-10"><ul class="flex list-none items-center justify-center gap-0.5 md:gap-1"><li><a href="/pr-preview/pr-20/demos/" class="group inline-flex select-none items-center gap-0.5 md:gap-1 rounded-lg px-2 md:px-3 py-1.5 md:py-2 text-xs sm:text-sm font-medium leading-none outline-none transition-colors whitespace-nowrap text-foreground hover:text-accent-base focus:text-accent-base">Demos<svg class="h-3 w-3 transition-transform duration-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></a></li><li><a href="/pr-preview/pr-20/docs/" class="group inline-flex select-none items-center gap-0.5 md:gap-1 rounded-lg px-2 md:px-3 py-1.5 md:py-2 text-xs sm:text-sm font-medium leading-none outline-none transition-colors whitespace-nowrap text-accent-one">Docs<svg class="h-3 w-3 transition-transform duration-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></a></li><li><a href="/pr-preview/pr-20/tutorials/" class="group inline-flex select-none items-center gap-0.5 md:gap-1 rounded-lg px-2 md:px-3 py-1.5 md:py-2 text-xs sm:text-sm font-medium leading-none outline-none transition-colors whitespace-nowrap text-foreground hover:text-accent-base focus:text-accent-base">Tutorials<svg class="h-3 w-3 transition-transform duration-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></a></li><li><a href="/pr-preview/pr-20/events/" class="group inline-flex select-none items-center gap-0.5 md:gap-1 rounded-lg px-2 md:px-3 py-1.5 md:py-2 text-xs sm:text-sm font-medium leading-none outline-none transition-colors whitespace-nowrap text-foreground hover:text-accent-base focus:text-accent-base">Events<svg class="h-3 w-3 transition-transform duration-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></a></li></ul></div></nav><div class="flex items-center gap-x-1 md:gap-x-2"><div id="buttons-panel" class="hidden md:flex space-x-1 md:space-x-2"><button class="hidden md:flex relative items-center justify-center select-none rounded-lg transition-colors bg-color-100 text-accent-base hover:bg-accent-base/10 focus:outline-2 focus:outline-accent-two outline-offset-2 h-8 w-8" type="button" aria-label="Toggle theme"><svg aria-hidden="true" class="absolute w-5 h-5 opacity-100 scale-100 transition-all dark:opacity-0 dark:scale-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"></circle><line x1="12" y1="2" x2="12" y2="5" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line><line x1="12" y1="19" x2="12" y2="22" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line><line x1="2" y1="12" x2="5" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line><line x1="19" y1="12" x2="22" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line><line x1="4.22" y1="4.22" x2="6.34" y2="6.34" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line><line x1="17.66" y1="17.66" x2="19.78" y2="19.78" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line><line x1="17.66" y1="6.34" x2="19.78" y2="4.22" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line><line x1="4.22" y1="19.78" x2="6.34" y2="17.66" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line></svg><svg aria-hidden="true" class="absolute w-5 h-5 opacity-0 scale-0 transition-all dark:opacity-100 dark:scale-100" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79Z" stroke="currentColor" stroke-width="2" fill="none"></path></svg></button></div><div class="flex items-center gap-x-1 md:gap-x-2 "><div class="hidden md:flex"><button type="button" aria-label="Open search" title="Open search" class="relative inline-flex items-center justify-center select-none rounded-lg transition-colors focus:outline-2 outline-offset-2 focus:outline-accent-one disabled:opacity-50 disabled:cursor-not-allowed h-8 w-8 bg-color-100 text-accent-base hover:bg-accent-base/10" data-active="false"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"></circle><line x1="16.65" y1="16.65" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line></svg></button></div><div class="md:hidden"><div class="md:hidden ml-auto flex items-center gap-2"><span class="text-sm font-medium text-foreground/80 truncate max-w-[40vw] text-right">Docs</span><button type="button" aria-label="Open navigation menu" title="Open navigation menu" class="relative inline-flex items-center justify-center select-none rounded-lg transition-colors focus:outline-2 outline-offset-2 focus:outline-accent-one disabled:opacity-50 disabled:cursor-not-allowed h-8 w-8 bg-color-100 text-accent-base hover:bg-accent-base/10" data-active="false" aria-haspopup="dialog" aria-expanded="false" aria-controls="radix-_r6R_jd_" data-state="closed"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line><line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line><line x1="3" y1="18" x2="21" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line></svg></button></div></div></div></div></div><div id="main-header-panel" class="hidden md:block"></div></header><!--astro:end--></astro-island> <div class="relative flex min-h-screen w-full flex-col"> <div class="relative flex min-h-screen w-full flex-1 m-auto max-w-6xl"> <div id="container" class="relative m-auto max-w-4xl grow w-full min-w-0 max-w-6xl"> <div class="m-auto grid grid-cols-1 min-h-screen grid-rows-[1fr_auto] px-4 md:px-8 w-full min-w-0 pt-18"> <main id="main" class="relative grow" data-pagefind-body> <div class="space-y-8 pt-4" data-astro-cid-cfpwghs5> <!-- Top navigation --> <nav class="flex items-center justify-between text-sm" data-astro-cid-cfpwghs5> <a href="/pr-preview/pr-20/docs/" class="inline-flex items-center gap-1.5 text-color-500 transition-colors hover:text-accent-two" data-astro-cid-cfpwghs5> <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" aria-hidden="true" data-astro-cid-cfpwghs5><circle opacity="0.5" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" data-astro-cid-cfpwghs5></circle><path d="M13.5 9L10.5 12L13.5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-cfpwghs5></path></svg>
+Back to Docs </a> <div class="flex items-center gap-4" data-astro-cid-cfpwghs5> <a href="/pr-preview/pr-20/docs/architecture/" class="inline-flex items-center gap-1.5 text-color-500 transition-colors hover:text-accent-two" data-astro-cid-cfpwghs5> <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" aria-hidden="true" data-astro-cid-cfpwghs5><circle opacity="0.5" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" data-astro-cid-cfpwghs5></circle><path d="M13.5 9L10.5 12L13.5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-cfpwghs5></path></svg> System Mental Model </a> <a href="/pr-preview/pr-20/docs/rigging-and-control-model/" class="inline-flex items-center gap-1.5 text-color-500 transition-colors hover:text-accent-two" data-astro-cid-cfpwghs5> Rigging and Control Model <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" aria-hidden="true" data-astro-cid-cfpwghs5><circle opacity="0.5" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" data-astro-cid-cfpwghs5></circle><path d="M10.5 9L13.5 12L10.5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-cfpwghs5></path></svg> </a> </div> </nav> <!-- Header --> <header class="space-y-4" data-astro-cid-cfpwghs5> <h1 class="text-3xl font-bold text-foreground sm:text-4xl" data-astro-cid-cfpwghs5>Renderer Data Model</h1> <p class="max-w-3xl text-base leading-relaxed text-color-500" data-astro-cid-cfpwghs5>Understand the typed input model, path semantics, and visible runtime behavior behind the first maintained interactions.</p> <div class="rounded-lg border border-accent-two/25 bg-special-lighter p-5" data-astro-cid-cfpwghs5> <p class="text-xs font-semibold uppercase tracking-widest text-accent-two" data-astro-cid-cfpwghs5>Reader outcome</p> <p class="mt-3 text-sm leading-7 text-color-500" data-astro-cid-cfpwghs5>After this page, you should be able to explain what a Vizij runtime input is, how it relates to typed paths and values, and how visible behavior on a face maps to a more stable runtime meaning underneath.</p> </div> </header> <!-- Prerequisites and success checks --> <div class="grid gap-4 sm:grid-cols-2" data-astro-cid-cfpwghs5> <div class="rounded-lg border border-accent-base/15 bg-special-lighter p-5" data-astro-cid-cfpwghs5> <p class="text-xs font-semibold uppercase tracking-widest text-accent-two" data-astro-cid-cfpwghs5>What you need</p> <ul class="mt-3 space-y-2 text-sm leading-6 text-color-500" data-astro-cid-cfpwghs5> <li class="flex gap-2" data-astro-cid-cfpwghs5> <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-two" data-astro-cid-cfpwghs5></span> <span data-astro-cid-cfpwghs5>completed Hello Face Quickstart,</span> </li><li class="flex gap-2" data-astro-cid-cfpwghs5> <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-two" data-astro-cid-cfpwghs5></span> <span data-astro-cid-cfpwghs5>read Paths and Standard Controls,</span> </li><li class="flex gap-2" data-astro-cid-cfpwghs5> <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-two" data-astro-cid-cfpwghs5></span> <span data-astro-cid-cfpwghs5>seen at least one runtime app show loading, ready, and error states.</span> </li> </ul> </div> <div class="rounded-lg border border-accent-base/15 bg-special-lighter p-5" data-astro-cid-cfpwghs5> <p class="text-xs font-semibold uppercase tracking-widest text-accent-two" data-astro-cid-cfpwghs5>Proof state</p> <ul class="mt-3 space-y-2 text-sm leading-6 text-color-500" data-astro-cid-cfpwghs5> <li class="flex gap-2" data-astro-cid-cfpwghs5> <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-two" data-astro-cid-cfpwghs5></span> <span data-astro-cid-cfpwghs5>you can explain why runtime inputs are more stable than any one UI,</span> </li><li class="flex gap-2" data-astro-cid-cfpwghs5> <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-two" data-astro-cid-cfpwghs5></span> <span data-astro-cid-cfpwghs5>you can distinguish staged inputs from rendered outputs,</span> </li><li class="flex gap-2" data-astro-cid-cfpwghs5> <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-two" data-astro-cid-cfpwghs5></span> <span data-astro-cid-cfpwghs5>you can describe how standard controls, poses, visemes, and animation-related values differ semantically.</span> </li> </ul> </div> </div> <!-- Interactive lab -->  <!-- Content area with sidebar --> <div class="grid gap-8 lg:grid-cols-[minmax(0,0.25fr)_minmax(0,0.75fr)]" data-astro-cid-cfpwghs5> <aside class="space-y-4 lg:sticky lg:top-24 lg:self-start" data-astro-cid-cfpwghs5> <div class="rounded-lg border border-accent-base/15 bg-special-lighter p-4" data-astro-cid-cfpwghs5> <p class="text-xs font-semibold uppercase tracking-widest text-accent-two" data-astro-cid-cfpwghs5>On this page</p> <ul class="mt-3 space-y-1" data-astro-cid-cfpwghs5> <li data-astro-cid-cfpwghs5> <a href="#module-notes" class="flex items-start gap-2 rounded-md px-2 py-1.5 text-sm text-color-500 transition-colors hover:bg-accent-base/8 hover:text-foreground" data-astro-cid-cfpwghs5> <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-accent-two/25 bg-accent-two/10 text-[10px] font-semibold text-accent-two" data-astro-cid-cfpwghs5> 1 </span> <span data-astro-cid-cfpwghs5>Module Notes</span> </a> </li><li data-astro-cid-cfpwghs5> <a href="#what-you-need" class="flex items-start gap-2 rounded-md px-2 py-1.5 text-sm text-color-500 transition-colors hover:bg-accent-base/8 hover:text-foreground" data-astro-cid-cfpwghs5> <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-accent-two/25 bg-accent-two/10 text-[10px] font-semibold text-accent-two" data-astro-cid-cfpwghs5> 2 </span> <span data-astro-cid-cfpwghs5>What You Need</span> </a> </li><li data-astro-cid-cfpwghs5> <a href="#the-core-semantic-chain" class="flex items-start gap-2 rounded-md px-2 py-1.5 text-sm text-color-500 transition-colors hover:bg-accent-base/8 hover:text-foreground" data-astro-cid-cfpwghs5> <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-accent-two/25 bg-accent-two/10 text-[10px] font-semibold text-accent-two" data-astro-cid-cfpwghs5> 3 </span> <span data-astro-cid-cfpwghs5>The Core Semantic Chain</span> </a> </li><li data-astro-cid-cfpwghs5> <a href="#what-a-runtime-input-actually-is" class="flex items-start gap-2 rounded-md px-2 py-1.5 text-sm text-color-500 transition-colors hover:bg-accent-base/8 hover:text-foreground" data-astro-cid-cfpwghs5> <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-accent-two/25 bg-accent-two/10 text-[10px] font-semibold text-accent-two" data-astro-cid-cfpwghs5> 4 </span> <span data-astro-cid-cfpwghs5>What A Runtime Input Actually Is</span> </a> </li><li data-astro-cid-cfpwghs5> <a href="#staging-reading-and-writing" class="flex items-start gap-2 rounded-md px-2 py-1.5 text-sm text-color-500 transition-colors hover:bg-accent-base/8 hover:text-foreground" data-astro-cid-cfpwghs5> <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-accent-two/25 bg-accent-two/10 text-[10px] font-semibold text-accent-two" data-astro-cid-cfpwghs5> 5 </span> <span data-astro-cid-cfpwghs5>Staging, Reading, and Writing</span> </a> </li><li data-astro-cid-cfpwghs5> <a href="#common-semantic-categories" class="flex items-start gap-2 rounded-md px-2 py-1.5 text-sm text-color-500 transition-colors hover:bg-accent-base/8 hover:text-foreground" data-astro-cid-cfpwghs5> <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-accent-two/25 bg-accent-two/10 text-[10px] font-semibold text-accent-two" data-astro-cid-cfpwghs5> 6 </span> <span data-astro-cid-cfpwghs5>Common Semantic Categories</span> </a> </li><li data-astro-cid-cfpwghs5> <a href="#why-semantics-matter-more-than-ui-labels" class="flex items-start gap-2 rounded-md px-2 py-1.5 text-sm text-color-500 transition-colors hover:bg-accent-base/8 hover:text-foreground" data-astro-cid-cfpwghs5> <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-accent-two/25 bg-accent-two/10 text-[10px] font-semibold text-accent-two" data-astro-cid-cfpwghs5> 7 </span> <span data-astro-cid-cfpwghs5>Why Semantics Matter More Than UI Labels</span> </a> </li><li data-astro-cid-cfpwghs5> <a href="#where-readers-see-these-semantics-in-practice" class="flex items-start gap-2 rounded-md px-2 py-1.5 text-sm text-color-500 transition-colors hover:bg-accent-base/8 hover:text-foreground" data-astro-cid-cfpwghs5> <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-accent-two/25 bg-accent-two/10 text-[10px] font-semibold text-accent-two" data-astro-cid-cfpwghs5> 8 </span> <span data-astro-cid-cfpwghs5>Where Readers See These Semantics In Practice</span> </a> </li><li data-astro-cid-cfpwghs5> <a href="#a-useful-mental-model" class="flex items-start gap-2 rounded-md px-2 py-1.5 text-sm text-color-500 transition-colors hover:bg-accent-base/8 hover:text-foreground" data-astro-cid-cfpwghs5> <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-accent-two/25 bg-accent-two/10 text-[10px] font-semibold text-accent-two" data-astro-cid-cfpwghs5> 9 </span> <span data-astro-cid-cfpwghs5>A Useful Mental Model</span> </a> </li><li data-astro-cid-cfpwghs5> <a href="#current-useful-diagram" class="flex items-start gap-2 rounded-md px-2 py-1.5 text-sm text-color-500 transition-colors hover:bg-accent-base/8 hover:text-foreground" data-astro-cid-cfpwghs5> <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-accent-two/25 bg-accent-two/10 text-[10px] font-semibold text-accent-two" data-astro-cid-cfpwghs5> 10 </span> <span data-astro-cid-cfpwghs5>Current Useful Diagram</span> </a> </li><li data-astro-cid-cfpwghs5> <a href="#recommended-next-steps" class="flex items-start gap-2 rounded-md px-2 py-1.5 text-sm text-color-500 transition-colors hover:bg-accent-base/8 hover:text-foreground" data-astro-cid-cfpwghs5> <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-accent-two/25 bg-accent-two/10 text-[10px] font-semibold text-accent-two" data-astro-cid-cfpwghs5> 11 </span> <span data-astro-cid-cfpwghs5>Recommended Next Steps</span> </a> </li> </ul> </div> <div class="rounded-lg border border-accent-base/15 bg-special-lighter p-4" data-astro-cid-cfpwghs5> <p class="text-xs font-semibold uppercase tracking-widest text-accent-two" data-astro-cid-cfpwghs5>Implementation anchors</p> <div class="mt-3 space-y-2" data-astro-cid-cfpwghs5> <a href="https://github.com/vizij-ai/vizij-web/tree/main/packages/@vizij/runtime-react" class="block rounded-md border border-accent-base/10 px-3 py-2 text-sm text-color-500 transition-colors hover:border-accent-two/30 hover:text-foreground" data-astro-cid-cfpwghs5> <div class="font-medium text-foreground" data-astro-cid-cfpwghs5>Runtime React package</div> <div class="mt-0.5 text-color-500" data-astro-cid-cfpwghs5>Current runtime hooks and provider primitives.</div> </a> </div> </div> <div class="rounded-lg border border-accent-base/15 bg-special-lighter p-4" data-astro-cid-cfpwghs5> <p class="text-xs font-semibold uppercase tracking-widest text-accent-two" data-astro-cid-cfpwghs5>Reference bridges</p> <div class="mt-3 space-y-2" data-astro-cid-cfpwghs5> <a href="https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/reference/renderer-and-rigging-reference.md" class="block rounded-md border border-accent-base/10 px-3 py-2 text-sm text-color-500 transition-colors hover:border-accent-two/30 hover:text-foreground" data-astro-cid-cfpwghs5> <div class="font-medium text-foreground" data-astro-cid-cfpwghs5>Renderer and Rigging Reference</div>  </a><a href="https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/reference/runtime-quickstart-reference.md" class="block rounded-md border border-accent-base/10 px-3 py-2 text-sm text-color-500 transition-colors hover:border-accent-two/30 hover:text-foreground" data-astro-cid-cfpwghs5> <div class="font-medium text-foreground" data-astro-cid-cfpwghs5>Runtime Quickstart Reference</div>  </a><a href="https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/support/glossary-and-terminology-bridge.md" class="block rounded-md border border-accent-base/10 px-3 py-2 text-sm text-color-500 transition-colors hover:border-accent-two/30 hover:text-foreground" data-astro-cid-cfpwghs5> <div class="font-medium text-foreground" data-astro-cid-cfpwghs5>Glossary and Terminology Bridge</div>  </a> </div> </div> </aside> <div class="min-w-0" data-astro-cid-cfpwghs5> <article class="prose prose-neutral max-w-none dark:prose-invert" data-astro-cid-cfpwghs5> <div class="mdx-content mdx-content--guidebook max-w-none text-color-800 dark:text-color-100 leading-7 md:leading-8"> <h2 id="module-notes">Module Notes</h2>
+<p>This page is for readers who already understand the basic path vocabulary from <a href="/pr-preview/pr-20/docs/rigging-and-control-model/">Paths and Standard Controls</a> and now need the next layer of runtime reasoning.</p>
+<p>The artifact here is not a single app screen. It is the runtime contract that multiple Vizij surfaces rely on: typed paths, typed values, staged runtime inputs, blackboard reads and writes, and output paths that can later be observed or rendered.</p>
+<h2 id="what-you-need">What You Need</h2>
+<p>It helps if you have already:</p>
+<ol>
+<li>completed <a href="/pr-preview/pr-20/tutorials/hello-face/">Hello Face Quickstart</a>,</li>
+<li>read <a href="/pr-preview/pr-20/docs/rigging-and-control-model/">Paths and Standard Controls</a>,</li>
+<li>seen at least one runtime app show loading, ready, and error states.</li>
+</ol>
+<h2 id="the-core-semantic-chain">The Core Semantic Chain</h2>
+<p>Visible face behavior is usually the end of a longer chain:</p>
+<ol>
+<li>an app or hook decides to set an input,</li>
+<li>the input is staged under a path,</li>
+<li>graphs and animations read and write values against the shared runtime state,</li>
+<li>the renderer receives the resulting animatable values,</li>
+<li>the user sees a face change.</li>
+</ol>
+<p>That is why the same visual behavior can show up in multiple apps. The UI is not the whole story. The runtime meaning is more stable than the surface.</p>
+<h2 id="what-a-runtime-input-actually-is">What A Runtime Input Actually Is</h2>
+<p>A runtime input is a value written with an explicit meaning.</p>
+<p>The important parts are:</p>
+<ol>
+<li>the path, which says what the input refers to,</li>
+<li>the value, which says what data is being written,</li>
+<li>the shape or expected kind of data, which keeps the runtime deterministic.</li>
+</ol>
+<p>In the architecture primer, this is the <code>TypedPath</code> plus <code>Value</code> plus <code>Shape</code> contract.</p>
+<p>That contract matters because Vizij does not want a control system that only works inside one UI. Inputs have to survive movement across apps, bundles, runtime controllers, and deployment surfaces.</p>
+<h2 id="staging-reading-and-writing">Staging, Reading, and Writing</h2>
+<p>The runtime is designed so inputs are staged first and then consumed during the runtime step.</p>
+<p>At a high level:</p>
+<ol>
+<li>the app stages a value,</li>
+<li>the orchestrator advances a frame,</li>
+<li>graphs and animations evaluate against the current state,</li>
+<li>output values are merged deterministically,</li>
+<li>the renderer applies the resulting values.</li>
+</ol>
+<p>This is different from directly mutating a scene or attaching view-only state to a slider. Vizij is intentionally closer to a runtime control pipeline.</p>
+<h2 id="common-semantic-categories">Common Semantic Categories</h2>
+<h3 id="semantic-categories">Semantic Categories</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th align="left">Category</th><th align="left">Meaning</th><th align="left">Encountered In</th></tr></thead><tbody><tr><td align="left"><strong>Standard</strong></td><td align="left">Reusable rig channels (Gaze)</td><td align="left"><code>Hello Face</code> / <code>useMouseGaze</code></td></tr><tr><td align="left"><strong>Poses</strong></td><td align="left">Authored expressions</td><td align="left"><code>Hello Face</code> / <code>usePoseHotkeys</code></td></tr><tr><td align="left"><strong>Speech-timed poses</strong></td><td align="left">Speech-driven pose weights that still use canonical pose paths</td><td align="left"><code>Agent Face</code> / <code>STT</code></td></tr><tr><td align="left"><strong>Animations</strong></td><td align="left">Time-based motion</td><td align="left"><code>Authoring</code> / <code>Player</code></td></tr><tr><td align="left"><strong>Outputs</strong></td><td align="left">Derived runtime values</td><td align="left"><code>Player</code> / <code>Diagnostics</code></td></tr></tbody></table>
+<p>The most useful categories for guidebook readers are:</p>
+<ol>
+<li>standard controls, which expose reusable channels such as gaze or shared rig movement,</li>
+<li>pose weights, which expose named authored states,</li>
+<li>speech-timed pose driving, which still stages pose weights even when authoring groups those poses for different blend behavior,</li>
+<li>animation controls, which drive authored time-based motion,</li>
+<li>renderer outputs, which can be observed for UI, diagnostics, or logging.</li>
+</ol>
+<p>These categories can all show up as paths, but they do not mean the same thing.</p>
+<h3 id="choose-the-semantic-family-first">Choose The Semantic Family First</h3>
+<p>Use this chooser before you start wiring a control or debugging a write:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>If you are trying to…</th><th>Likely semantic family</th><th>Why</th><th>Best next page</th></tr></thead><tbody><tr><td>steer a reusable eye, brow, jaw, or similar channel</td><td>standard control</td><td>you are driving a reusable rig-facing channel directly</td><td><a href="/pr-preview/pr-20/docs/rigging-and-control-model/">Paths and Standard Controls</a></td></tr><tr><td>blend a named facial state such as <code>smile</code></td><td>pose weight</td><td>you are changing the strength of an authored expression</td><td><a href="https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/customize/poses.md" rel="nofollow noreferrer" target="_blank">Poses</a></td></tr><tr><td>play or inspect motion over time</td><td>animation control</td><td>the main question is clip transport, timing, or playback</td><td><a href="/pr-preview/pr-20/docs/animation-model/">Animations</a></td></tr><tr><td>drive speech-shaped mouth motion</td><td>speech-timed pose weight</td><td>the speech layer still writes a canonical pose-weight path, while pose groups continue to define how subsets of poses blend</td><td><a href="https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/reference/animation-integration-and-deployment-reference.md" rel="nofollow noreferrer" target="_blank">Animation, Integration, and Deployment Reference</a></td></tr><tr><td>inspect what the runtime resolved after evaluation</td><td>output path</td><td>you are validating the result of orchestration, not only the staged input</td><td><a href="https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/control/orchestration-and-diagnostics.md" rel="nofollow noreferrer" target="_blank">Orchestration and Diagnostics</a></td></tr><tr><td>expose operator control through a deployment endpoint</td><td>deployment slot over runtime input</td><td>the client sees a deployment slot name, but the runtime still resolves it into the same typed input semantics underneath</td><td><a href="/pr-preview/pr-20/docs/deployment-model/">Operator and Deployment Model</a></td></tr></tbody></table>
+<h2 id="why-semantics-matter-more-than-ui-labels">Why Semantics Matter More Than UI Labels</h2>
+<p>Two controls can look similar in a UI and still represent different semantics.</p>
+<p>For example:</p>
+<ol>
+<li>a slider that writes <code>rig/{face}/standard/left_eye/pos/x</code> is steering a reusable rig channel,</li>
+<li>a slider that writes <code>rig/{face}/poses/smile.weight</code> is blending a named authored state,</li>
+<li>a speech-driven system may still write <code>rig/{face}/poses/{poseId}.weight</code> without the user touching a control at all.</li>
+</ol>
+<p>The visible widget is just a surface. The runtime meaning is the important teaching target.</p>
+<p>Pose groups matter here because they determine how different subsets of poses blend together. They are not part of the runtime input path syntax.</p>
+<h2 id="where-readers-see-these-semantics-in-practice">Where Readers See These Semantics In Practice</h2>
+<p>You can already see the semantic layers in the maintained apps:</p>
+<ol>
+<li><code>tutorial-fullscreen-face</code> stages gaze and pose inputs through tutorial hooks,</li>
+<li><code>tutorial-agent-face</code> layers conversation-driven viseme and expression behavior on top of the same runtime concepts,</li>
+<li><code>demo-vizij-player</code> exposes loading state, controllers, and output paths in a more application-like shell,</li>
+<li><code>vizij-standalone</code> maps externally driven values into deployment-facing control slots.</li>
+</ol>
+<p>Those apps are different surfaces, but the runtime language underneath them is continuous.</p>
+<p>That continuity is the main reason the guidebook keeps separating runtime meaning from surface labels:</p>
+<ol>
+<li>a deployment client may discover and write slot names such as <code>standard/vizij/left_eye/pos/x</code>,</li>
+<li>the standalone bridge then resolves those names into runtime paths such as <code>rig/{faceId}/standard/vizij/left_eye/pos/x</code>,</li>
+<li>the underlying semantic family is still “standard control” even though the operator surface does not expose the full runtime path directly.</li>
+</ol>
+<h2 id="a-useful-mental-model">A Useful Mental Model</h2>
+<p>If a reader gets lost, return to this question:</p>
+<p><code>What value is being written, to which path, by which part of the runtime, and why?</code></p>
+<p>That question usually clarifies whether the reader is dealing with:</p>
+<ol>
+<li>a user input,</li>
+<li>an authored pose or animation,</li>
+<li>a derived controller output,</li>
+<li>a deployment-facing control signal.</li>
+</ol>
+<h2 id="current-useful-diagram">Current Useful Diagram</h2>
+<h3 id="semantic-entry-points">Semantic Entry Points</h3>
+<p>Different surfaces can begin the same semantic write:</p>
+<pre class="guidebook-mermaid mermaid">flowchart LR
+    classDef source fill:#eef4ff,stroke:#4e79a7,stroke-width:1.5px
+    classDef runtime fill:#eef7ee,stroke:#2f855a,stroke-width:1.5px
+
+    hook["App hook or UI event"]
+    speech["Speech or agent behavior"]
+    operator["Deployment client or discovered slot"]
+    authored["Animation or procedural controller"]
+    staged["Staged input\npath + value + shape"]
+    orch["Orchestrator step"]
+
+    hook --> staged
+    speech --> staged
+    operator --> staged
+    authored --> orch
+    staged --> orch
+
+    class hook,speech,operator,authored source
+    class staged,orch runtime
+</pre>
+<h3 id="runtime-resolution-and-observation">Runtime Resolution And Observation</h3>
+<p>After entry, the runtime resolves those writes through the same shared chain:</p>
+<pre class="guidebook-mermaid mermaid">flowchart TB
+    classDef runtime fill:#eef7ee,stroke:#2f855a,stroke-width:1.5px
+    classDef observe fill:#fdf1f3,stroke:#c05670,stroke-width:1.5px
+
+    orch["Orchestrator step"]
+    board["Blackboard\nshared typed state"]
+    merged["Merged output writes"]
+    render["Renderer applies resolved values"]
+    diag["Diagnostics\noutputPaths, frame data, target snapshots"]
+    face["Visible face behavior"]
+
+    orch --> board --> merged
+    merged --> render --> face
+    merged --> diag
+    board --> diag
+
+    class orch,board,merged runtime
+    class render,diag,face observe
+</pre>
+<p>The screenshot shows the “ready” state where the face is active and responding to standard control writes.</p>
+<p>Until then, the architecture primer is the best current textual diagram.</p>
+<h2 id="recommended-next-steps">Recommended Next Steps</h2>
+<ol>
+<li>If you want to see how these runtime ideas become an application shell, continue to <a href="https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/integrate/loading-playback-and-embedding.md" rel="nofollow noreferrer" target="_blank">Loading, Playback, and Embedding</a>.</li>
+<li>If you want to stay on the fundamentals path inside <code>Control</code>, keep <a href="/pr-preview/pr-20/docs/rigging-and-control-model/">Paths and Standard Controls</a> nearby as the simpler vocabulary bridge.</li>
+<li>If you need to reason about which surface owns each category, continue to <a href="https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/control/control-surfaces-and-configuration-layers.md" rel="nofollow noreferrer" target="_blank">Control Surfaces and Configuration Layers</a>.</li>
+</ol> </div>  </article> <script>
+					(async () => {
+						const diagrams = document.querySelectorAll(".guidebook-mermaid.mermaid");
+						if (!diagrams.length) return;
+						try {
+							const mermaidModule = await import("https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs");
+							const mermaid = mermaidModule.default;
+							const getThemeName = () =>
+								document.documentElement.getAttribute("data-theme") === "light"
+									? "light"
+									: "dark";
+							const getThemeVariables = (theme) =>
+								theme === "dark"
+									? {
+											darkMode: true,
+											background: "#171b22",
+											primaryColor: "#232933",
+											primaryBorderColor: "#8ea0b3",
+											primaryTextColor: "#eef3f8",
+											textColor: "#e4ebf3",
+											labelColor: "#e4ebf3",
+											lineColor: "#aeb8c4",
+											secondaryColor: "#1b1f27",
+											tertiaryColor: "#101317",
+										}
+									: {
+											darkMode: false,
+											background: "#fffdf7",
+											primaryColor: "#efe1cd",
+											primaryBorderColor: "#6b7280",
+											primaryTextColor: "#1f2937",
+											textColor: "#1f2937",
+											labelColor: "#1f2937",
+											lineColor: "#5b6472",
+											secondaryColor: "#f7f1e7",
+											tertiaryColor: "#fff8ef",
+										};
+							const adaptGuidebookMermaidSource = (source, theme) => {
+								if (theme !== "dark") return source;
+								const darkPalette = new Map([
+									["#fff4e5", "#2b241b"],
+									["#c97a00", "#f0b36b"],
+									["#eef7ee", "#1d2a22"],
+									["#2f855a", "#73c591"],
+									["#eef4ff", "#1f2734"],
+									["#4e79a7", "#93b9e5"],
+									["#fdf1f3", "#2d2025"],
+									["#c05670", "#e28aa0"],
+									["#fff4cc", "#332816"],
+									["#b7791f", "#e0a85b"],
+									["#f4f5f7", "#232831"],
+									["#6b7280", "#a0a8b6"],
+								]);
+								let adapted = source;
+								for (const [lightColor, darkColor] of darkPalette.entries()) {
+									adapted = adapted.replaceAll(lightColor, darkColor);
+								}
+								return adapted;
+							};
+							const renderDiagrams = async () => {
+								const theme = getThemeName();
+								if ("fonts" in document) {
+									try {
+										await document.fonts.ready;
+									} catch {
+										// If font loading metadata is unavailable, render with the current metrics.
+									}
+								}
+								mermaid.initialize({
+									startOnLoad: false,
+									securityLevel: "loose",
+									theme: "base",
+									htmlLabels: false,
+									themeVariables: getThemeVariables(theme),
+								});
+								for (const [index, diagram] of Array.from(diagrams).entries()) {
+									const source =
+										diagram.dataset.mermaidSource ?? diagram.textContent?.trim();
+									if (!source) continue;
+									diagram.dataset.mermaidSource = source;
+									const themedSource = adaptGuidebookMermaidSource(source, theme);
+									const renderId = `guidebook-mermaid-${theme}-${index}`;
+									const { svg, bindFunctions } = await mermaid.render(
+										renderId,
+										themedSource,
+									);
+									diagram.innerHTML = svg;
+									diagram.setAttribute("data-processed", "true");
+									bindFunctions?.(diagram);
+								}
+							};
+							await renderDiagrams();
+							document.addEventListener("theme-change", () => {
+								void renderDiagrams();
+							});
+						} catch (error) {
+							console.error("Failed to render guidebook mermaid diagram", error);
+						}
+					})();
+				</script> <!-- Demo cross-links --> <div class="mt-8 rounded-lg border border-accent-base/15 bg-special-lighter p-5" data-astro-cid-cfpwghs5> <p class="text-xs font-semibold uppercase tracking-widest text-accent-two" data-astro-cid-cfpwghs5>Related demos</p> <div class="mt-3 space-y-2" data-astro-cid-cfpwghs5> <a href="/pr-preview/pr-20/demos/#controls" class="block rounded-md border border-accent-base/10 px-3 py-2 text-sm text-color-500 transition-colors hover:border-accent-two/30 hover:text-foreground" data-astro-cid-cfpwghs5> <div class="font-medium text-foreground" data-astro-cid-cfpwghs5>Rig controls demo</div> <div class="mt-0.5 text-color-500" data-astro-cid-cfpwghs5>Observe path writes and visible behavior before reproducing them.</div> </a> </div> </div> <!-- Full prev/next navigation --> <div class="mt-8" data-astro-cid-cfpwghs5> <nav aria-label="Page navigation" class="grid grid-cols-1 gap-4 sm:grid-cols-2 "><a href="/pr-preview/pr-20/docs/architecture/" class="group flex flex-col gap-2 rounded-lg border border-accent-base/15 bg-special-lighter p-5 transition-colors hover:border-accent-two/30"><span class="flex items-center gap-1.5 text-xs font-medium uppercase tracking-widest text-color-500"><svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle opacity="0.5" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"></circle><path d="M13.5 9L10.5 12L13.5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+Previous
+</span><span class="text-base font-semibold text-foreground">System Mental Model</span><span class="text-sm text-color-500 line-clamp-2">Return to the stable Vizij layer model before you go back into runtime path semantics.</span></a><a href="/pr-preview/pr-20/docs/rigging-and-control-model/" class="group flex flex-col gap-2 rounded-lg border border-accent-base/15 bg-special-lighter p-5 text-right transition-colors hover:border-accent-two/30"><span class="flex items-center justify-end gap-1.5 text-xs font-medium uppercase tracking-widest text-color-500">
+Next
+<svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle opacity="0.5" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"></circle><path d="M10.5 9L13.5 12L10.5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></span><span class="text-base font-semibold text-foreground">Rigging and Control Model</span><span class="text-sm text-color-500 line-clamp-2">Move from generic runtime inputs into control vocabulary and path families.</span></a></nav> </div> </div> </div> </div>  </main> <footer class="semibold mt-auto flex w-full flex-col items-center justify-center gap-y-3 sm:gap-y-2 pb-4 pt-8 text-center align-top text-accent sm:flex-row sm:justify-between text-xs sm:text-sm"><div class="me-0 font-semibold sm:me-4">© <!-- -->Vizij<!-- --> <!-- -->2026<!-- -->.</div><nav aria-label="More on this site" class="flex flex-wrap justify-center sm:justify-between gap-x-1.5 sm:gap-x-2 md:gap-x-3 gap-y-1 font-medium text-light w-full sm:w-auto max-w-full"><a class="underline-offset-2 hover:text-accent hover:underline text-xs sm:text-sm whitespace-nowrap" href="/pr-preview/pr-20/demos/">Demos</a><a class="underline-offset-2 hover:text-accent hover:underline text-xs sm:text-sm whitespace-nowrap" href="/pr-preview/pr-20/docs/">Docs</a><a class="underline-offset-2 hover:text-accent hover:underline text-xs sm:text-sm whitespace-nowrap" href="/pr-preview/pr-20/tutorials/">Tutorials</a><a class="underline-offset-2 hover:text-accent hover:underline text-xs sm:text-sm whitespace-nowrap" href="/pr-preview/pr-20/events/">Events</a></nav></footer> </div> </div> </div> </div> </body></html>
