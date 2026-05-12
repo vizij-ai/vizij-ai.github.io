@@ -116,7 +116,7 @@ async function getPersonRelatedContent(personId: string) {
 const relatedContent = await getPersonRelatedContent(entry.id);
 
 const meta = {
-  title: `${fullName} - Researcher Profile`,
+  title: `${fullName} - Contributor Profile`,
   description: data.bio || `Profile of ${fullName}`,
 };
 const ogImage = `/og/people/${entry.id}.png`;
