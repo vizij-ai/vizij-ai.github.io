@@ -1,7 +1,9 @@
 ---
 import { render as renderContent } from "astro:content";
-import type { MDXComponentMap } from "./mdxComponents";
-import { mergeMDXComponents } from "./mdxComponents";
+import {
+  type MDXComponentMap,
+  mergeMDXComponents,
+} from "@semio-community/ecosystem-site-core";
 
 // biome-ignore lint/suspicious/noExplicitAny: Astro content render result is untyped
 type RenderedContent = { Content: any };

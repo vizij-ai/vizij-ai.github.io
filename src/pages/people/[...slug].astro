@@ -6,10 +6,15 @@ import { getPeopleByExpertise, getPeopleByOrganization } from "@/data/people";
 import { getAllResearch } from "@/data/research";
 import { getAllHardware } from "@/data/hardware";
 import { getAllSoftware } from "@/data/software";
-import { PersonDetail } from "@semio-community/ecosystem-site-core";
+import {
+  PersonDetail,
+  isCurrentAffiliation,
+  sortAffiliationsForSite,
+  withResolvedLinks,
+} from "@semio-community/ecosystem-site-core";
+import { siteConfig } from "@/site.config";
 import { isDraftVisible } from "@/utils/drafts";
 import { toOrganizationCardData } from "@/utils/card-mappers";
-import { withResolvedLinks } from "@/utils/content-links";
 
 export async function getStaticPaths() {
   const people = await getCollection("people", ({ data }) => {
@@ -111,7 +116,7 @@ async function getPersonRelatedContent(personId: string) {
 const relatedContent = await getPersonRelatedContent(entry.id);
 
 const meta = {
-  title: `${fullName} - Researcher Profile`,
+  title: `${fullName} - Contributor Profile`,
   description: data.bio || `Profile of ${fullName}`,
 };
 const ogImage = `/og/people/${entry.id}.png`;
@@ -197,10 +202,15 @@ if (data.links?.scheduling) {
   });
 }
 
-// Prepare affiliations for display in main content
+// Prepare affiliations for display, with the site's home-org affiliation first
+const orderedAffiliations = sortAffiliationsForSite(
+  data.affiliations,
+  siteConfig.homeOrganizationId,
+);
+
 const currentAffiliations = await Promise.all(
-  (data.affiliations || [])
-    .filter((aff) => !aff.endDate)
+  orderedAffiliations
+    .filter((aff) => isCurrentAffiliation(aff))
     .map(async (aff) => {
       const org = await getEntry("organizations", aff.organizationId);
       return {
@@ -211,8 +221,8 @@ const currentAffiliations = await Promise.all(
 );
 
 const pastAffiliations = await Promise.all(
-  (data.affiliations || [])
-    .filter((aff) => aff.endDate)
+  orderedAffiliations
+    .filter((aff) => !isCurrentAffiliation(aff))
     .map(async (aff) => {
       const org = await getEntry("organizations", aff.organizationId);
       return {
@@ -304,6 +314,8 @@ if (data.links?.mastodon) {
         }}
         relatedPeople={relatedPeople}
         baseUrl={import.meta.env.BASE_URL}
+        homeOrganizationId={siteConfig.homeOrganizationId}
+        suppressOrganizationPage={siteConfig.suppressOrganizationPage}
       />
     </SiteShell>
   </body>
