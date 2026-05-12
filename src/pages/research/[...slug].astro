@@ -9,7 +9,7 @@ import { ResearchDetail, type ResearchOrganizationLink } from "@semio-community/
 import type { ResearchAuthorModel } from "@semio-community/ecosystem-site-core";
 import { isDraftVisible } from "@/utils/drafts";
 import { toOrganizationCardData } from "@/utils/card-mappers";
-import { withResolvedLinks } from "@/utils/content-links";
+import { withResolvedLinks } from "@semio-community/ecosystem-site-core";
 
 export async function getStaticPaths() {
   const researchEntries = await getCollection("research", ({ data }) => {

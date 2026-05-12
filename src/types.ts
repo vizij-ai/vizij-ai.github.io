@@ -19,6 +19,10 @@ export interface SiteConfig {
 		pageBackground?: string;
 		cardBackground?: string;
 	};
+	/** ID of the organization this site represents. Used to pick the headline role on person bios and to reorder a person's affiliations so the home-org entry comes first. */
+	homeOrganizationId?: string;
+	/** When true, `/organizations/<homeOrganizationId>` is excluded from this site and affiliation rows pointing at the home org link to `/` instead. */
+	suppressOrganizationPage?: boolean;
 }
 
 export interface PaginationLink {

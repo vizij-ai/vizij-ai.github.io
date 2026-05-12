@@ -20,7 +20,7 @@ import { remarkReadingTime } from "./src/plugins/remark-reading-time";
 // Rehype plugins
 import rehypeExternalLinks from "rehype-external-links";
 import rehypeUnwrapImages from "rehype-unwrap-images";
-import { rehypeBasePathContent } from "./src/plugins/rehype-base-path-content";
+import { rehypeBasePathContent } from "@semio-community/ecosystem-site-core";
 
 import {
   transformerMetaHighlight,
@@ -133,7 +133,14 @@ export default defineConfig({
       // Deduplicate React across the client bundle and, together with noExternal
       // above, across the SSR bundle — ensuring a single React instance even when
       // ecosystem-site-core is npm-linked and has its own nested node_modules/react.
-      dedupe: ["react", "react-dom"],
+      dedupe: [
+        "react",
+        "react-dom",
+        "motion",
+        "@radix-ui/react-dialog",
+        "@radix-ui/react-tooltip",
+        "@solar-icons/react-perf",
+      ],
     },
     ssr: {
       // Process ecosystem-site-core (and all packages that live inside its

@@ -19,7 +19,9 @@
     "verify:shared-tailwind": "node scripts/verify-shared-tailwind-wiring.mjs",
     "render:modules": "node scripts/render-configurator-modules.mjs",
     "content:sync:hub": "node scripts/sync-content-hub.mjs",
-    "content:sync:guidebook": "node scripts/sync-guidebook-public.mjs"
+    "content:sync:guidebook": "node scripts/sync-guidebook-public.mjs",
+    "link:local": "npm link ../ecosystem-content-schema ../ecosystem-site-core",
+    "unlink:local": "npm unlink --no-save @semio-community/ecosystem-content-schema @semio-community/ecosystem-site-core && npm install"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.10",
@@ -39,8 +41,8 @@
     "@radix-ui/react-tooltip": "^1.2.8",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.5.0",
-    "@semio-community/ecosystem-content-schema": "^0.3.7",
-    "@semio-community/ecosystem-site-core": "^0.3.41",
+    "@semio-community/ecosystem-content-schema": "^0.4.0",
+    "@semio-community/ecosystem-site-core": "^0.7.0",
     "@shikijs/transformers": "^1.25.1",
     "@solar-icons/react-perf": "^1.0.0",
     "@tailwindcss/vite": "^4.1.11",

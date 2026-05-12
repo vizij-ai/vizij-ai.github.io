@@ -6,7 +6,7 @@ import { getPerson } from "@/data/people";
 import { SoftwareDetail } from "@semio-community/ecosystem-site-core";
 import { isDraftVisible } from "@/utils/drafts";
 import { toOrganizationCardData } from "@/utils/card-mappers";
-import { withResolvedLinks } from "@/utils/content-links";
+import { withResolvedLinks } from "@semio-community/ecosystem-site-core";
 
 export async function getStaticPaths() {
   const software = await getCollection("software", ({ data }) => {

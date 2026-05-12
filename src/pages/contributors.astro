@@ -6,11 +6,15 @@ import SiteShell from "@/layouts/SiteShell.astro";
 import ContributorsPage from "@/react-pages/contributors/ContributorsPage";
 import { toOrganizationCardData, toPersonCardData } from "@/utils/card-mappers";
 import { isDraftVisible } from "@/utils/drafts";
-import type {
-  ContributorsPageOrganizationItem,
-  ContributorsPagePartnerSection,
-  ContributorsPagePersonItem,
+import {
+  type ContributorsPageOrganizationItem,
+  type ContributorsPagePartnerSection,
+  type ContributorsPagePersonItem,
+  filterHomeOrganization,
+  getCurrentAffiliation,
+  sortFeaturedFirst,
 } from "@semio-community/ecosystem-site-core";
+import { siteConfig } from "@/site.config";
 import { UsersGroupTwoRounded } from "@solar-icons/react-perf/LineDuotone";
 import React from "react";
 
@@ -33,24 +37,31 @@ const orgNameById = Object.fromEntries(
 );
 
 function affiliationLabel(person: (typeof allPeople)[number]): string | undefined {
-  const aff =
-    person.data.affiliations?.find((a) => a.isPrimary) ??
-    person.data.affiliations?.find((a) => !a.endDate);
+  const aff = getCurrentAffiliation(
+    person.data.affiliations,
+    siteConfig.homeOrganizationId,
+  );
   return aff ? orgNameById[aff.organizationId] || aff.organizationId : undefined;
 }
 
 const HIDE_BOARD_MEMBERS = true;
-const boardMembers = allPeople.filter(
-  (p) => p.data.isContributor && p.data.boardMember,
+const boardMembers = sortFeaturedFirst(
+  allPeople.filter((p) => p.data.isContributor && p.data.boardMember),
 );
-const communityMembers = allPeople.filter(
-  (p) =>
-    p.data.isContributor && (HIDE_BOARD_MEMBERS ? true : !p.data.boardMember),
+const communityMembers = sortFeaturedFirst(
+  allPeople.filter(
+    (p) =>
+      p.data.isContributor && (HIDE_BOARD_MEMBERS ? true : !p.data.boardMember),
+  ),
 );
 
-const donorPeople = allPeople.filter((p) => p.data.isDonor);
-const donorOrganizations = organizations.filter((org) => org.data.isDonor);
-const grantMakers = organizations.filter((org) => org.data.isGrantMaker);
+const donorPeople = sortFeaturedFirst(allPeople.filter((p) => p.data.isDonor));
+const donorOrganizations = sortFeaturedFirst(
+  organizations.filter((org) => org.data.isDonor),
+);
+const grantMakers = sortFeaturedFirst(
+  organizations.filter((org) => org.data.isGrantMaker),
+);
 
 const partnerTypeInfo: Record<
   string,
@@ -79,8 +90,11 @@ const partnerTypeInfo: Record<
 };
 const orderedPartnerTypes = ["industry", "nonprofit", "academic", "government"];
 
+const visiblePartners = sortFeaturedFirst(
+  filterHomeOrganization(allOrganizations, siteConfig),
+);
 const partnersByType: Record<string, typeof allOrganizations> = {};
-for (const partner of allOrganizations) {
+for (const partner of visiblePartners) {
   if (!partnersByType[partner.data.type]) {
     partnersByType[partner.data.type] = [];
   }
