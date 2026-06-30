@@ -1,6 +1,7 @@
 import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
 import { isDraftVisible } from "@/utils/drafts";
+import { isFeaturedOnSite } from "@semio-community/ecosystem-site-core";
 
 type OrganizationEntry = CollectionEntry<"organizations">;
 
@@ -12,8 +13,8 @@ async function loadOrganizationEntries(): Promise<OrganizationEntry[]> {
 	const partners = organizations.filter((org) => org.data.isPartner);
 
 	return partners.sort((a, b) => {
-		if (a.data.featured !== b.data.featured) {
-			return a.data.featured ? -1 : 1;
+		if (isFeaturedOnSite(a) !== isFeaturedOnSite(b)) {
+			return isFeaturedOnSite(a) ? -1 : 1;
 		}
 
 		if (a.data.order !== b.data.order) {
@@ -48,7 +49,7 @@ export async function getOrganizationsByCategory(
 /** Get featured partners */
 export async function getFeaturedOrganizations(): Promise<OrganizationEntry[]> {
 	const partners = await loadOrganizationEntries();
-	return partners.filter((partner) => partner.data.featured);
+	return partners.filter((partner) => isFeaturedOnSite(partner));
 }
 
 /** Get partners by location */
@@ -233,7 +234,7 @@ export async function filterOrganizations(criteria: {
 	}
 
 	if (criteria.featuredOnly) {
-		partners = partners.filter((partner) => partner.data.featured);
+		partners = partners.filter((partner) => isFeaturedOnSite(partner));
 	}
 
 	return partners;
@@ -256,7 +257,7 @@ export async function getOrganizationshipStatistics(): Promise<{
 
 	return {
 		total: partners.length,
-		featured: partners.filter((partner) => partner.data.featured).length,
+		featured: partners.filter((partner) => isFeaturedOnSite(partner)).length,
 		byType,
 		byCategory,
 		byCountry,

@@ -18,6 +18,7 @@ import {
   getEventPreviewDescription,
   getFormattedDateRanges,
   getLocationString,
+  isFeaturedOnSite,
   parseDateLocal,
   resolveLogoAsset,
 } from "@semio-community/ecosystem-site-core";
@@ -256,7 +257,7 @@ const descriptionText = getEventPreviewDescription(
   data.description,
   locationString,
 );
-const featuredState = data.featured
+const featuredState = isFeaturedOnSite(data)
   ? eventStatus === "past"
     ? "previously-featured"
     : "featured"

@@ -2,6 +2,15 @@ import guidebookHubsData from "./generated/guidebook/hubs.json";
 import type { GuidebookHubMap } from "./lib/guidebook-content";
 import { DEMO_PAGES, getDemoPageHref } from "./react-pages/demos/demoPages";
 import type { SiteConfig } from "./types";
+import {
+	type FeaturedSection as CoreFeaturedSection,
+	type LinkSection as CoreLinkSection,
+	type Section as CoreSection,
+	type MenuLink,
+	type NavCollectionKey,
+	type NavCollections,
+	setActiveSiteKey,
+} from "@semio-community/ecosystem-site-core";
 
 const guidebookHubs = guidebookHubsData as GuidebookHubMap;
 
@@ -30,41 +39,27 @@ export const siteConfig: SiteConfig = {
 		highlightVariant: "secondary",
 		ctaVariant: "secondary",
 	},
+	siteKey: "vizij",
 	homeOrganizationId: "semio-community",
 	suppressOrganizationPage: false,
 };
 
-export interface LinkSection {
-	kind: "link";
-	title: string;
-	href: string;
-}
+// Publish this build's site key to the shared card converters so their
+// featured-state checks narrow to THIS site ("featured here") rather
+// than "featured on any site." Runs at module-eval time — before any
+// page renders a card — so the converters always see the right key.
+// See `active-site.ts` in site-core for why a build singleton is used.
+setActiveSiteKey(siteConfig.siteKey);
 
-export interface FeaturedSection {
-	kind: "featured";
-	title: string;
-	collection: "organizations" | "events" | "software" | "research" | "hardware" | "people";
-	items: string[];
-	fields: {
-		title: string;
-		subtitle?: string;
-	};
-}
-
-export type Section = LinkSection | FeaturedSection;
-export type NavCollectionKey = FeaturedSection["collection"];
-export type NavCollections = Partial<
-	Record<
-		NavCollectionKey,
-		Record<
-			string,
-			{
-				id: string;
-				fields: Record<string, string | number | undefined>;
-			}
-		>
-	>
->;
+// Re-export the canonical types from site-core so the local
+// `@/site.config` import surface stays unchanged for downstream
+// consumers. Site-core's `FeaturedSection` allows the `press` /
+// `awards` collections and makes `items` optional (enabling
+// auto-populated featured sections).
+export type LinkSection = CoreLinkSection;
+export type FeaturedSection = CoreFeaturedSection;
+export type Section = CoreSection;
+export type { NavCollectionKey, NavCollections };
 
 function buildGuidebookMenuSections(basePath: "/docs/" | "/tutorials/"): Section[] {
 	const hub = basePath === "/docs/" ? guidebookHubs.docs : guidebookHubs.tutorials;
@@ -76,14 +71,7 @@ function buildGuidebookMenuSections(basePath: "/docs/" | "/tutorials/"): Section
 }
 
 // Used to generate links in both the Header & Footer.
-export const menuLinks: {
-	path: string;
-	title: string;
-	inHeader: boolean;
-	callToAction?: boolean;
-	dropdownSubtitle?: string;
-	sections?: Section[];
-}[] = [
+export const menuLinks: MenuLink[] = [
 	{
 		path: "/demos/",
 		title: "Demos",
@@ -123,6 +111,34 @@ export const menuLinks: {
 				kind: "link",
 				title: "Partner for an Event",
 				href: "/events/#events-contribute",
+			},
+		],
+	},
+	{
+		path: "/press/",
+		title: "Press",
+		inHeader: true,
+		dropdownSubtitle:
+			"Announcements, publications, stories, and awards from across the ecosystem",
+		sections: [
+			{ kind: "link", title: "Featured", href: "/press/#featured" },
+			{ kind: "link", title: "Announcements", href: "/press/#announcements" },
+			{ kind: "link", title: "Publications", href: "/press/#publications" },
+			{ kind: "link", title: "Stories", href: "/press/#stories" },
+			{ kind: "link", title: "Awards", href: "/press/#awards" },
+			{
+				kind: "featured",
+				title: "Featured Press",
+				collection: "press",
+				limit: 3,
+				fields: { title: "title", subtitle: "description" },
+			},
+			{
+				kind: "featured",
+				title: "Featured Awards",
+				collection: "awards",
+				limit: 3,
+				fields: { title: "title", subtitle: "description" },
 			},
 		],
 	},

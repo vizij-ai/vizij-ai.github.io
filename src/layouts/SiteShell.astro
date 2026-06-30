@@ -2,18 +2,16 @@
 import "@/lib/register-icons";
 import { getCollection } from "astro:content";
 import BaseHead from "@/components/BaseHead.astro";
+import ParallaxHexBackground from "@/components/background/ParallaxHexBackground";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
 import SkipLink from "@/components/layout/SkipLink";
 import ThemeProvider from "@/components/theme/ThemeProvider";
-import {
-  type FeaturedSection,
-  type NavCollections,
-  menuLinks,
-  siteConfig,
-} from "@/site.config";
-import type { SiteMeta } from "@/types";
+import { menuLinks, siteConfig } from "@/site.config";
+import { buildNavCollections } from "@semio-community/ecosystem-site-core";
+import { buildFeaturedPropagation } from "@/utils/featured-propagation";
 import { isDraftVisible } from "@/utils/drafts";
+import type { SiteMeta } from "@/types";
 
 export interface Props extends SiteMeta {
   containerClassName?: string;
@@ -29,79 +27,29 @@ const {
   containerClassName,
 } = Astro.props as Props;
 
-const coerceFieldValue = (value: unknown): string | number | undefined => {
-  if (typeof value === "string" || typeof value === "number") return value;
-  if (value instanceof Date && !Number.isNaN(value.getTime())) {
-    return value.getFullYear();
-  }
-  return undefined;
-};
+// The parallax hex background is a site-wide branding element driven by
+// `siteConfig.parallaxBackground` — not a per-page prop. Present =
+// render on every page (with optional tuning fields); absent = never.
+// vizij omits the config key, so the background never renders here.
+const parallaxBackground = siteConfig.parallaxBackground;
 
-const featuredSections = menuLinks
-  .flatMap((link) => link.sections ?? [])
-  .filter((section): section is FeaturedSection => section.kind === "featured");
-
-const idsByCollection = new Map<FeaturedSection["collection"], Set<string>>();
-const fieldsByCollection = new Map<
-  FeaturedSection["collection"],
-  Set<string>
->();
-
-for (const section of featuredSections) {
-  if (!idsByCollection.has(section.collection)) {
-    idsByCollection.set(section.collection, new Set());
-  }
-  if (!fieldsByCollection.has(section.collection)) {
-    fieldsByCollection.set(section.collection, new Set());
-  }
-
-  // biome-ignore lint/style/noNonNullAssertion: set() followed by get() on the same key always returns the value
-  const ids = idsByCollection.get(section.collection)!;
-  // biome-ignore lint/style/noNonNullAssertion: set() followed by get() on the same key always returns the value
-  const fields = fieldsByCollection.get(section.collection)!;
-  for (const itemId of section.items) ids.add(itemId);
-  fields.add(section.fields.title);
-  if (section.fields.subtitle) fields.add(section.fields.subtitle);
-}
-
-const navCollections: NavCollections = {};
-for (const [collection, ids] of idsByCollection) {
-  if (ids.size === 0) continue;
-  const entries = await getCollection(collection, ({ data }) =>
-    isDraftVisible(
-      (
-        data as {
-          draft?: boolean;
-          sites?: readonly ("semio" | "quori" | "vizij")[];
-        }
-      ).draft,
-      (
-        data as {
-          draft?: boolean;
-          sites?: readonly ("semio" | "quori" | "vizij")[];
-        }
-      ).sites,
-    ),
-  );
-  const fields = fieldsByCollection.get(collection) ?? new Set();
-  const collectionMap: Record<
-    string,
-    { id: string; fields: Record<string, string | number | undefined> }
-  > = {};
-
-  for (const entry of entries) {
-    if (!ids.has(entry.id)) continue;
-    const fieldValues: Record<string, string | number | undefined> = {};
-    for (const fieldName of fields) {
-      const rawValue = (entry.data as Record<string, unknown>)[fieldName];
-      const value = coerceFieldValue(rawValue);
-      if (value !== undefined) fieldValues[fieldName] = value;
-    }
-    collectionMap[entry.id] = { id: entry.id, fields: fieldValues };
-  }
-
-  navCollections[collection] = collectionMap;
-}
+// Compute the press/award propagation set once and feed it (along
+// with our draft-aware collection loaders) to the shared
+// `buildNavCollections` helper. It walks featured sections in
+// `menuLinks`, auto-fills with recency-ranked propagated entries,
+// filters the home org when its detail page is suppressed, and
+// resolves virtual fields (e.g. `affiliationLabel`) via the projector
+// registry. See `nav-collections-builder.ts` in site-core for the
+// full pipeline.
+const featuredPropagation = await buildFeaturedPropagation();
+const navCollections = await buildNavCollections({
+  menuLinks,
+  siteConfig,
+  featuredPropagation,
+  loadCollection: (key) =>
+    getCollection(key, ({ data }) => isDraftVisible(data.draft, data.sites)),
+  loadOrganizations: () => getCollection("organizations"),
+});
 ---
 
 <!doctype html>
@@ -125,6 +73,21 @@ for (const [collection, ids] of idsByCollection) {
       currentPath={Astro.url.pathname}
       navCollections={navCollections}
     />
+
+    {
+      parallaxBackground && (
+        <ParallaxHexBackground
+          client:only="react"
+          count={parallaxBackground.count}
+          seed={parallaxBackground.seed}
+          verticalSpanVh={parallaxBackground.verticalSpanVh}
+          horizontalRangeVw={parallaxBackground.horizontalRangeVw}
+          palette={parallaxBackground.palette}
+          opacity={parallaxBackground.opacity}
+          className={parallaxBackground.className}
+        />
+      )
+    }
 
     <div class="relative flex min-h-screen w-full flex-col">
       <div class="relative flex min-h-screen w-full flex-1 m-auto max-w-6xl">

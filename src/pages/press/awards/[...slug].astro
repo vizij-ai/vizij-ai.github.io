@@ -1,0 +1,104 @@
+---
+import { type CollectionEntry, getCollection, getEntry } from "astro:content";
+import SiteShell from "@/layouts/SiteShell.astro";
+import { siteConfig } from "@/site.config";
+import { isDraftVisible } from "@/utils/drafts";
+import {
+  AwardDetail,
+  buildOrgDisplayLookup,
+} from "@semio-community/ecosystem-site-core";
+
+export async function getStaticPaths() {
+  const awards = await getCollection("awards", ({ data }) =>
+    isDraftVisible(data.draft, data.sites),
+  );
+  return awards.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props as { entry: CollectionEntry<"awards"> };
+const { data } = entry;
+
+const meta = {
+  title: `${data.title} - Award`,
+  description: data.description ?? `Award presented to ecosystem contributors.`,
+};
+const ogImage = `/og/awards/${entry.id}.png`;
+
+// Resolve recipient entries grouped by collection. We pull each as
+// { id, data } so the AwardDetail's RelatedItemsGrid sections can
+// render with the right card per type.
+async function expand<
+  T extends
+    | "people"
+    | "organizations"
+    | "research"
+    | "hardware"
+    | "software"
+    | "press"
+    | "events",
+>(collection: T, ids: string[] | undefined) {
+  if (!ids?.length) return [];
+  const entries = await Promise.all(
+    ids.map(async (id) => {
+      const e = await getEntry(collection, id);
+      return e ? { id: e.id, data: e.data } : null;
+    }),
+  );
+  return entries.filter((x): x is { id: string; data: any } => x !== null);
+}
+
+const recipients = {
+  people: await expand("people", data.recipients?.people),
+  organizations: await expand("organizations", data.recipients?.organizations),
+  research: await expand("research", data.recipients?.research),
+  hardware: await expand("hardware", data.recipients?.hardware),
+  software: await expand("software", data.recipients?.software),
+  press: await expand("press", data.recipients?.press),
+};
+
+const relatedEvents = await expand("events", data.relatedEvents);
+const relatedPress = await expand("press", data.relatedPress);
+
+// If the granting org is tracked, surface its name/shortName for the
+// header. Otherwise the detail view falls back to the schema-level
+// `grantingOrganizationName` string.
+let grantingOrganization:
+  | { id: string; name?: string; shortName?: string }
+  | undefined;
+if (data.grantingOrganizationId) {
+  const org = await getEntry("organizations", data.grantingOrganizationId);
+  if (org) {
+    grantingOrganization = {
+      id: org.id,
+      name: org.data.name,
+      shortName: org.data.shortName,
+    };
+  }
+}
+
+// Org-display lookup for the People recipient grid so person chips
+// render "Role · Org Name" with the correct display name.
+const allOrgsForLookup = await getCollection("organizations");
+const orgDisplayLookup = buildOrgDisplayLookup(allOrgsForLookup);
+---
+
+<SiteShell
+  title={meta.title}
+  description={meta.description}
+  ogImage={ogImage}
+  containerClassName="max-w-5xl"
+>
+  <AwardDetail
+    data={data as any}
+    recipients={recipients}
+    grantingOrganization={grantingOrganization}
+    relatedEvents={relatedEvents}
+    relatedPress={relatedPress}
+    baseUrl={import.meta.env.BASE_URL}
+    homeOrgId={siteConfig.homeOrganizationId}
+    orgDisplayLookup={orgDisplayLookup}
+  />
+</SiteShell>

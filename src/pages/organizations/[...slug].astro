@@ -12,6 +12,7 @@ import {
   sortFeaturedFirst,
   toOrganizationKeyContact,
   withResolvedLinks,
+  findPressForEntity,
 } from "@semio-community/ecosystem-site-core";
 import { siteConfig } from "@/site.config";
 import { isDraftVisible } from "@/utils/drafts";
@@ -79,11 +80,18 @@ async function getPartnerRelatedContent(partnerId: string) {
     ),
   );
 
-  return { research: [], hardware, software, events: [] } as {
+  // Press items that reference this organization via `relatedOrganizations`.
+  const allPress = await getCollection("press", ({ data }) =>
+    isDraftVisible(data.draft, data.sites),
+  );
+  const press = findPressForEntity(allPress, "organizations", partnerId);
+
+  return { research: [], hardware, software, events: [], press } as {
     research: CollectionEntry<"research">[];
     hardware: CollectionEntry<"hardware">[];
     software: CollectionEntry<"software">[];
     events: CollectionEntry<"events">[];
+    press: CollectionEntry<"press">[];
   };
 }
 

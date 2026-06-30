@@ -1,6 +1,7 @@
 import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
 import { isDraftVisible } from "@/utils/drafts";
+import { isFeaturedOnSite } from "@semio-community/ecosystem-site-core";
 
 /** Get all software entries, sorted by featured status and name */
 export async function getAllSoftware(): Promise<CollectionEntry<"software">[]> {
@@ -10,8 +11,8 @@ export async function getAllSoftware(): Promise<CollectionEntry<"software">[]> {
 	});
 	return software.sort((a, b) => {
 		// Sort by featured first, then by status priority, then by name
-		if (a.data.featured !== b.data.featured) {
-			return a.data.featured ? -1 : 1;
+		if (isFeaturedOnSite(a) !== isFeaturedOnSite(b)) {
+			return isFeaturedOnSite(a) ? -1 : 1;
 		}
 
 		// Status priority: stable > beta > alpha > in-progress > deprecated
@@ -53,7 +54,7 @@ export async function getSoftwareByStatus(
 /** Get only featured software */
 export async function getFeaturedSoftware(): Promise<CollectionEntry<"software">[]> {
 	const software = await getAllSoftware();
-	return software.filter((item) => item.data.featured);
+	return software.filter((item) => isFeaturedOnSite(item));
 }
 
 /** Get software by programming language */
