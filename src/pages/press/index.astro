@@ -57,7 +57,7 @@ const { featured, announcements, publications, stories, awards } =
           </header>
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {featured.map((entry) => (
-              <PressCard pressId={entry.id} data={entry.data as any} />
+              <PressCard pressId={entry.id} data={entry.data as any} baseUrl={import.meta.env.BASE_URL} />
             ))}
           </div>
         </section>
@@ -75,7 +75,7 @@ const { featured, announcements, publications, stories, awards } =
           </header>
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {announcements.map((entry) => (
-              <PressCard pressId={entry.id} data={entry.data as any} />
+              <PressCard pressId={entry.id} data={entry.data as any} baseUrl={import.meta.env.BASE_URL} />
             ))}
           </div>
         </section>
@@ -94,7 +94,7 @@ const { featured, announcements, publications, stories, awards } =
           </header>
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {publications.map((entry) => (
-              <PressCard pressId={entry.id} data={entry.data as any} />
+              <PressCard pressId={entry.id} data={entry.data as any} baseUrl={import.meta.env.BASE_URL} />
             ))}
           </div>
         </section>
@@ -112,7 +112,7 @@ const { featured, announcements, publications, stories, awards } =
           </header>
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {stories.map((entry) => (
-              <PressCard pressId={entry.id} data={entry.data as any} />
+              <PressCard pressId={entry.id} data={entry.data as any} baseUrl={import.meta.env.BASE_URL} />
             ))}
           </div>
         </section>
@@ -135,6 +135,7 @@ const { featured, announcements, publications, stories, awards } =
                 awardId={entry.id}
                 data={entry.data as any}
                 className="w-full"
+                baseUrl={import.meta.env.BASE_URL}
               />
             ))}
           </div>
