@@ -8,9 +8,11 @@ import { getAllHardware } from "@/data/hardware";
 import { getAllSoftware } from "@/data/software";
 import {
   PersonDetail,
+  buildOrgDisplayLookup,
   isCurrentAffiliation,
   sortAffiliationsForSite,
   withResolvedLinks,
+  findPressForEntity,
 } from "@semio-community/ecosystem-site-core";
 import { siteConfig } from "@/site.config";
 import { isDraftVisible } from "@/utils/drafts";
@@ -110,7 +112,13 @@ async function getPersonRelatedContent(personId: string) {
   // are not available in the simplified roles schema.
   const events: CollectionEntry<"events">[] = [];
 
-  return { research, hardware, software, events };
+  // Press items that reference this person via `relatedPeople`.
+  const allPress = await getCollection("press", ({ data }) =>
+    isDraftVisible(data.draft, data.sites),
+  );
+  const press = findPressForEntity(allPress, "people", personId);
+
+  return { research, hardware, software, events, press };
 }
 
 const relatedContent = await getPersonRelatedContent(entry.id);
@@ -202,6 +210,14 @@ if (data.links?.scheduling) {
   });
 }
 
+// Org-display lookup for `PersonDetail`'s hero subtitle — resolves
+// the affiliation's organizationId to a human-readable name (e.g.
+// "Semio Community", "Peerbots") so the subtitle doesn't fall back to
+// the raw id. The affiliation's own `organizationName` override still
+// wins when authored (used for external orgs not in our collection).
+const allOrgsForLookup = await getCollection("organizations");
+const orgDisplayLookup = buildOrgDisplayLookup(allOrgsForLookup);
+
 // Prepare affiliations for display, with the site's home-org affiliation first
 const orderedAffiliations = sortAffiliationsForSite(
   data.affiliations,
@@ -291,7 +307,10 @@ if (data.links?.mastodon) {
         currentAffiliations={currentAffiliations.map((aff) => ({
           organizationId: aff.organizationId,
           organizationName:
-            aff.organization?.data?.shortName || aff.organization?.data?.name,
+            aff.organizationName ||
+            aff.organization?.data?.shortName ||
+            aff.organization?.data?.name,
+          organizationUrl: aff.organizationUrl,
           organizationImages: aff.organization?.data?.images,
           organizationData: aff.organization?.data ? toOrganizationCardData(aff.organization.data) : undefined,
           role: aff.role,
@@ -300,7 +319,10 @@ if (data.links?.mastodon) {
         pastAffiliations={pastAffiliations.map((aff) => ({
           organizationId: aff.organizationId,
           organizationName:
-            aff.organization?.data?.shortName || aff.organization?.data?.name,
+            aff.organizationName ||
+            aff.organization?.data?.shortName ||
+            aff.organization?.data?.name,
+          organizationUrl: aff.organizationUrl,
           organizationImages: aff.organization?.data?.images,
           organizationData: aff.organization?.data ? toOrganizationCardData(aff.organization.data) : undefined,
           role: aff.role,
@@ -311,10 +333,12 @@ if (data.links?.mastodon) {
           hardware: relatedContent.hardware,
           software: relatedContent.software,
           events: relatedContent.events,
+          press: relatedContent.press,
         }}
         relatedPeople={relatedPeople}
         baseUrl={import.meta.env.BASE_URL}
         homeOrganizationId={siteConfig.homeOrganizationId}
+        orgDisplayLookup={orgDisplayLookup}
         suppressOrganizationPage={siteConfig.suppressOrganizationPage}
       />
     </SiteShell>

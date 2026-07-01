@@ -4,6 +4,7 @@ import { getAllEvents } from "@/data/events";
 import SiteShell from "@/layouts/SiteShell.astro";
 import EventsPage from "@/react-pages/events/EventsPage";
 import { resolveImageLike } from "@/utils/images";
+import { isFeaturedOnSite } from "@semio-community/ecosystem-site-core";
 
 const meta = {
   title: "Events",
@@ -29,7 +30,7 @@ const serializeEvents = allEvents.map((event) => ({
       event.data.endDate instanceof Date
         ? event.data.endDate.toISOString()
         : event.data.endDate,
-    featured: event.data.featured,
+    featured: isFeaturedOnSite(event),
     links: event.data.links,
     location: event.data.location,
     imagePolicy: event.data.imagePolicy,

@@ -1,6 +1,7 @@
 import { getCollection, getEntry } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 import { isDraftVisible } from "@/utils/drafts";
+import { isFeaturedOnSite } from "@semio-community/ecosystem-site-core";
 
 function formatPersonName(data: CollectionEntry<"people">["data"]): string {
 	return data.honorific ? `${data.honorific} ${data.name}`.trim() : data.name;
@@ -60,7 +61,7 @@ export async function getPersonWithAffiliations(personId: string) {
 /** Get featured people */
 export async function getFeaturedPeople(): Promise<CollectionEntry<"people">[]> {
 	const allPeople = await getAllPeople();
-	return allPeople.filter((person) => person.data.featured);
+	return allPeople.filter((person) => isFeaturedOnSite(person));
 }
 
 /** Get people by expertise area */
@@ -163,7 +164,7 @@ export async function getPeopleStatistics() {
 
 	return {
 		total: allPeople.length,
-		featured: allPeople.filter((p) => p.data.featured).length,
+		featured: allPeople.filter((p) => isFeaturedOnSite(p)).length,
 		withOrcid: allPeople.filter((p) => p.data.links?.orcid).length,
 		withGoogleScholar: allPeople.filter((p) => p.data.links?.googleScholar).length,
 		uniqueExpertiseCount: expertiseAreas.length,
@@ -209,7 +210,7 @@ export async function getRelatedPeople(
 		}
 
 		// Bonus for featured people
-		if (person.data.featured) {
+		if (isFeaturedOnSite(person)) {
 			score += 0.5;
 		}
 

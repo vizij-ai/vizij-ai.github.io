@@ -4,6 +4,16 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  # Daily rebuild so temporal `featuring` windows (press/award items
+  # with `fromDate` / `toDate` on their `featuring` object) flip on
+  # and off without an editorial push. Featured propagation to
+  # related entities is resolved at build time; without a recurring
+  # build, a window opening or closing between edits wouldn't take
+  # effect until the next content change. GitHub Actions disables
+  # schedules in repos with no commits for 60 days — the editorial
+  # cadence comfortably keeps this active.
+  schedule:
+    - cron: '0 6 * * *'   # daily at 06:00 UTC
 
 permissions:
   contents: write

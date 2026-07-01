@@ -3,7 +3,7 @@ import { getCollection, getEntry } from "astro:content";
 import SiteShell from "@/layouts/SiteShell.astro";
 import { getRelatedHardware } from "@/data/hardware";
 import { getPerson } from "@/data/people";
-import { HardwareDetail } from "@semio-community/ecosystem-site-core";
+import { HardwareDetail, findPressForEntity } from "@semio-community/ecosystem-site-core";
 import { isDraftVisible } from "@/utils/drafts";
 import { toOrganizationCardData } from "@/utils/card-mappers";
 import { withResolvedLinks } from "@semio-community/ecosystem-site-core";
@@ -81,7 +81,14 @@ const orgContributors = await Promise.all(
         data: org?.data ? toOrganizationCardData(org.data) : undefined,
       };
     }),
-);---
+);
+
+// Press items that reference this hardware via `relatedHardware`.
+const allPress = await getCollection("press", ({ data }) =>
+  isDraftVisible(data.draft, data.sites),
+);
+const relatedPress = findPressForEntity(allPress, "hardware", entry.id);
+---
 
     <SiteShell
   title={meta.title}
@@ -94,6 +101,7 @@ const orgContributors = await Promise.all(
         organizationContributors={orgContributors}
         peopleContributors={validPeopleContributors}
         relatedHardware={relatedHardware}
+        relatedPress={relatedPress}
         baseUrl={import.meta.env.BASE_URL}
       />
     </SiteShell>

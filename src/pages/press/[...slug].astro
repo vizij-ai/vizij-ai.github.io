@@ -1,0 +1,207 @@
+---
+import { type CollectionEntry, getCollection, getEntry } from "astro:content";
+import SiteShell from "@/layouts/SiteShell.astro";
+import { siteConfig } from "@/site.config";
+import { isDraftVisible } from "@/utils/drafts";
+import { toOrganizationCardData } from "@/utils/card-mappers";
+import MDXContent from "@/components/mdx/MDXContent.astro";
+import { buildFeaturedPropagation } from "@/utils/featured-propagation";
+import {
+  PressDetail,
+  PublicationDetail,
+  buildOrgDisplayLookup,
+  findAwardsForEntity,
+  resolvePersonHeadline,
+  withResolvedLinks,
+  type ResearchOrganizationLink,
+} from "@semio-community/ecosystem-site-core";
+
+export async function getStaticPaths() {
+  const all = await getCollection("press", ({ data }) =>
+    isDraftVisible(data.draft, data.sites),
+  );
+  // Detail-route eligibility by variant:
+  //   - announcement → always (first-party, internal)
+  //   - publication  → always (internal; links to artifact via links.paper/.pdf/.doi)
+  //   - story        → only when no externalUrl (external stories link off-site)
+  const internal = all.filter((entry) => {
+    if (entry.data.type === "story") return !entry.data.externalUrl;
+    return true;
+  });
+  return internal.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props as { entry: CollectionEntry<"press"> };
+
+// Featured-status propagation: a press item can itself be the
+// recipient of an award (e.g. "Best Paper"), so apply propagation
+// before extracting `data`.
+const featured = await buildFeaturedPropagation();
+const propagatedEntry = featured.propagate(entry, "press");
+const data = propagatedEntry.data;
+const detailData = withResolvedLinks(data);
+
+const meta = {
+  title: `${data.title} - Press`,
+  description: data.description,
+};
+const ogImage = `/og/press/${entry.id}.png`;
+
+// Resolve related entries
+async function expand<
+  T extends
+    | "hardware"
+    | "software"
+    | "research"
+    | "events"
+    | "people"
+    | "organizations"
+    | "press"
+    | "awards",
+>(collection: T, ids: string[] | undefined) {
+  if (!ids?.length) return [];
+  const entries = await Promise.all(
+    ids.map(async (id) => {
+      const e = await getEntry(collection, id);
+      return e ? { id: e.id, data: e.data } : null;
+    }),
+  );
+  return entries.filter((x): x is { id: string; data: any } => x !== null);
+}
+
+const relatedHardware = await expand("hardware", data.relatedHardware);
+const relatedSoftware = await expand("software", data.relatedSoftware);
+const relatedResearch = await expand("research", data.relatedResearch);
+const relatedEvents = await expand("events", data.relatedEvents);
+const relatedPeople = await expand("people", data.relatedPeople);
+const relatedOrganizations = await expand(
+  "organizations",
+  data.relatedOrganizations,
+);
+const relatedPress = await expand("press", data.relatedPress);
+
+// Org-display lookup for person headlines on this page (author
+// affiliation snapshots, related-people grid chips). Built once per
+// page so every consumer renders consistently.
+const allOrgsForLookup = await getCollection("organizations");
+const orgDisplayLookup = buildOrgDisplayLookup(allOrgsForLookup);
+
+// Awards where this press entry is a recipient (e.g. a paper that won an award).
+const allAwards = await getCollection("awards", ({ data: awardData }) =>
+  isDraftVisible(awardData.draft, awardData.sites),
+);
+const awards = findAwardsForEntity(allAwards, "press", entry.id);
+
+// Resolve authors. For publications, prefer the contributor's explicit
+// `order`/`corresponding`/`equalContribution`/`affiliationSnapshot`
+// fields when set (these come from the augmented base contributor
+// schema). Announcements and stories fall back to array-index ordering
+// with no special-author markers.
+const authors = await Promise.all(
+  (data.contributors ?? []).map(async (c, i) => {
+    if (c.type !== "person") return null;
+    const person = await getEntry("people", c.personId);
+
+    // Author-list metadata may be supplied directly on the contributor;
+    // otherwise derive a snapshot from the person via the shared
+    // headline resolver (home-org-first, with the affiliation's
+    // `organizationName` override winning over the org-collection name).
+    let affiliationSnapshot: string | undefined = c.affiliationSnapshot;
+    if (!affiliationSnapshot && person?.data?.affiliations?.length) {
+      affiliationSnapshot = resolvePersonHeadline(person.data, {
+        homeOrgId: siteConfig.homeOrganizationId,
+        orgDisplayLookup,
+      }).label;
+    }
+    return {
+      personId: c.personId,
+      order: typeof c.order === "number" ? c.order : i + 1,
+      corresponding: c.corresponding ?? false,
+      equalContribution: c.equalContribution ?? false,
+      affiliationSnapshot,
+      person: person ? (person.data as any) : null,
+    };
+  }),
+);
+const resolvedAuthors = authors.filter(
+  (a): a is NonNullable<typeof a> => a !== null,
+);
+
+// Publication-specific resolutions: parent research programs and
+// research-style organization links.
+let fromResearch: { id: string; data: any }[] = [];
+let organizationLinks: ResearchOrganizationLink[] = [];
+if (data.type === "publication") {
+  fromResearch = await expand("research", data.fromResearch);
+
+  const validRoles = new Set([
+    "lead",
+    "affiliated",
+    "funding",
+    "collaborator",
+  ]);
+  const orgLinks: ResearchOrganizationLink[] = [];
+  for (const link of data.organizations ?? []) {
+    const role = link.role as ResearchOrganizationLink["role"];
+    if (!validRoles.has(role)) continue;
+    const org = await getEntry("organizations", link.organizationId);
+    if (!org) continue;
+    orgLinks.push({
+      role,
+      note: link.note,
+      organization: {
+        ...toOrganizationCardData(org.data),
+        id: org.id,
+      },
+    });
+  }
+  organizationLinks = orgLinks;
+}
+
+const shouldRenderBody = data.renderMarkdown === true;
+---
+
+<SiteShell
+  title={meta.title}
+  description={meta.description}
+  ogImage={ogImage}
+  containerClassName="max-w-5xl"
+>
+  {data.type === "publication" ? (
+    <PublicationDetail
+      data={detailData as any}
+      authors={resolvedAuthors}
+      organizationLinks={organizationLinks}
+      fromResearch={featured.propagateAll(fromResearch, "research")}
+      relatedHardware={featured.propagateAll(relatedHardware, "hardware")}
+      relatedSoftware={featured.propagateAll(relatedSoftware, "software")}
+      relatedResearch={featured.propagateAll(relatedResearch, "research")}
+      relatedPress={relatedPress}
+      awards={awards}
+      baseUrl={import.meta.env.BASE_URL}
+    >
+      {shouldRenderBody && <MDXContent entry={entry} />}
+    </PublicationDetail>
+  ) : (
+    <PressDetail
+      data={detailData as any}
+      authors={resolvedAuthors}
+      relatedHardware={featured.propagateAll(relatedHardware, "hardware")}
+      relatedSoftware={featured.propagateAll(relatedSoftware, "software")}
+      relatedResearch={featured.propagateAll(relatedResearch, "research")}
+      relatedEvents={featured.propagateAll(relatedEvents, "events")}
+      relatedPeople={featured.propagateAll(relatedPeople, "people")}
+      relatedOrganizations={featured.propagateAll(relatedOrganizations, "organizations")}
+      relatedPress={relatedPress}
+      awards={awards}
+      baseUrl={import.meta.env.BASE_URL}
+      homeOrgId={siteConfig.homeOrganizationId}
+      orgDisplayLookup={orgDisplayLookup}
+    >
+      {shouldRenderBody && <MDXContent entry={entry} />}
+    </PressDetail>
+  )}
+</SiteShell>
