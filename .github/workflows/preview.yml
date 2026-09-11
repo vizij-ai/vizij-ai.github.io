@@ -42,12 +42,18 @@ jobs:
       - name: Verify shared Tailwind wiring
         if: github.event.action != 'closed'
         run: npm run verify:shared-tailwind
+      - name: Check for orphan pages
+        if: github.event.action != 'closed'
+        run: npm run check:orphans
 
       - name: Run TypeScript typecheck
         if: github.event.action != 'closed'
         run: |
           npx astro sync
           npx tsc --noEmit --pretty false
+      - name: Typecheck .astro files
+        if: github.event.action != 'closed'
+        run: npx astro check
 
       - name: Debug PR Preview Path
         if: github.event.action != 'closed'

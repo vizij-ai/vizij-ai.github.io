@@ -1,28 +1,26 @@
 ---
-import type { CollectionEntry } from "astro:content";
-import { getCollection } from "astro:content";
+import { type CollectionEntry, getCollection } from "astro:content";
 import SiteShell from "@/layouts/SiteShell.astro";
+import MDXContent from "@/components/mdx/MDXContent.astro";
 import { getAllOrganizations } from "@/data/organizations";
-import { getPeopleByOrganization } from "@/data/people";
 import { getAllHardware } from "@/data/hardware";
 import { getAllSoftware } from "@/data/software";
+import { getPeopleByOrganization } from "@/data/people";
+import { getResearchByOrganization } from "@/data/research";
+
+import { siteConfig } from "@/site.config";
+import { isDraftVisible } from "@/utils/drafts";
+import { buildFeaturedPropagation } from "@/utils/featured-propagation";
 import {
   OrganizationDetail,
   filterHomeOrganization,
-  sortFeaturedFirst,
-  toOrganizationKeyContact,
-  withResolvedLinks,
-  findPressForEntity,
+  prepareOrganizationDetail,
 } from "@semio-community/ecosystem-site-core";
-import { siteConfig } from "@/site.config";
-import { isDraftVisible } from "@/utils/drafts";
-
-type PartnerEntry = CollectionEntry<"organizations">;
 
 export async function getStaticPaths() {
-  const organizations = await getCollection("organizations", ({ data }) => {
-    return isDraftVisible(data.draft, data.sites);
-  });
+  const organizations = await getCollection("organizations", ({ data }) =>
+    isDraftVisible(data.draft, data.sites),
+  );
   const partners = filterHomeOrganization(
     organizations.filter((org) => org.data.isPartner),
     siteConfig,
@@ -33,100 +31,63 @@ export async function getStaticPaths() {
   }));
 }
 
-interface Props {
-  entry: PartnerEntry;
-}
+const { entry } = Astro.props as { entry: CollectionEntry<"organizations"> };
 
-const { entry } = Astro.props as Props;
-const { data } = entry;
-const detailData = withResolvedLinks(data);
+const [
+  featured,
+  allOrganizations,
+  research,
+  allHardware,
+  allSoftware,
+  affiliatedPeople,
+  allPress,
+  allAwards,
+] = await Promise.all([
+  buildFeaturedPropagation(),
+  getAllOrganizations(),
+  getResearchByOrganization(entry.id),
+  getAllHardware(),
+  getAllSoftware(),
+  getPeopleByOrganization(entry.id),
+  getCollection("press", ({ data }) => isDraftVisible(data.draft, data.sites)),
+  getCollection("awards", ({ data }) => isDraftVisible(data.draft, data.sites)),
+]);
 
-async function getRelatedOrganizations(partner: PartnerEntry, limit = 3) {
-  const allOrganizations = await getAllOrganizations();
-  const otherOrganizations = allOrganizations.filter(
-    (p) => p.id !== partner.id,
-  );
-
-  const scoredOrganizations = otherOrganizations
-    .map((p) => {
-      let score = 0;
-      if (p.data.type === partner.data.type) score += 2;
-      if (p.data.category === partner.data.category) score += 2;
-      if (p.data.location.country === partner.data.location.country) score += 1;
-      return { partner: p, score };
-    })
-    .filter((sp) => sp.score > 0)
-    .sort((a, b) => b.score - a.score);
-
-  return scoredOrganizations.slice(0, limit).map((sp) => sp.partner);
-}
-
-const relatedOrganizations = await getRelatedOrganizations(entry, 3);
-
-async function getPartnerRelatedContent(partnerId: string) {
-  const hardware = (await getAllHardware()).filter((hw) =>
-    hw.data.contributors?.some(
-      (contributor) =>
-        contributor.type === "organization" &&
-        contributor.organizationId === partnerId,
-    ),
-  );
-
-  const software = (await getAllSoftware()).filter((sw) =>
-    sw.data.contributors?.some(
-      (contributor) =>
-        contributor.type === "organization" &&
-        contributor.organizationId === partnerId,
-    ),
-  );
-
-  // Press items that reference this organization via `relatedOrganizations`.
-  const allPress = await getCollection("press", ({ data }) =>
-    isDraftVisible(data.draft, data.sites),
-  );
-  const press = findPressForEntity(allPress, "organizations", partnerId);
-
-  return { research: [], hardware, software, events: [], press } as {
-    research: CollectionEntry<"research">[];
-    hardware: CollectionEntry<"hardware">[];
-    software: CollectionEntry<"software">[];
-    events: CollectionEntry<"events">[];
-    press: CollectionEntry<"press">[];
-  };
-}
-
-const relatedContent = await getPartnerRelatedContent(entry.id);
+const payload = prepareOrganizationDetail({
+  entry,
+  featured,
+  allOrganizations,
+  research,
+  allHardware,
+  allSoftware,
+  allPress,
+  allAwards,
+  affiliatedPeople,
+  siteKey: siteConfig.siteKey,
+});
 
 const meta = {
-  title: `${data.name} - Partner Organization`,
-  description: data.description,
+  title: `${entry.data.name} - Partner Organization`,
+  description: entry.data.description,
 };
 const ogImage = `/og/organizations/${entry.id}.png`;
+---
 
-const affiliatedPeople = await getPeopleByOrganization(entry.id);
-const keyContacts = sortFeaturedFirst(affiliatedPeople)
-  .slice(0, 6)
-  .map((personEntry) =>
-    toOrganizationKeyContact({
-      personEntry,
-      organizationId: entry.id,
-      partnerName: data.shortName || data.name,
-    }),
-  );---
-
-    <SiteShell
+<SiteShell
   title={meta.title}
   description={meta.description}
   ogImage={ogImage}
   containerClassName="max-w-5xl"
 >
-      <OrganizationDetail
-        data={detailData}
-        relatedContent={relatedContent}
-        relatedOrganizations={relatedOrganizations}
-        keyContacts={keyContacts}
-        baseUrl={import.meta.env.BASE_URL}
-      />
-    </SiteShell>
-  </body>
-</html>
+  <OrganizationDetail
+    data={payload.data}
+    relatedContent={payload.relatedContent}
+    relatedOrganizations={payload.relatedOrganizations}
+    awardsReceived={payload.awardsReceived}
+    awardsGranted={payload.awardsGranted}
+    keyContacts={payload.keyContacts}
+    baseUrl={import.meta.env.BASE_URL}
+  >
+    {payload.shouldRenderBody && <MDXContent entry={entry} />}
+  </OrganizationDetail>
+</SiteShell>

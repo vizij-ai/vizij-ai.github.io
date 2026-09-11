@@ -30,7 +30,8 @@ import {
 } from "@solar-icons/react-perf/LineDuotone";
 import type { APIContext } from "astro";
 import type { ImageMetadata } from "astro";
-import React, { type ComponentType, type SVGProps } from "react";
+import React from "react";
+import type { NavigationIcon } from "@/components/navigation/navIcons";
 import { renderToStaticMarkup } from "react-dom/server";
 import { isFeaturedOnSite } from "@semio-community/ecosystem-site-core";
 
@@ -108,7 +109,7 @@ const assetDataCache = new Map<string, string>();
 const BADGE_ICON_COLOR = "#FF9E00";
 const BADGE_ICON_SIZE = 200;
 
-const createBadgeIcon = (Icon: ComponentType<SVGProps<SVGSVGElement>>) => {
+const createBadgeIcon = (Icon: NavigationIcon) => {
 	const svg = renderToStaticMarkup(
 		React.createElement(Icon, {
 			width: BADGE_ICON_SIZE,

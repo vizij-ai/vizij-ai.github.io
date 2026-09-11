@@ -1,346 +1,92 @@
 ---
-import type { CollectionEntry } from "astro:content";
-import { getCollection, getEntry } from "astro:content";
+import { type CollectionEntry, getCollection } from "astro:content";
 import SiteShell from "@/layouts/SiteShell.astro";
-import { getPeopleByExpertise, getPeopleByOrganization } from "@/data/people";
-import { getAllResearch } from "@/data/research";
+import MDXContent from "@/components/mdx/MDXContent.astro";
 import { getAllHardware } from "@/data/hardware";
+import { getAllResearch } from "@/data/research";
 import { getAllSoftware } from "@/data/software";
-import {
-  PersonDetail,
-  buildOrgDisplayLookup,
-  isCurrentAffiliation,
-  sortAffiliationsForSite,
-  withResolvedLinks,
-  findPressForEntity,
-} from "@semio-community/ecosystem-site-core";
+import { getPeopleByExpertise, getPeopleByOrganization } from "@/data/people";
 import { siteConfig } from "@/site.config";
 import { isDraftVisible } from "@/utils/drafts";
-import { toOrganizationCardData } from "@/utils/card-mappers";
+import { loadEntry } from "@/utils/content-loader";
+import { buildFeaturedPropagation } from "@/utils/featured-propagation";
+import {
+  PersonDetail,
+  preparePersonDetail,
+} from "@semio-community/ecosystem-site-core";
 
 export async function getStaticPaths() {
-  const people = await getCollection("people", ({ data }) => {
-    // In production, exclude drafts and private people. In development, show all.
-    return isDraftVisible(data.draft, data.sites);
-  });
+  const people = await getCollection("people", ({ data }) =>
+    isDraftVisible(data.draft, data.sites),
+  );
   return people.map((entry) => ({
     params: { slug: entry.id },
     props: { entry },
   }));
 }
 
-const { entry } = Astro.props;
-const { data } = entry;
-const detailData = withResolvedLinks(data);
-const fullName = data.honorific ? `${data.honorific} ${data.name}` : data.name;
+const { entry } = Astro.props as { entry: CollectionEntry<"people"> };
 
-// Get related people (by expertise or organization)
-async function getRelatedPeople(
-  person: CollectionEntry<"people">,
-  limit: number = 3,
-) {
-  const relatedPeople: CollectionEntry<"people">[] = [];
-  const seenIds = new Set<string>([person.id]);
+const [
+  featured,
+  allResearch,
+  allHardware,
+  allSoftware,
+  allPress,
+  allAwards,
+  allOrganizationsUnfiltered,
+] = await Promise.all([
+  buildFeaturedPropagation(),
+  getAllResearch(),
+  getAllHardware(),
+  getAllSoftware(),
+  getCollection("press", ({ data }) => isDraftVisible(data.draft, data.sites)),
+  getCollection("awards", ({ data }) => isDraftVisible(data.draft, data.sites)),
+  getCollection("organizations"),
+]);
 
-  // Find people with similar expertise
-  if (person.data.expertise && person.data.expertise.length > 0) {
-    for (const expertise of person.data.expertise.slice(0, 2)) {
-      const expertisePeople = await getPeopleByExpertise(expertise);
-      for (const p of expertisePeople) {
-        if (!seenIds.has(p.id) && relatedPeople.length < limit) {
-          relatedPeople.push(p);
-          seenIds.add(p.id);
-        }
-      }
-    }
-  }
-
-  // If not enough, find people from same organization
-  if (
-    relatedPeople.length < limit &&
-    person.data.affiliations &&
-    person.data.affiliations.length > 0
-  ) {
-    const currentAffiliations = person.data.affiliations.filter(
-      (aff) => !aff.endDate,
-    );
-    for (const aff of currentAffiliations) {
-      const orgPeople = await getPeopleByOrganization(aff.organizationId);
-      for (const p of orgPeople) {
-        if (!seenIds.has(p.id) && relatedPeople.length < limit) {
-          relatedPeople.push(p);
-          seenIds.add(p.id);
-        }
-      }
-    }
-  }
-
-  return relatedPeople.slice(0, limit);
-}
-
-const relatedPeople = await getRelatedPeople(entry, 3);
-
-// Get related content by this person
-async function getPersonRelatedContent(personId: string) {
-  // Get research where this person is an author
-  const allResearch = await getAllResearch();
-  const research = allResearch.filter((study) =>
-    study.data.contributors?.some(
-      (contributor) => contributor.personId === personId,
-    ),
-  );
-
-  // Get hardware where this person is a contributor
-  const allHardware = await getAllHardware();
-  const hardware = allHardware.filter((hw) =>
-    hw.data.contributors?.some(
-      (contributor) =>
-        contributor.type === "person" && contributor.personId === personId,
-    ),
-  );
-
-  // Get software where this person is a contributor
-  const allSoftware = await getAllSoftware();
-  const software = allSoftware.filter((sw) =>
-    sw.data.contributors?.some(
-      (contributor) =>
-        contributor.type === "person" && contributor.personId === personId,
-    ),
-  );
-
-  // Events are tracked at the Semio-community level; per-person associations
-  // are not available in the simplified roles schema.
-  const events: CollectionEntry<"events">[] = [];
-
-  // Press items that reference this person via `relatedPeople`.
-  const allPress = await getCollection("press", ({ data }) =>
-    isDraftVisible(data.draft, data.sites),
-  );
-  const press = findPressForEntity(allPress, "people", personId);
-
-  return { research, hardware, software, events, press };
-}
-
-const relatedContent = await getPersonRelatedContent(entry.id);
+const payload = await preparePersonDetail({
+  entry,
+  loadEntry,
+  featured,
+  allResearch,
+  allHardware,
+  allSoftware,
+  allPress,
+  allAwards,
+  allOrganizationsUnfiltered,
+  peopleByExpertise: getPeopleByExpertise,
+  peopleByOrganization: getPeopleByOrganization,
+  homeOrganizationId: siteConfig.homeOrganizationId,
+});
 
 const meta = {
-  title: `${fullName} - Contributor Profile`,
-  description: data.bio || `Profile of ${fullName}`,
+  title: `${payload.fullName} - Contributor Profile`,
+  description: entry.data.bio || `Profile of ${payload.fullName}`,
 };
 const ogImage = `/og/people/${entry.id}.png`;
+---
 
-// Prepare status badges
-const badges = [];
-if (data.pronouns) {
-  badges.push({
-    text: data.pronouns,
-    color: "gray" as const,
-    variant: "outline" as const,
-  });
-}
-
-// Prepare action buttons
-const actionButtons = [];
-if (data.links?.website) {
-  actionButtons.push({
-    href: data.links?.website,
-    text: "Personal Website",
-    variant: "default" as const,
-    target: "_blank",
-    rel: "noopener noreferrer",
-    icon: "solar:global-line-duotone",
-  });
-}
-if (data.links?.github) {
-  actionButtons.push({
-    href: `https://github.com/${data.links.github}`,
-    text: "GitHub",
-    variant: "secondary" as const,
-    target: "_blank",
-    rel: "noopener noreferrer",
-    icon: "mdi:github",
-  });
-}
-if (data.links?.email) {
-  actionButtons.push({
-    href: `mailto:${data.links.email}`,
-    text: "Email",
-    variant: "tertiary" as const,
-    icon: "solar:letter-line-duotone",
-  });
-}
-if (data.links?.linkedin) {
-  actionButtons.push({
-    href: `https://linkedin.com/in/${data.links.linkedin}`,
-    text: "LinkedIn",
-    variant: "tertiary" as const,
-    target: "_blank",
-    rel: "noopener noreferrer",
-    icon: "mdi:linkedin",
-  });
-}
-if (data.links?.twitter) {
-  actionButtons.push({
-    href: `https://twitter.com/${data.links.twitter}`,
-    text: "Twitter",
-    variant: "tertiary" as const,
-    target: "_blank",
-    rel: "noopener noreferrer",
-    icon: "mdi:twitter",
-  });
-}
-if (data.links?.mastodon) {
-  actionButtons.push({
-    href: `https://mastodon.com/${data.links.mastodon}`,
-    text: "Mastodon",
-    variant: "tertiary" as const,
-    target: "_blank",
-    rel: "noopener noreferrer",
-    icon: "mdi:mastodon",
-  });
-}
-if (data.links?.scheduling) {
-  actionButtons.push({
-    href: data.links?.scheduling,
-    text: "Schedule",
-    variant: "default" as const,
-    target: "_blank",
-    rel: "noopener noreferrer",
-    icon: "solar:calendar-mark-line-duotone",
-  });
-}
-
-// Org-display lookup for `PersonDetail`'s hero subtitle — resolves
-// the affiliation's organizationId to a human-readable name (e.g.
-// "Semio Community", "Peerbots") so the subtitle doesn't fall back to
-// the raw id. The affiliation's own `organizationName` override still
-// wins when authored (used for external orgs not in our collection).
-const allOrgsForLookup = await getCollection("organizations");
-const orgDisplayLookup = buildOrgDisplayLookup(allOrgsForLookup);
-
-// Prepare affiliations for display, with the site's home-org affiliation first
-const orderedAffiliations = sortAffiliationsForSite(
-  data.affiliations,
-  siteConfig.homeOrganizationId,
-);
-
-const currentAffiliations = await Promise.all(
-  orderedAffiliations
-    .filter((aff) => isCurrentAffiliation(aff))
-    .map(async (aff) => {
-      const org = await getEntry("organizations", aff.organizationId);
-      return {
-        ...aff,
-        organization: org,
-      };
-    }),
-);
-
-const pastAffiliations = await Promise.all(
-  orderedAffiliations
-    .filter((aff) => !isCurrentAffiliation(aff))
-    .map(async (aff) => {
-      const org = await getEntry("organizations", aff.organizationId);
-      return {
-        ...aff,
-        organization: org,
-      };
-    }),
-);
-
-// Prepare academic profile items
-const academicProfileItems = [];
-if (data.links?.orcid) {
-  academicProfileItems.push({
-    label: "ORCID",
-    value: data.links.orcid,
-    link: `https://orcid.org/${data.links.orcid}`,
-    external: true,
-  });
-}
-if (data.links?.googleScholar) {
-  academicProfileItems.push({
-    label: "Google Scholar",
-    value: "View Profile",
-    link: `https://scholar.google.com/citations?user=${data.links.googleScholar}`,
-    external: true,
-  });
-}
-
-// Prepare social media items
-const socialMediaItems = [];
-if (data.links?.twitter) {
-  socialMediaItems.push({
-    label: "Twitter",
-    value: `@${data.links.twitter}`,
-    link: `https://twitter.com/${data.links.twitter}`,
-    external: true,
-  });
-}
-if (data.links?.bluesky) {
-  socialMediaItems.push({
-    label: "Bluesky",
-    value: data.links.bluesky,
-    link: `https://bsky.app/profile/${data.links.bluesky}`,
-    external: true,
-  });
-}
-if (data.links?.mastodon) {
-  socialMediaItems.push({
-    label: "Mastodon",
-    value: data.links.mastodon,
-    link: data.links.mastodon,
-    external: true,
-  });
-}---
-
-    <SiteShell
+<SiteShell
   title={meta.title}
   description={meta.description}
   ogImage={ogImage}
   containerClassName="max-w-5xl"
 >
-      <PersonDetail
-        data={detailData}
-        fullName={fullName}
-        badges={badges}
-        currentAffiliations={currentAffiliations.map((aff) => ({
-          organizationId: aff.organizationId,
-          organizationName:
-            aff.organizationName ||
-            aff.organization?.data?.shortName ||
-            aff.organization?.data?.name,
-          organizationUrl: aff.organizationUrl,
-          organizationImages: aff.organization?.data?.images,
-          organizationData: aff.organization?.data ? toOrganizationCardData(aff.organization.data) : undefined,
-          role: aff.role,
-          department: aff.department,
-        }))}
-        pastAffiliations={pastAffiliations.map((aff) => ({
-          organizationId: aff.organizationId,
-          organizationName:
-            aff.organizationName ||
-            aff.organization?.data?.shortName ||
-            aff.organization?.data?.name,
-          organizationUrl: aff.organizationUrl,
-          organizationImages: aff.organization?.data?.images,
-          organizationData: aff.organization?.data ? toOrganizationCardData(aff.organization.data) : undefined,
-          role: aff.role,
-          department: aff.department,
-        }))}
-        relatedContent={{
-          research: relatedContent.research,
-          hardware: relatedContent.hardware,
-          software: relatedContent.software,
-          events: relatedContent.events,
-          press: relatedContent.press,
-        }}
-        relatedPeople={relatedPeople}
-        baseUrl={import.meta.env.BASE_URL}
-        homeOrganizationId={siteConfig.homeOrganizationId}
-        orgDisplayLookup={orgDisplayLookup}
-        suppressOrganizationPage={siteConfig.suppressOrganizationPage}
-      />
-    </SiteShell>
-  </body>
-</html>
+  <PersonDetail
+    data={payload.data}
+    fullName={payload.fullName}
+    badges={payload.badges}
+    currentAffiliations={payload.currentAffiliations}
+    pastAffiliations={payload.pastAffiliations}
+    relatedContent={payload.relatedContent}
+    relatedPeople={payload.relatedPeople}
+    awards={payload.awards}
+    baseUrl={import.meta.env.BASE_URL}
+    homeOrganizationId={siteConfig.homeOrganizationId}
+    orgDisplayLookup={payload.orgDisplayLookup}
+    suppressOrganizationPage={siteConfig.suppressOrganizationPage}
+  >
+    {payload.shouldRenderBody && <MDXContent entry={entry} />}
+  </PersonDetail>
+</SiteShell>
