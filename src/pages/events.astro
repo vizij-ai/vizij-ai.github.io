@@ -5,6 +5,7 @@ import SiteShell from "@/layouts/SiteShell.astro";
 import EventsPage from "@/react-pages/events/EventsPage";
 import { resolveImageLike } from "@/utils/images";
 import { isFeaturedOnSite } from "@semio-community/ecosystem-site-core";
+import { buildFeaturedPropagation } from "@/utils/featured-propagation";
 
 const meta = {
   title: "Events",
@@ -13,7 +14,8 @@ const meta = {
 };
 const ogImage = "/og/events.png";
 
-const allEvents = await getAllEvents();
+const featured = await buildFeaturedPropagation();
+const allEvents = featured.propagateAll(await getAllEvents(), "events");
 
 const serializeEvents = allEvents.map((event) => ({
   id: event.id,

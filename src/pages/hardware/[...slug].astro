@@ -1,17 +1,17 @@
 ---
-import { getCollection, getEntry } from "astro:content";
+import { getCollection } from "astro:content";
 import SiteShell from "@/layouts/SiteShell.astro";
+import MDXContent from "@/components/mdx/MDXContent.astro";
 import { getRelatedHardware } from "@/data/hardware";
-import { getPerson } from "@/data/people";
-import { HardwareDetail, findPressForEntity } from "@semio-community/ecosystem-site-core";
 import { isDraftVisible } from "@/utils/drafts";
-import { toOrganizationCardData } from "@/utils/card-mappers";
-import { withResolvedLinks } from "@semio-community/ecosystem-site-core";
+import { loadEntry } from "@/utils/content-loader";
+import { buildFeaturedPropagation } from "@/utils/featured-propagation";
+import { HardwareDetail, prepareHardwareDetail } from "@semio-community/ecosystem-site-core";
 
 export async function getStaticPaths() {
-  const hardware = await getCollection("hardware", ({ data }) => {
-    return isDraftVisible(data.draft, data.sites);
-  });
+  const hardware = await getCollection("hardware", ({ data }) =>
+    isDraftVisible(data.draft, data.sites),
+  );
   return hardware.map((entry) => ({
     params: { slug: entry.id },
     props: { entry },
@@ -19,91 +19,45 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
-const { data } = entry;
-const detailData = withResolvedLinks(data);
 
-const relatedHardware = await getRelatedHardware(entry, 3);
+const [featured, related, allPress, allAwards] = await Promise.all([
+  buildFeaturedPropagation(),
+  getRelatedHardware(entry, 3),
+  getCollection("press", ({ data }) => isDraftVisible(data.draft, data.sites)),
+  getCollection("awards", ({ data }) => isDraftVisible(data.draft, data.sites)),
+]);
+
+const payload = await prepareHardwareDetail({
+  entry,
+  loadEntry,
+  featured,
+  related,
+  allPress,
+  allAwards,
+});
 
 const meta = {
-  title: `${data.name} - Hardware Platform`,
-  description: data.description,
+  title: `${entry.data.name} - Hardware Platform`,
+  description: entry.data.description,
 };
 const ogImage = `/og/hardware/${entry.id}.png`;
-
-const contributors = data.contributors || [];
-const peopleContributors = await Promise.all(
-  contributors
-    .filter((c) => c.type === "person")
-    .map(async (contributor) => {
-      const personEntry = await getPerson(contributor.personId);
-      let currentAffiliation:
-        | {
-            organizationId: string;
-            partnerName?: string;
-            role: string;
-          }
-        | undefined;
-      if (personEntry?.data?.affiliations) {
-        const current = personEntry.data.affiliations.find(
-          (aff) => !aff.endDate,
-        );
-        if (current) {
-          const organization = await getEntry(
-            "organizations",
-            current.organizationId,
-          );
-          currentAffiliation = {
-            organizationId: current.organizationId,
-            partnerName: organization?.data.name || current.organizationId,
-            role: current.role,
-          };
-        }
-      }
-      const person = personEntry?.data ?? null;
-      return {
-        ...contributor,
-        person,
-        currentAffiliation,
-      };
-    }),
-);
-const validPeopleContributors = peopleContributors.filter(
-  (c) => c.person !== null,
-);
-
-const orgContributors = await Promise.all(
-  contributors
-    .filter((c) => c.type === "organization")
-    .map(async (contributor) => {
-      const org = await getEntry("organizations", contributor.organizationId);
-      return {
-        ...contributor,
-        data: org?.data ? toOrganizationCardData(org.data) : undefined,
-      };
-    }),
-);
-
-// Press items that reference this hardware via `relatedHardware`.
-const allPress = await getCollection("press", ({ data }) =>
-  isDraftVisible(data.draft, data.sites),
-);
-const relatedPress = findPressForEntity(allPress, "hardware", entry.id);
 ---
 
-    <SiteShell
+<SiteShell
   title={meta.title}
   description={meta.description}
   ogImage={ogImage}
   containerClassName="max-w-5xl"
 >
-      <HardwareDetail
-        data={detailData}
-        organizationContributors={orgContributors}
-        peopleContributors={validPeopleContributors}
-        relatedHardware={relatedHardware}
-        relatedPress={relatedPress}
-        baseUrl={import.meta.env.BASE_URL}
-      />
-    </SiteShell>
-  </body>
-</html>
+  <HardwareDetail
+    data={payload.data}
+    organizationContributors={payload.contributors.organizations}
+    peopleContributors={payload.contributors.people}
+    relatedHardware={payload.related}
+    relatedPress={payload.relatedPress}
+    awards={payload.awards}
+    baseUrl={import.meta.env.BASE_URL}
+  >
+    {payload.shouldRenderBody && <MDXContent entry={entry} />}
+  </HardwareDetail>
+</SiteShell>
