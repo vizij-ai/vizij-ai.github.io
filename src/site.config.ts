@@ -10,6 +10,7 @@ import {
 	type NavCollectionKey,
 	type NavCollections,
 	setActiveSiteKey,
+	setActiveSiteOrigin,
 } from "@semio-community/ecosystem-site-core";
 
 const guidebookHubs = guidebookHubsData as GuidebookHubMap;
@@ -50,6 +51,13 @@ export const siteConfig: SiteConfig = {
 // page renders a card — so the converters always see the right key.
 // See `active-site.ts` in site-core for why a build singleton is used.
 setActiveSiteKey(siteConfig.siteKey);
+
+// Publish the deploy origin too, so shared code can tell a link to this
+// very page from a link to the same path on a sibling site — the three
+// sites share one content hub and the same route shapes, so the origin
+// is the only thing that distinguishes them. Sourced from `astro.config`
+// rather than restated here, so the two cannot drift.
+setActiveSiteOrigin(import.meta.env.SITE);
 
 // Re-export the canonical types from site-core so the local
 // `@/site.config` import surface stays unchanged for downstream

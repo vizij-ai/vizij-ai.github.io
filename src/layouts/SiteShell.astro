@@ -106,5 +106,18 @@ const navCollections = await buildNavCollections({
         </div>
       </div>
     </div>
+    {/*
+      Tooltips for statically-rendered content. Almost everything below
+      the header ships no client JS, so the Radix tooltip inside every
+      icon button never mounts. This one delegated listener covers all of
+      them — detail link rows, listing cards, featured stars, author
+      marks — for about a kilobyte, and stands down on any element that
+      does hydrate. See `tooltip.ts` in site-core.
+    */}
+    <script>
+      import { initTooltips } from "@semio-community/ecosystem-site-core/tooltip";
+
+      initTooltips();
+    </script>
   </body>
 </html>

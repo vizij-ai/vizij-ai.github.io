@@ -1,7 +1,11 @@
 import { getCollection, getEntry } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 import { isDraftVisible } from "@/utils/drafts";
-import { isFeaturedOnSite } from "@semio-community/ecosystem-site-core";
+import {
+	isFeaturedOnSite,
+	toLinkDetail,
+	type LinkType,
+} from "@semio-community/ecosystem-site-core";
 
 function formatPersonName(data: CollectionEntry<"people">["data"]): string {
 	return data.honorific ? `${data.honorific} ${data.name}`.trim() : data.name;
@@ -105,8 +109,17 @@ export async function searchPeople(query: string): Promise<CollectionEntry<"peop
 
 	return allPeople.filter((person) => {
 		const displayName = formatPersonName(person.data).toLowerCase();
-		const linkValues =
-			Object.values(person.data.links || {}).map((value) => value?.toLowerCase()) ?? [];
+		// Links may be a bare url or `{ url, label }`, so search the
+		// resolved href plus any per-entry text rather than the raw value.
+		const linkValues = Object.entries(person.data.links ?? {}).flatMap(
+			([type, value]) => {
+				const detail = toLinkDetail(type as LinkType, value);
+				if (!detail) return [];
+				return [detail.href, detail.label].filter(Boolean).map((text) =>
+					(text as string).toLowerCase(),
+				);
+			},
+		);
 
 		return (
 			person.data.name.toLowerCase().includes(lowerQuery) ||
