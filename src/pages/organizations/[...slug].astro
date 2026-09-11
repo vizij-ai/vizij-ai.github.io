@@ -1,6 +1,7 @@
 ---
 import { type CollectionEntry, getCollection } from "astro:content";
 import SiteShell from "@/layouts/SiteShell.astro";
+import RedirectPage from "@/components/util/RedirectPage.astro";
 import MDXContent from "@/components/mdx/MDXContent.astro";
 import { getAllOrganizations } from "@/data/organizations";
 import { getAllHardware } from "@/data/hardware";
@@ -21,17 +22,25 @@ export async function getStaticPaths() {
   const organizations = await getCollection("organizations", ({ data }) =>
     isDraftVisible(data.draft, data.sites),
   );
-  const partners = filterHomeOrganization(
-    organizations.filter((org) => org.data.isPartner),
-    siteConfig,
-  );
+  const partners = organizations.filter((org) => org.data.isPartner);
+  const visible = filterHomeOrganization(partners, siteConfig);
+  const visibleIds = new Set(visible.map((o) => o.id));
+
+  // When the home organization's page is suppressed, still emit a route
+  // for it that redirects to the site root. Hub content is shared across
+  // sites and legitimately links to `/organizations/<home-org>/`; without
+  // this the link resolves on sites that show the page and 404s on the
+  // one that suppresses it.
   return partners.map((entry) => ({
     params: { slug: entry.id },
-    props: { entry },
+    props: { entry, redirectToRoot: !visibleIds.has(entry.id) },
   }));
 }
 
-const { entry } = Astro.props as { entry: CollectionEntry<"organizations"> };
+const { entry, redirectToRoot } = Astro.props as {
+  entry: CollectionEntry<"organizations">;
+  redirectToRoot?: boolean;
+};
 
 const [
   featured,
@@ -73,6 +82,14 @@ const meta = {
 const ogImage = `/og/organizations/${entry.id}.png`;
 ---
 
+{
+  redirectToRoot ? (
+    <RedirectPage
+      to="/"
+      title={`Redirecting to ${siteConfig.title}`}
+      description="This organization's page is the site itself. Redirecting you home."
+    />
+  ) : (
 <SiteShell
   title={meta.title}
   description={meta.description}
@@ -91,3 +108,5 @@ const ogImage = `/og/organizations/${entry.id}.png`;
     {payload.shouldRenderBody && <MDXContent entry={entry} />}
   </OrganizationDetail>
 </SiteShell>
+  )
+}
