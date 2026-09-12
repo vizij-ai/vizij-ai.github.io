@@ -9,6 +9,8 @@ import {
   preparePressIndexSections,
   type PressPageContent,
 } from "@semio-community/ecosystem-site-core";
+import { Feed } from "@solar-icons/react-perf/LineDuotone";
+import React from "react";
 
 const meta = {
   title: "Press",
@@ -28,6 +30,10 @@ const sections = preparePressIndexSections({
   allAwards,
   siteKey: siteConfig.siteKey,
   propagation,
+});
+
+const heroIcon = React.createElement(Feed, {
+  className: "w-16 h-16 text-accent-two",
 });
 
 const content: PressPageContent = {
@@ -67,6 +73,7 @@ const content: PressPageContent = {
   containerClassName="max-w-6xl"
 >
   <PressPage
+    heroIcon={heroIcon}
     sections={sections}
     content={content}
     baseUrl={import.meta.env.BASE_URL}
