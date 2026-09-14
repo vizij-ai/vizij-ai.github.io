@@ -1,6 +1,11 @@
 import { getCollection, getEntry } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 import { isDraftVisible } from "@/utils/drafts";
+import {
+	isFeaturedOnSite,
+	toLinkDetail,
+	type LinkType,
+} from "@semio-community/ecosystem-site-core";
 
 function formatPersonName(data: CollectionEntry<"people">["data"]): string {
 	return data.honorific ? `${data.honorific} ${data.name}`.trim() : data.name;
@@ -60,7 +65,7 @@ export async function getPersonWithAffiliations(personId: string) {
 /** Get featured people */
 export async function getFeaturedPeople(): Promise<CollectionEntry<"people">[]> {
 	const allPeople = await getAllPeople();
-	return allPeople.filter((person) => person.data.featured);
+	return allPeople.filter((person) => isFeaturedOnSite(person));
 }
 
 /** Get people by expertise area */
@@ -104,8 +109,17 @@ export async function searchPeople(query: string): Promise<CollectionEntry<"peop
 
 	return allPeople.filter((person) => {
 		const displayName = formatPersonName(person.data).toLowerCase();
-		const linkValues =
-			Object.values(person.data.links || {}).map((value) => value?.toLowerCase()) ?? [];
+		// Links may be a bare url or `{ url, label }`, so search the
+		// resolved href plus any per-entry text rather than the raw value.
+		const linkValues = Object.entries(person.data.links ?? {}).flatMap(
+			([type, value]) => {
+				const detail = toLinkDetail(type as LinkType, value);
+				if (!detail) return [];
+				return [detail.href, detail.label].filter(Boolean).map((text) =>
+					(text as string).toLowerCase(),
+				);
+			},
+		);
 
 		return (
 			person.data.name.toLowerCase().includes(lowerQuery) ||
@@ -163,7 +177,7 @@ export async function getPeopleStatistics() {
 
 	return {
 		total: allPeople.length,
-		featured: allPeople.filter((p) => p.data.featured).length,
+		featured: allPeople.filter((p) => isFeaturedOnSite(p)).length,
 		withOrcid: allPeople.filter((p) => p.data.links?.orcid).length,
 		withGoogleScholar: allPeople.filter((p) => p.data.links?.googleScholar).length,
 		uniqueExpertiseCount: expertiseAreas.length,
@@ -209,7 +223,7 @@ export async function getRelatedPeople(
 		}
 
 		// Bonus for featured people
-		if (person.data.featured) {
+		if (isFeaturedOnSite(person)) {
 			score += 0.5;
 		}
 

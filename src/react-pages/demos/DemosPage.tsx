@@ -77,7 +77,6 @@ function DemoOverviewPage() {
 
       <HeroHeader
         fullBleed
-        showGlyphField={false}
         icon={<EmojiFunnySquare className="h-16 w-16 text-accent-two" />}
         title="Demos"
         description="Explore the Vizij runtime and tools for expressive behavior, gaze interactions, and voice lip-sync."
@@ -288,7 +287,6 @@ function DemoDetailHeader({ demo }: { demo: DemoPageMeta }) {
       </nav>
 
       <HeroHeader
-        showGlyphField={false}
         title={demo.title}
         description={demo.description}
         actions={[

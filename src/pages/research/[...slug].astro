@@ -1,21 +1,21 @@
 ---
-import type { CollectionEntry } from "astro:content";
-import { getCollection, getEntry } from "astro:content";
+import { type CollectionEntry, getCollection } from "astro:content";
 import SiteShell from "@/layouts/SiteShell.astro";
-import { getRelatedResearch as fetchRelatedResearch } from "@/data/research";
-import { getPerson, getFormattedAuthors } from "@/data/people";
-import { toResearchAuthor } from "@semio-community/ecosystem-site-core";
-import { ResearchDetail, type ResearchOrganizationLink } from "@semio-community/ecosystem-site-core";
-import type { ResearchAuthorModel } from "@semio-community/ecosystem-site-core";
+import MDXContent from "@/components/mdx/MDXContent.astro";
+import { getFormattedAuthors } from "@/data/people";
+import { getRelatedResearch } from "@/data/research";
 import { isDraftVisible } from "@/utils/drafts";
-import { toOrganizationCardData } from "@/utils/card-mappers";
-import { withResolvedLinks } from "@semio-community/ecosystem-site-core";
+import { loadEntry } from "@/utils/content-loader";
+import { buildFeaturedPropagation } from "@/utils/featured-propagation";
+import {
+  ResearchDetail,
+  prepareResearchDetail,
+} from "@semio-community/ecosystem-site-core";
 
 export async function getStaticPaths() {
-  const researchEntries = await getCollection("research", ({ data }) => {
-    // In production, exclude drafts. In development, show all.
-    return isDraftVisible(data.draft, data.sites);
-  });
+  const researchEntries = await getCollection("research", ({ data }) =>
+    isDraftVisible(data.draft, data.sites),
+  );
   return researchEntries.map((entry) => ({
     params: { slug: entry.id },
     props: { entry },
@@ -23,80 +23,51 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props as { entry: CollectionEntry<"research"> };
-const { data } = entry;
-const detailData = withResolvedLinks(data);
 
-const relatedResearch = await fetchRelatedResearch(entry, 3);
+const [featured, relatedResearch, allPress, allAwards] = await Promise.all([
+  buildFeaturedPropagation(),
+  getRelatedResearch(entry, 3),
+  getCollection("press", ({ data }) => isDraftVisible(data.draft, data.sites)),
+  getCollection("awards", ({ data }) => isDraftVisible(data.draft, data.sites)),
+]);
 
-const authors = data.contributors ?? [];
-const authorsString = await getFormattedAuthors(authors);
+const payload = await prepareResearchDetail({
+  entry,
+  loadEntry,
+  featured,
+  relatedResearch,
+  allPress,
+  allAwards,
+});
+
+const authorsSubtitle = await getFormattedAuthors(entry.data.contributors ?? []);
 
 const meta = {
-  title: `${data.title} - Research Study`,
-  description: data.description,
+  title: `${entry.data.title} - Research Study`,
+  description: entry.data.description,
 };
 const ogImage = `/og/research/${entry.id}.png`;
+---
 
-const authorsWithData: ResearchAuthorModel[] = await Promise.all(
-  authors.map(async (contributor) => {
-    const personEntry = await getPerson(contributor.personId);
-    return toResearchAuthor(contributor, personEntry);
-  }),
-);
-
-const validRoles = new Set(["lead", "affiliated", "funding", "collaborator"]);
-const organizationLinks: ResearchOrganizationLink[] = [];
-
-for (const orgLink of data.organizations ?? []) {
-  const role = orgLink.role as ResearchOrganizationLink["role"];
-  if (!role || !validRoles.has(role)) continue;
-  const organization = await getEntry("organizations", orgLink.organizationId);
-  if (!organization) continue;
-  organizationLinks.push({
-    role,
-    note: orgLink.note,
-    organization: { ...toOrganizationCardData(organization.data), id: organization.id },
-  });
-}
-
-// Get related hardware
-const relatedHardwareItems = data.relatedHardware
-  ? await Promise.all(
-      data.relatedHardware.map((id) => getEntry("hardware", id)),
-    )
-  : [];
-
-// Get related software
-const relatedSoftwareItems = data.relatedSoftware
-  ? await Promise.all(
-      data.relatedSoftware.map((id) => getEntry("software", id)),
-    )
-  : [];
-
-const validRelatedHardware = relatedHardwareItems.filter(
-  (item): item is CollectionEntry<"hardware"> => Boolean(item),
-);
-
-const validRelatedSoftware = relatedSoftwareItems.filter(
-  (item): item is CollectionEntry<"software"> => Boolean(item),
-);---
-
-    <SiteShell
+<SiteShell
   title={meta.title}
   description={meta.description}
   ogImage={ogImage}
   containerClassName="max-w-5xl"
 >
-      <ResearchDetail
-        data={detailData}
-        authors={authorsWithData}
-        authorsSubtitle={authorsString}
-        organizationLinks={organizationLinks}
-        relatedHardware={validRelatedHardware}
-        relatedSoftware={validRelatedSoftware}
-        relatedResearch={relatedResearch}
-        baseUrl={import.meta.env.BASE_URL}
-      />
-    </SiteShell>
-  </body>
-</html>
+  <ResearchDetail
+    data={payload.data}
+    authors={payload.authors}
+    authorsSubtitle={authorsSubtitle}
+    organizationLinks={payload.organizationLinks}
+    relatedHardware={payload.relatedHardware}
+    relatedSoftware={payload.relatedSoftware}
+    relatedResearch={payload.relatedResearch}
+    relatedPress={payload.relatedPress}
+    relatedPublications={payload.relatedPublications}
+    awards={payload.awards}
+    baseUrl={import.meta.env.BASE_URL}
+  >
+    {payload.shouldRenderBody && <MDXContent entry={entry} />}
+  </ResearchDetail>
+</SiteShell>

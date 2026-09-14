@@ -1,6 +1,7 @@
 import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
 import { isDraftVisible } from "@/utils/drafts";
+import { isFeaturedOnSite } from "@semio-community/ecosystem-site-core";
 
 type ResearchEntry = CollectionEntry<"research">;
 
@@ -35,8 +36,8 @@ function getPublishYear(entry: ResearchEntry): number | null {
 
 function sortResearchEntries(entries: ResearchEntry[]): ResearchEntry[] {
 	return [...entries].sort((a, b) => {
-		if (a.data.featured !== b.data.featured) {
-			return a.data.featured ? -1 : 1;
+		if (isFeaturedOnSite(a) !== isFeaturedOnSite(b)) {
+			return isFeaturedOnSite(a) ? -1 : 1;
 		}
 
 		const aTime = getPublishDate(a)?.getTime() ?? Number.NEGATIVE_INFINITY;
@@ -82,7 +83,7 @@ export async function getAllResearch(): Promise<ResearchEntry[]> {
 /** Get featured research entries */
 export async function getFeaturedResearch(): Promise<ResearchEntry[]> {
 	const entries = await loadResearchEntries();
-	return entries.filter((entry) => entry.data.featured);
+	return entries.filter((entry) => isFeaturedOnSite(entry));
 }
 
 /** Get research entries filtered by type */

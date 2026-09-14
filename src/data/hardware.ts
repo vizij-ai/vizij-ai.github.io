@@ -1,6 +1,7 @@
 import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
 import { isDraftVisible } from "@/utils/drafts";
+import { isFeaturedOnSite } from "@semio-community/ecosystem-site-core";
 
 /** Get all hardware entries, sorted by featured status and name */
 export async function getAllHardware(): Promise<CollectionEntry<"hardware">[]> {
@@ -10,8 +11,8 @@ export async function getAllHardware(): Promise<CollectionEntry<"hardware">[]> {
 	});
 	return hardware.sort((a, b) => {
 		// Sort by featured first, then by status priority, then by name
-		if (a.data.featured !== b.data.featured) {
-			return a.data.featured ? -1 : 1;
+		if (isFeaturedOnSite(a) !== isFeaturedOnSite(b)) {
+			return isFeaturedOnSite(a) ? -1 : 1;
 		}
 
 		// Status priority: available > in-progress > coming-soon > deprecated
@@ -52,7 +53,7 @@ export async function getHardwareByStatus(
 /** Get only featured hardware */
 export async function getFeaturedHardware(): Promise<CollectionEntry<"hardware">[]> {
 	const hardware = await getAllHardware();
-	return hardware.filter((item) => item.data.featured);
+	return hardware.filter((item) => isFeaturedOnSite(item));
 }
 
 /** Get hardware by topic */
