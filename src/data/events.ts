@@ -1,6 +1,7 @@
 import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
 import { isDraftVisible } from "@/utils/drafts";
+import { isFeaturedOnSite } from "@semio-community/ecosystem-site-core";
 
 /** Get all events, sorted by start date (upcoming first) */
 export async function getAllEvents(): Promise<CollectionEntry<"events">[]> {
@@ -12,8 +13,8 @@ export async function getAllEvents(): Promise<CollectionEntry<"events">[]> {
 
 	return events.sort((a, b) => {
 		// Featured events first
-		if (a.data.featured !== b.data.featured) {
-			return a.data.featured ? -1 : 1;
+		if (isFeaturedOnSite(a) !== isFeaturedOnSite(b)) {
+			return isFeaturedOnSite(a) ? -1 : 1;
 		}
 
 		// Then upcoming events before past events
@@ -66,7 +67,7 @@ export async function getEventsByType(
 /** Get only featured events */
 export async function getFeaturedEvents(): Promise<CollectionEntry<"events">[]> {
 	const events = await getAllEvents();
-	return events.filter((event) => event.data.featured);
+	return events.filter((event) => isFeaturedOnSite(event));
 }
 
 /** Get events by location (city or country) */

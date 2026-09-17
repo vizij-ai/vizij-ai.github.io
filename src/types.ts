@@ -19,10 +19,30 @@ export interface SiteConfig {
 		pageBackground?: string;
 		cardBackground?: string;
 	};
+	/** Identifies this site within the ecosystem (matches the sync script siteKey). */
+	siteKey: "semio-community" | "quori" | "vizij";
 	/** ID of the organization this site represents. Used to pick the headline role on person bios and to reorder a person's affiliations so the home-org entry comes first. */
 	homeOrganizationId?: string;
 	/** When true, `/organizations/<homeOrganizationId>` is excluded from this site and affiliation rows pointing at the home org link to `/` instead. */
 	suppressOrganizationPage?: boolean;
+	/**
+	 * Site-wide parallax hex background — a branding element, not a
+	 * per-page toggle. When present, the background renders on EVERY
+	 * page of this site (optionally tuned by the fields below). Omit the
+	 * key entirely to disable the background for the whole site. There is
+	 * deliberately no per-page override: the background is part of the
+	 * site's visual identity, so its presence is a single site-level
+	 * decision rather than per-page configuration overhead.
+	 */
+	parallaxBackground?: {
+		count?: number;
+		seed?: string | number;
+		verticalSpanVh?: number;
+		horizontalRangeVw?: { min: number; max: number };
+		palette?: string[];
+		opacity?: { stroke: [number, number]; fill: [number, number] };
+		className?: string;
+	};
 }
 
 export interface PaginationLink {

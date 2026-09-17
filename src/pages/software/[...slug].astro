@@ -1,17 +1,17 @@
 ---
-import { getCollection, getEntry } from "astro:content";
+import { getCollection } from "astro:content";
 import SiteShell from "@/layouts/SiteShell.astro";
+import MDXContent from "@/components/mdx/MDXContent.astro";
 import { getRelatedSoftware } from "@/data/software";
-import { getPerson } from "@/data/people";
-import { SoftwareDetail } from "@semio-community/ecosystem-site-core";
 import { isDraftVisible } from "@/utils/drafts";
-import { toOrganizationCardData } from "@/utils/card-mappers";
-import { withResolvedLinks } from "@semio-community/ecosystem-site-core";
+import { loadEntry } from "@/utils/content-loader";
+import { buildFeaturedPropagation } from "@/utils/featured-propagation";
+import { SoftwareDetail, prepareSoftwareDetail } from "@semio-community/ecosystem-site-core";
 
 export async function getStaticPaths() {
-  const software = await getCollection("software", ({ data }) => {
-    return isDraftVisible(data.draft, data.sites);
-  });
+  const software = await getCollection("software", ({ data }) =>
+    isDraftVisible(data.draft, data.sites),
+  );
   return software.map((entry) => ({
     params: { slug: entry.id },
     props: { entry },
@@ -19,83 +19,45 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
-const { data } = entry;
-const detailData = withResolvedLinks(data);
 
-const relatedSoftware = await getRelatedSoftware(entry, 3);
+const [featured, relatedSoftware, allPress, allAwards] = await Promise.all([
+  buildFeaturedPropagation(),
+  getRelatedSoftware(entry, 3),
+  getCollection("press", ({ data }) => isDraftVisible(data.draft, data.sites)),
+  getCollection("awards", ({ data }) => isDraftVisible(data.draft, data.sites)),
+]);
+
+const payload = await prepareSoftwareDetail({
+  entry,
+  loadEntry,
+  featured,
+  related: relatedSoftware,
+  allPress,
+  allAwards,
+});
 
 const meta = {
-  title: `${data.name} - Software Platform`,
-  description: data.description,
+  title: `${entry.data.name} - Software Platform`,
+  description: entry.data.description,
 };
 const ogImage = `/og/software/${entry.id}.png`;
+---
 
-const contributors = data.contributors || [];
-const peopleContributors = await Promise.all(
-  contributors
-    .filter((c) => c.type === "person")
-    .map(async (contributor) => {
-      const personEntry = await getPerson(contributor.personId);
-      let currentAffiliation:
-        | {
-            organizationId: string;
-            partnerName?: string;
-            role: string;
-          }
-        | undefined;
-      if (personEntry?.data?.affiliations) {
-        const current = personEntry.data.affiliations.find(
-          (aff) => !aff.endDate,
-        );
-        if (current) {
-          const organization = await getEntry(
-            "organizations",
-            current.organizationId,
-          );
-          currentAffiliation = {
-            organizationId: current.organizationId,
-            partnerName: organization?.data.name || current.organizationId,
-            role: current.role,
-          };
-        }
-      }
-      const person = personEntry?.data ?? null;
-      return {
-        ...contributor,
-        person,
-        currentAffiliation,
-      };
-    }),
-);
-const validPeopleContributors = peopleContributors.filter(
-  (c) => c.person !== null,
-);
-
-const orgContributors = await Promise.all(
-  contributors
-    .filter((c) => c.type === "organization")
-    .map(async (contributor) => {
-      const org = await getEntry("organizations", contributor.organizationId);
-      return {
-        ...contributor,
-        data: org?.data ? toOrganizationCardData(org.data) : undefined,
-      };
-    }),
-);---
-
-    <SiteShell
+<SiteShell
   title={meta.title}
   description={meta.description}
   ogImage={ogImage}
   containerClassName="max-w-5xl"
 >
-      <SoftwareDetail
-        data={detailData}
-        organizationContributors={orgContributors}
-        peopleContributors={validPeopleContributors}
-        relatedSoftware={relatedSoftware}
-        baseUrl={import.meta.env.BASE_URL}
-      />
-    </SiteShell>
-  </body>
-</html>
+  <SoftwareDetail
+    data={payload.data}
+    organizationContributors={payload.contributors.organizations}
+    peopleContributors={payload.contributors.people}
+    relatedSoftware={payload.related}
+    relatedPress={payload.relatedPress}
+    awards={payload.awards}
+    baseUrl={import.meta.env.BASE_URL}
+  >
+    {payload.shouldRenderBody && <MDXContent entry={entry} />}
+  </SoftwareDetail>
+</SiteShell>

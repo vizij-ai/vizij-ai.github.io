@@ -2,6 +2,12 @@
 
 This directory contains components used for displaying detailed content pages (slug pages) across the Semio Community website.
 
+
+> **Note:** `DetailHero`, `LinkSection`, and `ActionsSection` previously
+> lived in this directory as per-site copies. They were unreferenced and
+> have been removed; the shared equivalents are exported from
+> `@semio-community/ecosystem-site-core`.
+
 ## Overview
 
 All detail pages use a consistent single-column layout with semantic content slots for better organization and maintainability. The components in this directory work together to create a unified experience across research, people, partners, events, hardware, and software pages.

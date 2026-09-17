@@ -7,6 +7,11 @@ import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
 const STATIC_PAGES: Record<string, OgImageProps> = {
+	press: {
+		title: "Press",
+		description:
+			"Announcements, publications, stories, and awards from across the Vizij ecosystem.",
+	},
 	home: {
 		title: siteConfig.title,
 		description: siteConfig.description,
@@ -35,10 +40,6 @@ const STATIC_PAGES: Record<string, OgImageProps> = {
 	"get-involved": {
 		title: "Get Involved",
 		description: "Contribute to Vizij's open source robot face ecosystem.",
-	},
-	about: {
-		title: "About",
-		description: "Learn about Vizij's mission to make expressive robot faces open and accessible.",
 	},
 };
 

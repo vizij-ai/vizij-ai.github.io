@@ -1,0 +1,62 @@
+---
+import { type CollectionEntry, getCollection } from "astro:content";
+import SiteShell from "@/layouts/SiteShell.astro";
+import { siteConfig } from "@/site.config";
+import { isDraftVisible } from "@/utils/drafts";
+import { loadEntry } from "@/utils/content-loader";
+import { buildFeaturedPropagation } from "@/utils/featured-propagation";
+import {
+  AwardDetail,
+  buildOrgDisplayLookup,
+  prepareAwardDetail,
+  type AwardDisplayData,
+} from "@semio-community/ecosystem-site-core";
+
+export async function getStaticPaths() {
+  const awards = await getCollection("awards", ({ data }) =>
+    isDraftVisible(data.draft, data.sites),
+  );
+  return awards.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props as { entry: CollectionEntry<"awards"> };
+const { data } = entry;
+
+const [featured, allOrgs] = await Promise.all([
+  buildFeaturedPropagation(),
+  getCollection("organizations"),
+]);
+
+const payload = await prepareAwardDetail({
+  entry,
+  loadEntry,
+  featured,
+});
+
+const meta = {
+  title: `${data.title} - Award`,
+  description: data.description ?? `Award presented to ecosystem contributors.`,
+};
+const ogImage = `/og/awards/${entry.id}.png`;
+---
+
+<SiteShell
+  title={meta.title}
+  description={meta.description}
+  ogImage={ogImage}
+  containerClassName="max-w-5xl"
+>
+  <AwardDetail
+    data={payload.data as AwardDisplayData}
+    recipients={payload.recipients}
+    grantingOrganization={payload.grantingOrganization}
+    relatedEvents={payload.relatedEvents}
+    relatedPress={payload.relatedPress}
+    baseUrl={import.meta.env.BASE_URL}
+    homeOrgId={siteConfig.homeOrganizationId}
+    orgDisplayLookup={buildOrgDisplayLookup(allOrgs)}
+  />
+</SiteShell>

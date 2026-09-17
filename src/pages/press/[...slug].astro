@@ -1,0 +1,96 @@
+---
+import { type CollectionEntry, getCollection } from "astro:content";
+import SiteShell from "@/layouts/SiteShell.astro";
+import { siteConfig } from "@/site.config";
+import { isDraftVisible } from "@/utils/drafts";
+import { loadEntry } from "@/utils/content-loader";
+import MDXContent from "@/components/mdx/MDXContent.astro";
+import { buildFeaturedPropagation } from "@/utils/featured-propagation";
+import {
+  PressDetail,
+  PublicationDetail,
+  buildOrgDisplayLookup,
+  isPressDetailRouted,
+  preparePressDetail,
+  type PublicationDetailData,
+} from "@semio-community/ecosystem-site-core";
+
+export async function getStaticPaths() {
+  const all = await getCollection("press", ({ data }) =>
+    isDraftVisible(data.draft, data.sites),
+  );
+  // `isPressDetailRouted` is the shared eligibility rule — external
+  // stories link off-site and get no detail page. Keeping it in
+  // site-core means link-building and route-generation can't disagree.
+  return all
+    .filter((entry) => isPressDetailRouted(entry.data))
+    .map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props as { entry: CollectionEntry<"press"> };
+
+const [featured, allAwards, allOrgs] = await Promise.all([
+  buildFeaturedPropagation(),
+  getCollection("awards", ({ data }) => isDraftVisible(data.draft, data.sites)),
+  getCollection("organizations"),
+]);
+
+const orgDisplayLookup = buildOrgDisplayLookup(allOrgs);
+
+const payload = await preparePressDetail({
+  entry,
+  loadEntry,
+  featured,
+  allAwards,
+  orgDisplayLookup,
+  homeOrgId: siteConfig.homeOrganizationId,
+});
+
+const meta = {
+  title: `${payload.data.title} - Press`,
+  description: payload.data.description,
+};
+const ogImage = `/og/press/${entry.id}.png`;
+---
+
+<SiteShell
+  title={meta.title}
+  description={meta.description}
+  ogImage={ogImage}
+  containerClassName="max-w-5xl"
+>
+  {payload.isPublication ? (
+    <PublicationDetail
+      data={payload.data as PublicationDetailData}
+      authors={payload.authors}
+      organizationLinks={payload.organizationLinks}
+      fromResearch={payload.fromResearch}
+      relatedHardware={payload.relatedHardware}
+      relatedSoftware={payload.relatedSoftware}
+      relatedResearch={payload.relatedResearch}
+      relatedPress={payload.relatedPress}
+      awards={payload.awards}
+      baseUrl={import.meta.env.BASE_URL}
+    >
+      {payload.shouldRenderBody && <MDXContent entry={entry} />}
+    </PublicationDetail>
+  ) : (
+    <PressDetail
+      data={payload.data}
+      authors={payload.authors}
+      relatedHardware={payload.relatedHardware}
+      relatedSoftware={payload.relatedSoftware}
+      relatedResearch={payload.relatedResearch}
+      relatedEvents={payload.relatedEvents}
+      relatedPeople={payload.relatedPeople}
+      relatedOrganizations={payload.relatedOrganizations}
+      relatedPress={payload.relatedPress}
+      awards={payload.awards}
+      baseUrl={import.meta.env.BASE_URL}
+      homeOrgId={siteConfig.homeOrganizationId}
+      orgDisplayLookup={orgDisplayLookup}
+    >
+      {payload.shouldRenderBody && <MDXContent entry={entry} />}
+    </PressDetail>
+  )}
+</SiteShell>

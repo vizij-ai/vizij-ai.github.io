@@ -1,0 +1,81 @@
+---
+import { getCollection } from "astro:content";
+import SiteShell from "@/layouts/SiteShell.astro";
+import { siteConfig } from "@/site.config";
+import { isDraftVisible } from "@/utils/drafts";
+import { buildFeaturedPropagation } from "@/utils/featured-propagation";
+import {
+  PressPage,
+  preparePressIndexSections,
+  type PressPageContent,
+} from "@semio-community/ecosystem-site-core";
+import { Feed } from "@solar-icons/react-perf/LineDuotone";
+import React from "react";
+
+const meta = {
+  title: "Press",
+  description:
+    "Announcements, publications, stories, and awards from across the Vizij ecosystem.",
+};
+const ogImage = "/og/press.png";
+
+const [propagation, allPress, allAwards] = await Promise.all([
+  buildFeaturedPropagation(),
+  getCollection("press", ({ data }) => isDraftVisible(data.draft, data.sites)),
+  getCollection("awards", ({ data }) => isDraftVisible(data.draft, data.sites)),
+]);
+
+const sections = preparePressIndexSections({
+  allPress,
+  allAwards,
+  siteKey: siteConfig.siteKey,
+  propagation,
+});
+
+const heroIcon = React.createElement(Feed, {
+  className: "w-16 h-16 text-accent-two",
+});
+
+const content: PressPageContent = {
+  heading: "Press",
+  intro:
+    "Announcements, publications, stories, and awards from across the ecosystem.",
+  featured: {
+    title: "Featured",
+    description: "Highlighted stories.",
+  },
+  announcements: {
+    title: "Announcements",
+    description: "Releases, notices, and updates.",
+  },
+  publications: {
+    title: "Publications",
+    description:
+      "Papers, preprints, whitepapers, datasets, and other published works from across the ecosystem.",
+  },
+  stories: {
+    title: "Stories",
+    description: "Longer-form articles from across the ecosystem.",
+  },
+  awards: {
+    title: "Awards",
+    description:
+      "External recognition received by people, projects, and publications across the ecosystem.",
+  },
+  emptyMessage: "No press entries yet.",
+};
+---
+
+<SiteShell
+  title={meta.title}
+  description={meta.description}
+  ogImage={ogImage}
+  containerClassName="max-w-6xl"
+>
+  <PressPage
+    heroIcon={heroIcon}
+    sections={sections}
+    content={content}
+    baseUrl={import.meta.env.BASE_URL}
+  />
+</SiteShell>

@@ -1,390 +1,53 @@
 ---
-import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
-import ActionsSection from "@/components/detail/ActionsSection";
-import LinkSection from "@/components/detail/LinkSection";
+import SiteShell from "@/layouts/SiteShell.astro";
 import MDXContent from "@/components/mdx/MDXContent.astro";
 import { getAllEvents } from "@/data/events";
-import SiteShell from "@/layouts/SiteShell.astro";
 import { isDraftVisible } from "@/utils/drafts";
+import { buildFeaturedPropagation } from "@/utils/featured-propagation";
 import {
-  BaseDetailLayout,
-  BasicChip,
-  ContentSection,
-  DetailHero,
+  EventDetail,
+  prepareEventDetail,
   type RelatedItem,
-  RelatedItemsGrid,
-  SpecificationsList,
-  getEventPreviewDescription,
-  getFormattedDateRanges,
-  getLocationString,
-  parseDateLocal,
-  resolveLogoAsset,
 } from "@semio-community/ecosystem-site-core";
 
 export async function getStaticPaths() {
-  const events = await getCollection("events", ({ data }) => {
-    // In production, exclude drafts. In development, show all.
-    return isDraftVisible(data.draft, data.sites);
-  });
+  const events = await getCollection("events", ({ data }) =>
+    isDraftVisible(data.draft, data.sites),
+  );
   return events.map((entry) => ({
     params: { slug: entry.id },
     props: { entry },
   }));
 }
 
-const { entry } = Astro.props as { entry: CollectionEntry<"events"> };
-const { data } = entry;
+const { entry } = Astro.props;
 
-// Get related events (by type or topics)
-async function getRelatedEvents(event: CollectionEntry<"events">, limit = 3) {
-  const allEvents = await getAllEvents();
+const [featured, allEvents] = await Promise.all([
+  buildFeaturedPropagation(),
+  getAllEvents(),
+]);
 
-  // Filter out the current event and past events (unless current is also past)
-  const currentDate = new Date();
-  const isCurrentPast = parseDateLocal(event.data.endDate) < currentDate;
-
-  const otherEvents = allEvents.filter((e) => {
-    if (!isDraftVisible(e.data.draft, e.data.sites)) return false;
-    if (e.id === event.id) return false;
-    // If current event is past, include all; otherwise prefer upcoming
-    if (!isCurrentPast) {
-      const eventDate = parseDateLocal(e.data.startDate);
-      if (eventDate < currentDate) return false;
-    }
-    return true;
-  });
-
-  // Score each event based on similarity
-  const scoredEvents = otherEvents.map((e) => {
-    let score = 0;
-
-    // Same type gets points
-    if (e.data.type === event.data.type) score += 3;
-
-    // Same delivery mode (online vs in-person) gets points
-    if (
-      Boolean(e.data.location.online) === Boolean(event.data.location.online)
-    ) {
-      score += 2;
-    }
-
-    // Same city gets points
-    if (e.data.location.city === event.data.location.city) score += 2;
-
-    // Same country gets points
-    if (e.data.location.country === event.data.location.country) score += 1;
-
-    // Overlapping topics get points
-    const eventTopics = new Set(event.data.topics || []);
-    const otherTopics = e.data.topics || [];
-    const topicOverlap = otherTopics.filter((topic) =>
-      eventTopics.has(topic),
-    ).length;
-    score += topicOverlap * 2;
-
-    // Temporal proximity (within 3 months) gets points
-    const timeDiff = Math.abs(
-      parseDateLocal(e.data.startDate).getTime() -
-        parseDateLocal(event.data.startDate).getTime(),
-    );
-    const monthsDiff = timeDiff / (1000 * 60 * 60 * 24 * 30);
-    if (monthsDiff <= 3) score += 3 - Math.floor(monthsDiff);
-
-    return { event: e, score };
-  });
-
-  // Sort by score and take the top ones
-  scoredEvents.sort((a, b) => b.score - a.score);
-
-  return scoredEvents
-    .filter((se) => se.score > 0)
-    .slice(0, limit)
-    .map((se) => se.event);
-}
-
-const relatedEvents = await getRelatedEvents(entry, 3);
+const payload = prepareEventDetail({ entry, allEvents, featured });
 
 const meta = {
-  title: `${data.name} - Event`,
-  description: data.description,
+  title: `${payload.data.name} - Event`,
+  description: payload.data.description,
 };
 const ogImage = `/og/events/${entry.id}.png`;
-
-// Determine event status
-const currentDate = new Date();
-const startDate = parseDateLocal(data.startDate);
-const endDate = parseDateLocal(data.endDate);
-let eventStatus = "upcoming";
-if (currentDate > endDate) {
-  eventStatus = "past";
-} else if (currentDate >= startDate && currentDate <= endDate) {
-  eventStatus = "ongoing";
-}
-
-// Prepare status badges
-const badges = [];
-
-// Status badge
-if (eventStatus === "ongoing") {
-  badges.push({
-    text: "Ongoing",
-    color: "green" as const,
-    variant: "solid" as const,
-  });
-} else if (eventStatus === "upcoming") {
-  badges.push({
-    text: "Upcoming",
-    color: "blue" as const,
-    variant: "solid" as const,
-  });
-} else {
-  badges.push({
-    text: "Past Event",
-    color: "gray" as const,
-    variant: "outline" as const,
-  });
-}
-
-if (typeof data.location.online === "boolean") {
-  badges.push({
-    text: data.location.online ? "Online" : "In Person",
-    color: data.location.online ? ("accent" as const) : ("green" as const),
-    variant: "outline" as const,
-  });
-}
-
-const typeLabels = {
-  conference: "Conference",
-  workshop: "Workshop",
-  hackathon: "Hackathon",
-  meetup: "Meetup",
-  webinar: "Webinar",
-  competition: "Competition",
-};
-badges.push({
-  text: typeLabels[data.type] || data.type,
-  color: "blue" as const,
-  variant: "outline" as const,
-});
-
-const eventLinks = { ...(data.links || {}) };
-if (eventStatus === "past") {
-  eventLinks.registration = undefined;
-}
-
-// Format dates for display
-const formatDate = (date: Date) => {
-  return date.toLocaleDateString("en-US", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
-};
-
-// Prepare event details from dates array
-const DATE_ICONS: Record<string, string> = {
-  "start date": "solar:calendar-date-line-duotone",
-  start: "solar:calendar-date-line-duotone",
-  "end date": "solar:calendar-mark-line-duotone",
-  end: "solar:calendar-mark-line-duotone",
-  "submission deadline": "solar:clipboard-check-line-duotone",
-  "paper submission deadline": "solar:clipboard-check-line-duotone",
-  "participant support request deadline":
-    "solar:users-group-rounded-line-duotone",
-  "notification date": "solar:bell-line-duotone",
-  "paper notification date": "solar:bell-line-duotone",
-  "early paper submission deadline": "solar:clipboard-add-line-duotone",
-  "early paper notification date": "solar:bell-bing-line-duotone",
-  "early bird conference registration deadline": "solar:ticket-line-duotone",
-};
-
-const eventDetailsItems = [...data.dates]
-  .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
-  .map(({ name, date }) => ({
-    label: name,
-    value: formatDate(parseDateLocal(date)),
-    icon: DATE_ICONS[name.toLowerCase()] ?? "solar:calendar-line-duotone",
-  }));
-// Prepare location details
-const locationItems = [];
-if (data.location.venue) {
-  locationItems.push({
-    label: "Venue",
-    value: data.location.venue,
-    icon: "solar:buildings-line-duotone",
-  });
-}
-locationItems.push({
-  label: "Location",
-  value: `${data.location.city}, ${data.location.country}`,
-  icon: "solar:map-point-line-duotone",
-});
-if (data.location.online) {
-  locationItems.push({
-    label: "Online Access",
-    value: "Available",
-    icon: "solar:laptop-minimalistic-line-duotone",
-  });
-}
-if (data.location.coordinates) {
-  locationItems.push({
-    label: "Map",
-    value: "View on Google Maps",
-    link: `https://maps.google.com/?q=${data.location.coordinates.lat},${data.location.coordinates.lng}`,
-    external: true,
-    icon: "solar:map-line-duotone",
-  });
-}
-
-const formatRoleLabel = (role: string) =>
-  role
-    .split("-")
-    .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
-    .join(" ");
-
-const roleEntries = (data.roles || []).map((role) => ({
-  value: role,
-  label: formatRoleLabel(role),
-}));
-
-const locationString = getLocationString(data.location);
-const dateString = getFormattedDateRanges(startDate, endDate);
-const descriptionText = getEventPreviewDescription(
-  dateString,
-  data.description,
-  locationString,
-);
-const featuredState = data.featured
-  ? eventStatus === "past"
-    ? "previously-featured"
-    : "featured"
-  : undefined;
 ---
 
-    <SiteShell
+<SiteShell
   title={meta.title}
   description={meta.description}
   ogImage={ogImage}
   containerClassName="max-w-5xl"
 >
-      <BaseDetailLayout>
-        <Fragment slot="hero">
-          <DetailHero
-            image={data.images?.hero}
-            title={data.name}
-            subtitle={descriptionText}
-            badges={badges}
-            featuredState={featuredState}
-            logo={resolveLogoAsset(data.images)}
-            entityType="event"
-          />
-        </Fragment>
-
-        <Fragment slot="links">
-          {
-            eventLinks && Object.keys(eventLinks).length > 0 && (
-              <LinkSection
-                client:idle
-                links={eventLinks}
-                size="md"
-                className="gap-1"
-              />
-            )
-          }
-        </Fragment>
-
-        <Fragment slot="description">
-          <ContentSection title="ABOUT THE EVENT" content={data.description} />
-        </Fragment>
-
-        <Fragment slot="metadata">
-          <SpecificationsList
-            title="EVENT DETAILS"
-            items={eventDetailsItems}
-            defaultItemIcon="solar:calendar-line-duotone"
-          />
-          <SpecificationsList
-            title="LOCATION"
-            items={locationItems}
-            defaultItemIcon="solar:map-point-line-duotone"
-          />
-        </Fragment>
-
-        <Fragment slot="actions">
-          {
-            data.actions && data.actions.length > 0 && (
-              <ActionsSection title="ACTIONS" actions={data.actions} />
-            )
-          }
-        </Fragment>
-
-        <Fragment slot="contributors">
-          {
-            roleEntries.length > 0 && (
-              <div class="bg-linear-to-br from-surface-lighter to-surface rounded-xl border border-accent-one/20 p-6">
-                <h3 class="text-xs font-semibold mb-3 text-accent-base uppercase tracking-wider">
-                  VIZIJ ROLES
-                </h3>
-                <div class="flex flex-wrap gap-2">
-                  {roleEntries.map((role) => (
-                    <BasicChip text={role.label} variant="primary" />
-                  ))}
-                </div>
-              </div>
-            )
-          }
-        </Fragment>
-
-        <Fragment slot="content">
-          <div
-            class="bg-linear-to-br from-surface-lighter to-surface rounded-xl border border-accent-one/20 p-6"
-          >
-            <h2
-              class="text-xs font-semibold mb-3 text-accent-base uppercase tracking-wider"
-            >
-              EVENT DETAILS
-            </h2>
-            <MDXContent entry={entry} />
-          </div>
-        </Fragment>
-
-        <Fragment slot="tags">
-          {
-            data.topics && data.topics.length > 0 && (
-              <div class="bg-linear-to-br from-surface-lighter to-surface rounded-xl border border-accent-one/20 p-6">
-                <h3 class="text-xs font-semibold mb-3 text-accent-base uppercase tracking-wider">
-                  TOPICS
-                </h3>
-                <div class="flex flex-wrap gap-2">
-                  {data.topics.map((topic: string) => (
-                    <span class="px-3 py-1.5 bg-accent-two/10 rounded-lg text-sm text-accent-base">
-                      {topic}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )
-          }
-        </Fragment>
-
-        <Fragment slot="related">
-          {
-            relatedEvents && relatedEvents.length > 0 && (
-              <RelatedItemsGrid
-                client:load
-                title="Related Events"
-                subtitle="Similar upcoming and past events"
-                items={relatedEvents as RelatedItem[]}
-                itemType="events"
-                columns={3}
-                baseUrl={import.meta.env.BASE_URL}
-              />
-            )
-          }
-        </Fragment>
-      </BaseDetailLayout>
-    </SiteShell>
-  </body>
-</html>
+  <EventDetail
+    data={payload.data}
+    relatedEvents={payload.relatedEvents as RelatedItem[]}
+    baseUrl={import.meta.env.BASE_URL}
+  >
+    {payload.shouldRenderBody && <MDXContent entry={entry} />}
+  </EventDetail>
+</SiteShell>
