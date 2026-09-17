@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { unified } from "@astrojs/markdown-remark";
 import mdx from "@astrojs/mdx";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
@@ -86,42 +87,44 @@ export default defineConfig({
   markdown: {
     syntaxHighlight: false,
 
-    remarkPlugins: [
-      remarkGfm,
-      remarkReadingTime,
-      remarkDirective,
-      remarkAdmonitions,
-    ],
-    remarkRehype: {
-      footnoteLabelProperties: {
-        className: [""],
+    processor: unified({
+      remarkPlugins: [
+        remarkGfm,
+        remarkReadingTime,
+        remarkDirective,
+        remarkAdmonitions,
+      ],
+      remarkRehype: {
+        footnoteLabelProperties: {
+          className: [""],
+        },
+        footnoteBackContent: "⤴",
       },
-      footnoteBackContent: "⤴",
-    },
 
-    rehypePlugins: [
-      [
-        rehypeExternalLinks,
-        {
-          rel: ["nofollow", "noreferrer"],
-          target: "_blank",
-        },
-      ],
-      [rehypeBasePathContent, { basePath: process.env.PR_PREVIEW_PATH || "/" }],
-
-      [
-        rehypePrettyCode,
-        {
-          theme: {
-            light: "rose-pine-dawn", // after changing the theme, the server needs to be restarted
-            dark: "rose-pine", // after changing the theme, the server needs to be restarted
+      rehypePlugins: [
+        [
+          rehypeExternalLinks,
+          {
+            rel: ["nofollow", "noreferrer"],
+            target: "_blank",
           },
+        ],
+        [rehypeBasePathContent, { basePath: process.env.PR_PREVIEW_PATH || "/" }],
 
-          transformers: [transformerNotationDiff(), transformerMetaHighlight()],
-        },
+        [
+          rehypePrettyCode,
+          {
+            theme: {
+              light: "rose-pine-dawn", // after changing the theme, the server needs to be restarted
+              dark: "rose-pine", // after changing the theme, the server needs to be restarted
+            },
+
+            transformers: [transformerNotationDiff(), transformerMetaHighlight()],
+          },
+        ],
+        rehypeUnwrapImages,
       ],
-      rehypeUnwrapImages,
-    ],
+    }),
   },
   // https://docs.astro.build/en/guides/prefetch/
   prefetch: true,
