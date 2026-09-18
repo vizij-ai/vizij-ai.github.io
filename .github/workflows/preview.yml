@@ -28,7 +28,7 @@ jobs:
         if: github.event.action != 'closed'
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: "npm"
           registry-url: https://npm.pkg.github.com
           scope: "@semio-community"

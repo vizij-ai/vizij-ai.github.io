@@ -2,6 +2,11 @@ import type { AdmonitionType } from "@/types";
 import type { Properties } from "hastscript";
 import { h as _h } from "hastscript";
 import type { Node, Paragraph as P, Parent, PhrasingContent, Root } from "mdast";
+// `hName`/`hProperties` are contributed to mdast's `data` by
+// mdast-util-to-hast's module augmentation, which only applies when the
+// package is in scope. Import it for the types alone.
+import type {} from "mdast-util-to-hast";
+
 import type { Directives, LeafDirective, TextDirective } from "mdast-util-directive";
 import { directiveToMarkdown } from "mdast-util-directive";
 import { toMarkdown } from "mdast-util-to-markdown";
