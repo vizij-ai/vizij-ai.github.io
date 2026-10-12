@@ -54,4 +54,12 @@ export const {
 	getResearchByOrganization,
 	getAllSoftware,
 	getRelatedSoftware,
-} = createCollectionQueries<Entries>({ site, loadCollection, loadEntry });
+} = createCollectionQueries<Entries>({
+	site,
+	loadCollection,
+	loadEntry,
+	// Rank by the same propagated featured state the payload builders
+	// star: an entry featured through an active press item or award
+	// ranks with the featured entries and counts as a featured event.
+	featuredRanking: "propagated",
+});
