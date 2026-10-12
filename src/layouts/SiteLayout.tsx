@@ -11,7 +11,7 @@ import React, { type ReactNode } from "react";
  * Usage (from an .astro route):
  *   ---
  *   import BaseLayout from "@/layouts/BaseLayout";
- *   import { getAllHardware } from "@/data/hardware";
+ *   import { getAllHardware } from "@/utils/collections";
  *   const data = await getAllHardware();
  *   ---
  *   <BaseLayout header={<HeaderIsland />} footer={<FooterIsland />}>
