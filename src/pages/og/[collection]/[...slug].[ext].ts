@@ -1,12 +1,14 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { type CollectionEntry, getCollection } from "astro:content";
-import { getAllEvents } from "@/data/events";
-import { getAllHardware } from "@/data/hardware";
-import { getAllOrganizations } from "@/data/organizations";
-import { getAllPeople } from "@/data/people";
-import { getAllResearch } from "@/data/research";
-import { getAllSoftware } from "@/data/software";
+import {
+	getAllEvents,
+	getAllHardware,
+	getPartnerOrganizations,
+	getAllPeople,
+	getAllResearch,
+	getAllSoftware,
+} from "@/utils/collections";
 import { renderOgImage } from "@/og/renderer";
 import type { OgImageAsset, OgImageProps } from "@/og/types";
 import { isDraftVisible } from "@/utils/drafts";
@@ -462,7 +464,7 @@ async function mapEvent(
 }
 
 async function mapOrganization(
-	entry: Awaited<ReturnType<typeof getAllOrganizations>>[number],
+	entry: Awaited<ReturnType<typeof getPartnerOrganizations>>[number],
 ): Promise<OgImageProps> {
 	const typeLabel = capitalize(entry.data.type) || "Partner";
 	const focusLabel = entry.data.category
@@ -658,7 +660,7 @@ export async function getStaticPaths() {
 		pushPaths("events", entry.id, await mapEvent(entry));
 	}
 
-	const organizationEntries = (await getAllOrganizations())
+	const organizationEntries = (await getPartnerOrganizations())
 		.filter(isVisible)
 		.filter((entry) => entry.data.isPartner)
 		.filter((entry) => !hasCustomOgImage(entry));

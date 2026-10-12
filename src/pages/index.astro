@@ -11,10 +11,10 @@ import {
   getCurrentEvents,
   getFeaturedEvents,
   getUpcomingEvents,
-} from "@/data/events";
-import { getAllHardware } from "@/data/hardware";
-import { getAllResearch } from "@/data/research";
-import { getAllSoftware } from "@/data/software";
+  getAllHardware,
+  getAllResearch,
+  getAllSoftware,
+} from "@/utils/collections";
 
 // Load data on the server (Astro)
 const allHardware = await getAllHardware();
@@ -31,7 +31,9 @@ const featuredOnly = await getFeaturedEvents();
 const featuredEventCount = [
   ...currentEvents.filter((c) => !featuredOnly.some((f) => f.id === c.id)),
   ...upcomingEvents.filter((u) => !featuredOnly.some((f) => f.id === u.id)),
-  ...featuredOnly.filter((f) => f.data.startDate > now),
+  // A featured event counts until it ends: the terms above exclude every
+  // featured event, so one already under way would otherwise drop out.
+  ...featuredOnly.filter((f) => f.data.endDate >= now),
 ].length;
 
 const pageTitle = siteConfig.title;

@@ -2,7 +2,7 @@
 import { getCollection } from "astro:content";
 import SiteShell from "@/layouts/SiteShell.astro";
 import MDXContent from "@/components/mdx/MDXContent.astro";
-import { getAllEvents } from "@/data/events";
+import { getAllEvents } from "@/utils/collections";
 import { isDraftVisible } from "@/utils/drafts";
 import { buildFeaturedPropagation } from "@/utils/featured-propagation";
 import {
