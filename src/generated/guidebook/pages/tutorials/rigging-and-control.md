@@ -119,7 +119,7 @@ The current implementation anchors live mainly in `vizij-web/apps/vizij-authorin
 Use the `vizij-web` workspace root:
 
 ```bash
-cd /home/chris/Code/Semio/vizij_ws/vizij-web
+cd path/to/vizij-web
 pnpm run dev:vizij-authoring
 ```
 

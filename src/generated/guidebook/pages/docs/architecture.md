@@ -30,12 +30,12 @@ prerequisites:
 successCheck:
   - you can describe Vizij as authored assets plus runtime coordination plus
     application and deployment surfaces,
-  - you can explain the distinct roles of the renderer, orchestrator,
-    controllers, and blackboard at a high level,
+  - you can explain the distinct roles of the view, the device's step, the
+    composed graph, and the store at a high level,
   - you can explain why typed paths, values, and shapes matter even before
     learning their detailed syntax,
-  - you can place Hello Face, Authoring, Player, and Deployment in the overall
-    system without confusing them for one another.
+  - you can place the public buckets and their current app anchors in the
+    overall system without confusing them for one another.
 headings:
   - depth: 2
     slug: module-notes
@@ -141,23 +141,24 @@ flowchart LR
     classDef runtime fill:#eef7ee,stroke:#2f855a,stroke-width:1.5px
     classDef app fill:#eef4ff,stroke:#4e79a7,stroke-width:1.5px
 
-    asset[&quot;1. Face asset\nGLB / loaded world&quot;]
+    asset[&quot;1. Face asset\nGLB&quot;]
     bundle[&quot;2. Vizij bundle metadata\nrig, poses, animations, programs&quot;]
-    provider[&quot;3. VizijRuntimeProvider\nloads and owns runtime startup&quot;]
+    provider[&quot;3. VizijRuntimeProvider\nloads the face as a device&quot;]
     inputs[&quot;4. Typed inputs\npaths + values&quot;]
-    orch[&quot;5. Orchestrator + controllers&quot;]
-    board[&quot;6. Blackboard and output paths&quot;]
-    render[&quot;7. Renderer applies resolved values&quot;]
-    face[&quot;8. VizijRuntimeFace&quot;]
+    device[&quot;5. The face's device steps\ncomposed graph, runs, modules&quot;]
+    board[&quot;6. The face's store\n(its blackboard)&quot;]
+    render[&quot;7. The Bevy view draws the pose\non the page's canvas&quot;]
+    face[&quot;8. The face, over its slot\n(VizijRuntimeFace)&quot;]
 
     asset --- bundle
-    asset --&gt;|&quot;loaded as bundle input&quot;| provider
-    bundle --&gt;|&quot;registers authored runtime layers&quot;| provider
-    provider --&gt;|&quot;stages runtime inputs&quot;| inputs
-    inputs --&gt; orch --&gt; board --&gt; render --&gt; face
+    asset --&gt;|&quot;loaded as the face's GLB&quot;| provider
+    bundle --&gt;|&quot;composed into the device's behavior&quot;| provider
+    provider --&gt;|&quot;app writes keys&quot;| inputs
+    inputs --&gt; board --&gt; device --&gt; board
+    device --&gt; render --&gt; face
 
     class asset,bundle asset
-    class inputs,orch,board,render runtime
+    class inputs,device,board,render runtime
     class provider,face app
 </pre>
 
@@ -169,7 +170,7 @@ flowchart LR
     classDef deploy fill:#fdf1f3,stroke:#c05670,stroke-width:1.5px
 
     provider[&quot;Runtime provider\nowns lifecycle&quot;]
-    face[&quot;Runtime face surface&quot;]
+    face[&quot;The face on the page's canvas&quot;]
     ui[&quot;App-owned hooks,\npanels, and session state&quot;]
     shell[&quot;Browser app or standalone shell&quot;]
     operator[&quot;Operator or end-user context&quot;]
@@ -205,14 +206,14 @@ This is why authoring matters. It produces a face that is not only visible, but 
 
 The runtime is the part that turns authored structure into live behavior.
 
-The current architecture stays intentionally small:
+Each face runs as an Arora device of its own, and the architecture stays intentionally small:
 
-1. the `renderer` applies values to the visible face,
-2. the `orchestrator` coordinates execution and merges writes,
-3. graph and animation controllers generate or transform values,
-4. the `blackboard` holds shared typed state between controllers.
+1. the `store` (the face's blackboard) holds its shared typed state,
+2. the face's graphs, composed into one, read and write that store each step, with programs, skills such as `say`, and animations running beside them,
+3. the device's step loop coordinates them, one step after another,
+4. the `view`, the Bevy renderer of the vizij-rs `vizij` crate, reads the face's pose and draws it.
 
-The important learner-level point is that Vizij does not treat a face as a passive clip player. It treats the face as something live controllers can drive frame by frame.
+The important learner-level point is that Vizij does not treat a face as a passive clip player. It treats the face as something live graphs and programs drive step by step. The same device runs the face in a browser page and in the native `vizij` app.
 
 ### 3. Integration surfaces
 
@@ -252,7 +253,7 @@ That sentence prevents several later confusions:
 | Layer | Primary Role | Key Artifact | Stability |
 | :--- | :--- | :--- | :--- |
 | **Asset** | Structure & Metadata | GLB / Vizij Bundle | Foundational |
-| **Runtime** | Execution & Logic | Orchestrator / WASM | Predictable |
+| **Runtime** | Execution & Logic | The face's Arora device (WASM in a browser) | Predictable |
 | **App Shell** | Use Case & UI | React Component / Shell | Context-Specific |
 | **Deployment** | Endpoint & Operator | Executable / Web URL | Operational |
 
@@ -286,13 +287,13 @@ You do not need every encoding detail yet. You do need to know that Vizij depend
 
 ### The blackboard
 
-The blackboard is the shared runtime state where controllers read and write typed-path values.
+The blackboard is the shared runtime state where the face's graphs, programs and modules read and write typed-path values; Arora calls it the device's store.
 
-You can think of it as the coordination surface between authored behavior and the visible renderer:
+You can think of it as the coordination surface between authored behavior and the visible face:
 
-1. controllers write there,
-2. the orchestrator schedules and merges those writes,
-3. the renderer ultimately applies the resulting values.
+1. the app and the face's graphs and programs write there,
+2. each step, the device evaluates the composed graph over it, and each key keeps the last value written to it in the step,
+3. the view ultimately draws the resulting pose.
 
 That is why the blackboard matters conceptually even if you never inspect it directly in early workflows.
 
@@ -329,18 +330,20 @@ This page intentionally does not teach the detailed control taxonomy. It only es
 
 ## Where The Public Route Fits
 
-One helpful public builder spine is:
+The maintained public route uses the guidebook bucket chain:
 
-`Hello Face -> Authoring -> Player -> Deployment`
+`Introduction -> Experience -> Control -> Customize -> Integrate -> Deploy`
 
 This page should help you interpret that route correctly:
 
-1. `Hello Face` proves the runtime is real,
-2. `Authoring` changes the artifact and its behavior definitions,
-3. `Player` shows the runtime inside an application shell,
-4. `Deployment` makes that application usable in a real operating context.
+1. `Introduction` gets the reader oriented before they start building,
+2. `Experience` proves the runtime is real,
+3. `Control` explains what is being driven and why it is stable,
+4. `Customize` changes the artifact and its behavior definitions when needed,
+5. `Integrate` shows the runtime inside an application shell,
+6. `Deploy` makes that application usable in a real operating context.
 
-The route is a teaching sequence, not the literal architecture diagram.
+App names such as `Hello Face`, `vizij-authoring`, `demo-vizij-player`, and `vizij-standalone` are anchors inside that route. The route itself is a teaching sequence, not the literal architecture diagram.
 
 ## Misunderstandings This Page Should Prevent
 

@@ -99,7 +99,7 @@ hasMermaid: false
 Use the `vizij-web` workspace root:
 
 ```bash
-cd /home/chris/Code/Semio/vizij_ws/vizij-web
+cd path/to/vizij-web
 pnpm run dev:vizij-standalone
 ```
 
@@ -114,7 +114,7 @@ Before you run the standalone path, confirm these assumptions:
 3. you have one known-good bundled GLB available if you do not want to rely on the file picker,
 4. if you plan to launch fullscreen on a specific monitor, you can inspect displays first from the app-local README.
 
-If the desktop shell itself does not start, stop here and use [vizij-web/apps/vizij-standalone/README.md](/home/chris/Code/Semio/vizij_ws/vizij-web/apps/vizij-standalone/README.md) as the implementation authority before debugging runtime behavior.
+If the desktop shell itself does not start, stop here and use [vizij-web/apps/vizij-standalone/README.md](https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/deploy/vizij-web/apps/vizij-standalone/README.md) as the implementation authority before debugging runtime behavior.
 
 ## What This First Deployment Must Prove
 

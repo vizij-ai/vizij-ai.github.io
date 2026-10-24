@@ -94,6 +94,12 @@ implementationAnchors:
   - label: tutorial-agent-face
     href: https://github.com/vizij-ai/vizij-web/tree/main/apps/tutorial-agent-face
     description: Current richer integration app behind the public branch.
+  - label: "@vizij/runtime-react"
+    href: https://github.com/vizij-ai/vizij-web/tree/main/packages/@vizij/runtime-react
+    description: The provider that loads the face and hands the app its runtime.
+  - label: "@vizij/render"
+    href: https://github.com/vizij-ai/vizij-web/tree/main/packages/@vizij/render
+    description: The page's canvas and the face's slot.
 demoLinks:
   - label: Voice demo
     href: /demos/#voice
@@ -107,7 +113,7 @@ hasMermaid: false
 Use the `vizij-web` workspace root:
 
 ```bash
-cd /home/chris/Code/Semio/vizij_ws/vizij-web
+cd path/to/vizij-web
 ```
 
 This walkthrough uses `apps/tutorial-agent-face`, the maintained Vizij example that layers a live service loop on top of the same runtime foundation used in `tutorial-fullscreen-face`.
@@ -187,7 +193,7 @@ Open the local URL shown by Vite.
 
 Expected result:
 
-1. the face appears through the same runtime-react foundation used by the simpler tutorial
+1. the face appears on the page's canvas through the same provider used by the simpler tutorial
 2. the UI has more controls and session-facing chrome than `tutorial-fullscreen-face`
 3. the app is clearly more product-shaped without being a different runtime model
 
@@ -208,7 +214,7 @@ What to look for:
 
 1. the face runtime can become ready even if the external session is disconnected
 2. a missing API key or disconnected session does not mean the runtime failed
-3. local behavior such as face presence, base interactions, and UI shell rendering still prove that the Vizij layer is healthy
+3. local behavior such as the face's own idle motion, the debug controls, and UI shell rendering still prove that the Vizij layer is healthy
 
 This is the first advanced lesson:
 
@@ -230,42 +236,56 @@ The runtime bootstrap still looks like this:
 ```tsx
 export function FaceApp() {
   return (
-    <VizijRuntimeProvider assetBundle={assetBundle} autostart>
-      <AgentFaceRuntime />
-    </VizijRuntimeProvider>
+    <>
+      <VizijCanvas style={CANVAS_STYLE} />
+      <VizijRuntimeProvider glb={faceAssetUrl}>
+        <AgentFaceRuntime />
+      </VizijRuntimeProvider>
+    </>
   );
 }
 ```
 
-That small bootstrap matters. The app becomes rich by adding layers around the runtime, not by replacing it.
+`<VizijCanvas>` is the page's one canvas, on which the face draws; `VizijRuntimeProvider` loads the face and runs it as a device. The face carries a program that keeps it alive and reacts to what the app tells it. That small bootstrap matters. The app becomes rich by adding layers around the runtime, not by replacing it.
 
 ### 4. Follow the live-service bridge in code
 
 Inside `FaceApp.tsx`, look for the boundary between session logic and runtime logic:
 
 ```tsx
-const { tools, handleFunctionCalls, gazeActive } = useAgentFaceTools({
+const { tools, handleFunctionCalls } = useAgentFaceTools({
   enabled: ready,
-  bindings,
+  expressions,
+  allowEmotionTools: debugControlsOpen,
 });
 
-const { status: geminiStatus, connect, disconnect } = useGeminiLive(
-  audioManager,
-  voiceName,
-  {
-    enableTools: toolsEnabled,
-    tools,
-    handleFunctionCalls: toolsEnabled ? handleFunctionCalls : undefined,
-    systemInstruction: SYSTEM_INSTRUCTION,
-  },
-);
+const {
+  status: geminiStatus,
+  userSpeaking,
+  thinking,
+  modelSpeaking,
+  connect,
+  disconnect,
+} = useGeminiLive(audioManager, voiceName, {
+  enableTools: toolsEnabled,
+  tools,
+  handleFunctionCalls: toolsEnabled ? handleFunctionCalls : undefined,
+  systemInstruction,
+  initialUserTurn,
+});
+
+useConversationState(ready, {
+  speaking: modelSpeaking,
+  userSpeaking,
+  thinking,
+});
 ```
 
 What this means:
 
 1. `useGeminiLive` owns the external session
 2. `useAgentFaceTools` owns the translation from tool calls into Vizij runtime actions
-3. the face still moves through runtime helpers such as `setInput(...)` and `animateValue(...)`
+3. the face moves through its Vizij face standard keys and methods: the conversation state (`standard/vizij/conversation/*`) that the face's program reacts to, the gaze target (`standard/vizij/gaze/target/*`) that `set_gaze` steers, the expression weights (`standard/vizij/expression/<name>`) that `express_emotion` fades, and `play_viseme`, which plays the lips from the agent's audio
 
 This translation layer is the part you copy into your own advanced app.
 
@@ -276,7 +296,7 @@ If `VITE_GEMINI_API_KEY` is configured:
 1. connect the session from the UI
 2. trigger a short interaction
 3. watch for transcript or session-state feedback
-4. observe gaze, emotion, or mouth behavior update through the face surface
+4. observe gaze, expression, or mouth behavior update through the face surface
 
 Expected result:
 
@@ -303,7 +323,7 @@ Use these shortcuts:
 
 1. if the face never loads, treat that as a runtime problem and compare against [Hello Face Quickstart](/tutorials/hello-face/)
 2. if the face loads but the session will not connect, check whether `VITE_GEMINI_API_KEY` is configured
-3. if the session connects but the face does not react, inspect `useAgentFaceTools.ts` and compare the expected bridge shape in this page
+3. if the session connects but the face does not react, inspect `useAgentFaceTools.ts` and `useConversationState.ts` and compare the expected bridge shape in this page
 4. if you need route-level healthy-state checks, use [Validation Checkpoints](https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/support/validation-checkpoints.md)
 5. if you need failure-driven recovery, use [Troubleshooting Matrix](https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/support/troubleshooting-matrix.md)
 

@@ -211,19 +211,17 @@ This is why deployment is not just about rendering. The runtime has to expose a 
 
 ## Path Contract At The Deployment Boundary
 
-Keep these three strings separate when you validate or debug the standalone endpoint:
+Keep these two strings separate when you validate or debug the standalone endpoint:
 
 | What you are looking at | Example | Trust it for |
 | --- | --- | --- |
-| runtime hint | `rig/{faceId}/standard/vizij/left_eye/pos/x` | internal runtime reasoning and bundle-to-renderer diagnostics |
-| discovered slot name | `standard/vizij/left_eye/pos/x` | external client writes and operator-facing control |
-| namespaced snapshot key | `{namespace}/rig/{faceId}/standard/vizij/left_eye/pos/x` | shared-runtime or orchestrator-level inspection |
+| runtime path | `rig/{faceId}/standard/vizij/left_eye/pos/x` | internal runtime reasoning and bundle-to-renderer diagnostics |
+| deployment slot | `standard/vizij/left_eye/pos/x` | external client writes and operator-facing control |
 
 The practical rule is simple:
 
-1. copy discovered slot names from the endpoint when writing through WebSocket or the built-in panel,
-2. use the full runtime path when you are inspecting runtime internals,
-3. use the namespaced form only when a shared runtime or diagnostics surface actually shows it.
+1. copy deployment slots from the endpoint when writing through WebSocket or the built-in panel,
+2. use the full runtime path when you are inspecting runtime internals.
 
 ## Recommended First Deployment Choice
 
@@ -246,7 +244,7 @@ Use this before you jump into deeper topology pages:
 
 ## Slot-Centric Thinking
 
-In the standalone deployment model, think in discovered slot names at the operator boundary:
+In the standalone deployment model, think in deployment slots at the operator boundary:
 
 1. the deployment surface exposes controllable paths,
 2. those paths are synchronized into the backend,

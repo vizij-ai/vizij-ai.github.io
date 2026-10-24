@@ -21,15 +21,15 @@ redirects:
   - first-control-interactions
 outcome: After this page, you should be able to use the maintained fullscreen
   tutorial to trigger two different kinds of control, explain how their behavior
-  differs, and connect each visible interaction to the code that stages it.
+  differs, and connect each visible interaction to the code that drives it.
 prerequisites:
   - "Run this from the vizij-web root:"
 successCheck:
-  - mouse movement visibly steers gaze
-  - number keys visibly animate authored facial states
-  - you can explain the difference between continuous standard-input control and
-    discrete pose-weight control
-  - you can point to the two hooks that stage those writes
+  - holding an expression key visibly fades an expression in and out
+  - a viseme key visibly moves the mouth
+  - you can explain the difference between writing a standard control and
+    calling a method
+  - you can point to the hook that does both
 headings:
   - depth: 2
     slug: starting-state
@@ -96,7 +96,7 @@ hasMermaid: false
 Run this from the `vizij-web` root:
 
 ```bash
-cd /home/chris/Code/Semio/vizij_ws/vizij-web
+cd path/to/vizij-web
 pnpm run dev:tutorial-fullscreen-face
 ```
 
@@ -108,20 +108,20 @@ This page assumes you already completed [Hello Face Quickstart](/tutorials/hello
 
 This app teaches two useful control ideas immediately:
 
-1. continuous standard-input control through mouse gaze
-2. discrete authored-state control through pose hotkeys
+1. a held expression: a key fades one of the face standard's expression weights in, and back out on release
+2. a played viseme: a key calls one of the face's methods, which plays a mouth shape once
 
-Both are real runtime writes. They just write into different parts of the runtime model.
+Both drive the face through its own API. One writes a key the app owns for as long as the key is held; the other asks the face to do something over time, and the face writes the keys itself.
 
 Quick term bridge before you continue:
 
-1. `standard control` means a reusable runtime channel such as eye position.
-2. `pose weight` means the current strength of a named authored state such as `happy` or `surprise`.
-3. `path` means the runtime address the hook writes, not the visible UI widget itself.
+1. `standard control` means a key of the Vizij face standard, such as `standard/vizij/expression/happy`, the same on every face.
+2. `method` means a function the face's device declares, such as `play_viseme`, called by name with `runtime.invoke(...)`.
+3. `path` means the runtime address a write lands on, not the visible UI widget itself.
 
 ## What This Page Is Not Proving Yet
 
-This page proves that the runtime can accept and apply different kinds of control writes.
+This page proves that the runtime can accept different kinds of control.
 
 It does not yet prove:
 
@@ -139,60 +139,56 @@ Do not test control while the app is still loading.
 Wait until:
 
 1. the face is fully visible
-2. there is no loading or initialization message blocking the view
-3. repeated mouse movement produces consistent eye motion
+2. the loading bar over the face is gone
+3. moving the pointer over the page shows the key hints
 
 Why this matters:
 
-1. `tutorial-fullscreen-face` stages a neutral pose baseline when the runtime becomes ready
-2. the interaction hooks only make sense after the provider has loaded the face and registered the runtime state
+1. the hotkeys bind only once the provider reports the face `ready`
+2. the hints list the keys the app bound, so their presence proves the face's profile was read
 3. a visible face is not automatically a ready control surface
 
 If you are not confident the app is healthy yet, go back to [Hello Face Quickstart](/tutorials/hello-face/) or check [Validation Checkpoints](https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/support/validation-checkpoints.md).
 
-### 2. Use mouse gaze as a continuous control
+### 2. Hold an expression key
 
-Move the pointer across the viewport and watch the eyes respond.
-
-Expected result:
-
-1. eye movement changes smoothly as the pointer moves
-2. the interaction feels continuous rather than one-shot
-3. the face returns toward neutral when the pointer stops driving gaze
-
-Open:
-
-1. `vizij-web/apps/tutorial-fullscreen-face/src/hooks/useMouseGaze.ts`
-
-What to look for:
-
-1. pointer position is normalized into a reusable value range
-2. the hook calls runtime input staging rather than mutating the canvas directly
-3. the control paths target the face's standard eye-position channels
-
-The important mental model is simple: mouse movement becomes a stream of runtime input values.
-
-### 3. Use pose hotkeys as a discrete authored-state control
-
-Press the number keys shown by the app.
+Hold one of the expression keys (`1`–`0`, `Q`–`P`, `A`–`J`), then release it.
 
 Expected result:
 
-1. a visible face pose or expression animates in
-2. releasing the key lets the pose animate back out
-3. repeated key presses work consistently
+1. the expression fades in over about two seconds while the key is held
+2. it fades back out over the same time once released
+3. repeated presses work consistently
 
 Open:
 
-1. `vizij-web/apps/tutorial-fullscreen-face/src/hooks/usePoseHotkeys.ts`
+1. `vizij-web/apps/tutorial-fullscreen-face/src/hooks/useFaceHotkeys.ts`
 
 What to look for:
 
-1. the hook derives pose-weight paths from the loaded pose config
-2. it uses runtime helpers such as `buildPoseWeightPathMap()` and `animateValue(...)`
-3. the interaction is based on named authored states, not direct eye-position steering
+1. the hook reads the face standard's profile, `vizij-face`, and binds its expressions in the profile's order
+2. a key press tweens `runtime.path("standard/vizij/expression/<name>")` to 0.75 with `animateValue(...)`, and the release tweens it back to 0
+3. the write targets the standard's key, not one of this face's own poses: the face's standard adaptation maps it onto Quori's poses
 
-The mental model here is different: a key press selects one authored state and animates its weight.
+The important mental model is simple: the app owns the expression's weight, and a tween writes it once per frame.
+
+### 3. Press a viseme key
+
+Press one of the viseme keys (`K`, `L`, `Z`–`M`). They play the first nine of the standard's 15 visemes, `sil` to `nn`; the other six have no key.
+
+Expected result:
+
+1. the mouth takes the shape once, then returns
+2. holding the key does not hold the shape
+3. repeated presses replay it
+
+What to look for in the same hook:
+
+1. a key press calls `runtime.invoke("play_viseme", { shape, weight })`
+2. the face's viseme player writes the standard's viseme keys (`standard/vizij/viseme/<shape>`) through its lipsync envelope, so the app writes no viseme key itself
+3. the release does nothing: a viseme is played, not held
+
+The mental model here is different: a key press asks the face to play something, and the face owns the keys it writes while it plays.
 
 ### 4. Compare the two control styles directly
 
@@ -200,22 +196,24 @@ Use this comparison while the app is open:
 
 | Interaction | What you do | What changes visibly | Runtime meaning |
 | --- | --- | --- | --- |
-| Mouse gaze | move the pointer | eyes track continuously | writes standardized eye-position inputs |
-| Pose hotkeys | press and release a number key | expression or pose weight animates in and out | writes authored pose-weight values |
+| Expression key | hold and release a key | an expression fades in and out | the app tweens a key of the face standard |
+| Viseme key | press a key | the mouth takes one shape | the app calls a method; the face writes the viseme keys |
 
 This is the first important control lesson in Vizij:
 
-1. not every control write is the same kind of write
-2. standardized channels and authored pose weights are both valid, but they solve different problems
+1. not every control is the same kind of write
+2. writing a key and calling a method are both valid, but they solve different problems
 3. later pages explain the path grammar and semantics behind these interactions
+
+With `?autoplay` added to the URL, the face's own program also runs from load and moves the face between your key presses: a third writer, which the app commands through the keys the program reads.
 
 ### 5. Inspect the code shape that makes both patterns work
 
 You have already seen the behavior in the browser. Now connect it to the runtime API surface:
 
-1. `useMouseGaze.ts` uses runtime input staging for continuous steering
-2. `usePoseHotkeys.ts` uses runtime animation helpers for temporary pose blends
-3. both hooks depend on the same `VizijRuntimeProvider` and `useVizijRuntime()` foundation from `FaceApp.tsx`
+1. `useFaceHotkeys.ts` uses `useAnimateValue()` for the held expressions
+2. the same hook calls `runtime.invoke("play_viseme", …)` for the visemes
+3. both depend on the same `VizijRuntimeProvider` and `useVizijRuntime()` foundation from `FaceApp.tsx`
 
 That common foundation matters. Vizij control is not a pile of unrelated tricks. The runtime stays consistent while the control semantics change.
 
@@ -223,16 +221,16 @@ That common foundation matters. Vizij control is not a pile of unrelated tricks.
 
 By the end of this page, the correct short explanation is:
 
-1. mouse gaze is a continuous standard-control example
-2. hotkeys are a discrete pose-weight example
-3. both go through runtime APIs
-4. they differ because they write to different semantic control surfaces
+1. an expression key is a held write to a standard control
+2. a viseme key is a method call the face plays out over time
+3. both go through the face's runtime API
+4. they differ because one writes a key and the other asks the face to write keys
 
 ## Fast Recovery If It Fails
 
 Use these shortcuts:
 
-1. if the face is visible but gaze does not move, compare the current app state with [Hello Face Quickstart](/tutorials/hello-face/)
+1. if the face is visible but no hints show, compare the current app state with [Hello Face Quickstart](/tutorials/hello-face/)
 2. if hotkeys do nothing, verify the app finished loading before testing
 3. if you need a route-level definition of healthy behavior, use [Validation Checkpoints](https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/support/validation-checkpoints.md)
 4. if the runtime reaches an error state, use [Troubleshooting Matrix](https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/support/troubleshooting-matrix.md)
@@ -241,7 +239,7 @@ Use these shortcuts:
 
 Continue to [Paths and Standard Controls](/docs/rigging-and-control-model/).
 
-That page names the path vocabulary underneath the gaze and pose interactions you just used.
+That page names the path vocabulary underneath the expression and viseme interactions you just used.
 
 Use these branch points after that:
 
