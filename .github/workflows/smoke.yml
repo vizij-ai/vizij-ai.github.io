@@ -66,6 +66,10 @@ jobs:
           npx astro sync
           npx tsc --noEmit --pretty false
 
+      - name: Typecheck .astro files
+        working-directory: site
+        run: npx astro check
+
       - name: Resolve hub owner
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.enable_hub_sync }}
         id: hub_owner
