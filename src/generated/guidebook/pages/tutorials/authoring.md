@@ -92,7 +92,7 @@ hasMermaid: false
 Use the `vizij-web` workspace root:
 
 ```bash
-cd /home/chris/Code/Semio/vizij_ws/vizij-web
+cd path/to/vizij-web
 pnpm run dev:vizij-authoring
 ```
 
@@ -120,6 +120,8 @@ Expected result before you continue:
 ## Walkthrough
 
 ### 1. Load a maintained preset face
+
+The supported sample set for the maintained creator path is `Quori / Toasty`. This walkthrough uses `Quori Latest` because it is the current lowest-friction preset anchor in the app.
 
 Click `Quori Latest`.
 

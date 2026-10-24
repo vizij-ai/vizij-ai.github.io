@@ -288,7 +288,7 @@
         "description": "Launch the smallest maintained Vizij runtime app, prove the face is live, and connect the visible behavior back to the runtime skeleton.",
         "href": "/tutorials/hello-face/",
         "implementation": "tutorial-fullscreen-face",
-        "outcome": "After this page, you should be able to launch the maintained Hello Face app, confirm that the runtime is actually live, trigger visible behavior with the mouse and keyboard, and point to the small runtime skeleton that makes the app work."
+        "outcome": "After this page, you should be able to launch the maintained Hello Face app, confirm that the runtime is actually live, trigger visible behavior with the keyboard, and point to the small runtime skeleton that makes the app work."
       },
       {
         "eyebrow": "Stage 2",
@@ -296,7 +296,7 @@
         "description": "Use the first maintained runtime interactions to make path writes, cause and effect, and visible control semantics concrete.",
         "href": "/tutorials/renderer-data-model/",
         "implementation": "Control bucket reference",
-        "outcome": "After this page, you should be able to use the maintained fullscreen tutorial to trigger two different kinds of control, explain how their behavior differs, and connect each visible interaction to the code that stages it."
+        "outcome": "After this page, you should be able to use the maintained fullscreen tutorial to trigger two different kinds of control, explain how their behavior differs, and connect each visible interaction to the code that drives it."
       },
       {
         "eyebrow": "Stage 3",

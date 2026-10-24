@@ -21,16 +21,17 @@ redirects:
   - hello-face-quickstart
 outcome: After this page, you should be able to launch the maintained Hello Face
   app, confirm that the runtime is actually live, trigger visible behavior with
-  the mouse and keyboard, and point to the small runtime skeleton that makes the
-  app work.
+  the keyboard, and point to the small runtime skeleton that makes the app work.
 prerequisites:
   - "Install dependencies once:"
   - "Use the vizij-web workspace root:"
 successCheck:
   - tutorial-fullscreen-face runs locally
   - the face renders and reaches a stable ready state
-  - mouse movement changes gaze and number keys trigger visible pose changes
-  - you can point to the asset bundle, provider, and interaction hooks in code
+  - expression keys fade visible expressions in and out and viseme keys move the
+    mouth
+  - you can point to the canvas, the provider, the face's slot, and the hotkey
+    hook in code
 headings:
   - depth: 2
     slug: starting-state
@@ -105,7 +106,7 @@ hasMermaid: false
 Use the `vizij-web` workspace root:
 
 ```bash
-cd /home/chris/Code/Semio/vizij_ws/vizij-web
+cd path/to/vizij-web
 ```
 
 This walkthrough uses `apps/tutorial-fullscreen-face`, which is the smallest maintained Vizij runtime app in the workspace.
@@ -133,7 +134,7 @@ Keep these four labels distinct while you work through the first run:
 | Term | What it means on this page | What it does not mean yet |
 | --- | --- | --- |
 | `face artifact` | the bundled sample face being loaded | your own authored face |
-| `runtime bundle` | the app-facing bundle handed to `VizijRuntimeProvider` | the whole application shell |
+| `runtime bundle` | the face GLB, with its bundle, handed to `VizijRuntimeProvider` | the whole application shell |
 | `app shell` | the tutorial app that hosts the face and hooks | a deployed operator endpoint |
 | `deployment endpoint` | a later `Deploy` concern with an exposed control path | this first-run tutorial surface |
 
@@ -143,8 +144,8 @@ Before you inspect any code, know what a healthy first run should look like:
 
 1. the page opens without a blank canvas or crash
 2. the face becomes visible after loading finishes
-3. moving the mouse changes eye gaze
-4. pressing the number keys changes visible facial poses
+3. holding an expression key fades that expression in, and releasing it fades it out
+4. pressing a viseme key moves the mouth
 
 If the face never appears, stop and use [Validation Checkpoints](https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/support/validation-checkpoints.md) or [Troubleshooting Matrix](https://github.com/vizij-ai/vizij-docs/tree/main/current_documentation/guidebook/support/troubleshooting-matrix.md) before continuing.
 
@@ -162,7 +163,7 @@ When the browser opens, wait for the face to settle into its ready state.
 
 Expected result:
 
-1. you may briefly see a loading or initialization message
+1. you briefly see a loading bar while the runtime downloads and the face loads
 2. the face appears centered on screen
 3. the app stops looking transitional and starts behaving like a live face surface
 
@@ -177,16 +178,18 @@ Use this still to confirm the baseline face state before you test motion or hotk
 
 ### 2. Prove that the face is live, not static
 
-Do two checks immediately:
+Move the pointer over the page to show the key hints, then do two checks immediately:
 
-1. move the mouse across the viewport and watch the eyes follow
-2. press the number keys and watch visible expression or pose changes trigger
+1. hold one of the expression keys (`1`–`0`, `Q`–`P`, `A`–`J`) and watch the expression fade in, then release it
+2. press one of the viseme keys (`L`, `Z`–`M`) and watch the mouth take that shape (`K` plays `sil`, the mouth at rest)
 
 Expected result:
 
-1. gaze moves continuously with pointer movement
-2. pose changes feel discrete and key-driven
-3. repeated interactions continue working, which proves the runtime is actively staging inputs rather than showing a prerecorded asset
+1. an expression fades in over about two seconds while its key is held, and back out when released
+2. a viseme plays once per key press
+3. repeated interactions continue working, which proves the face's device is actively taking writes rather than showing a prerecorded asset
+
+With `?autoplay` added to the URL, the face's own program also runs from load, moving the face between your key presses.
 
 This is the first useful Vizij confidence test. A rendered face is not enough. The face has to respond.
 
@@ -194,77 +197,69 @@ Motion anchor:
 
 <figure class="guidebook-media">
 <img src="/guidebook-assets/gifs/fullscreen-demo.gif" alt="Fullscreen Demo Motion" loading="lazy" />
-<figcaption>live gaze steering and hotkey-triggered pose changes proving that the face is not static.</figcaption>
+<figcaption>the face responding to input, proving that it is not static.</figcaption>
 </figure>
 
-The still screenshot above proves the settled ready state. This loop is the stronger proof that the surface is live: gaze keeps steering and hotkey-triggered expressions come and go through the runtime.
+The still screenshot above proves the settled ready state. This loop is the stronger proof that the surface is live.
 
 ### 3. Inspect the runtime skeleton in code
 
 Open these files:
 
 1. `vizij-web/apps/tutorial-fullscreen-face/src/FaceApp.tsx`
-2. `vizij-web/apps/tutorial-fullscreen-face/src/hooks/useMouseGaze.ts`
-3. `vizij-web/apps/tutorial-fullscreen-face/src/hooks/usePoseHotkeys.ts`
+2. `vizij-web/apps/tutorial-fullscreen-face/src/hooks/useFaceHotkeys.ts`
 
 In `FaceApp.tsx`, find the three pieces that define the app:
 
 ```tsx
-const assetBundle: VizijAssetBundle = {
-  namespace: "fullscreen-face",
-  glb: {
-    kind: "url",
-    src: faceAssetUrl,
-    aggressiveImport: true,
-  },
-  pose: {
-    stageNeutralFilter: (_id, path) => !path.includes("/color/"),
-  },
-};
-
 export function FaceApp() {
   return (
-    <VizijRuntimeProvider assetBundle={assetBundle} autostart>
-      <VizijRuntimeHud />
-      <FaceRuntime />
-    </VizijRuntimeProvider>
+    <>
+      <VizijCanvas style={CANVAS_STYLE} />
+      <VizijRuntimeProvider
+        glb={faceAssetUrl}
+        options={{ program: autoplay ? "auto" : "none" }}
+      >
+        <FaceRuntime />
+      </VizijRuntimeProvider>
+    </>
   );
 }
 ```
 
 What each piece is doing:
 
-1. `assetBundle` tells Vizij what face bundle to load
-2. `VizijRuntimeProvider` owns loading, controller registration, and runtime state
-3. `FaceRuntime` and `VizijRuntimeFace` render and control the resolved face
+1. `<VizijCanvas>` is the page's one canvas, on which `@vizij/runtime`'s Bevy view draws the face
+2. `VizijRuntimeProvider` fetches the face GLB, loads the face as an Arora device, steps it every frame, and reports its `status`
+3. `FaceRuntime` renders `VizijRuntimeFace`, the slot the face draws over, and binds the hotkeys once the face is ready
 
 If you understand those three pieces, you understand the core shape of the maintained Hello Face path.
 
-### 4. Connect the visible behavior to the maintained hooks
+### 4. Connect the visible behavior to the maintained hook
 
-Open `useMouseGaze.ts` and `usePoseHotkeys.ts`.
+Open `useFaceHotkeys.ts`.
 
 You are looking for two different control patterns:
 
-1. mouse gaze writes eye-position inputs continuously while the pointer moves
-2. pose hotkeys animate named pose-weight paths up and back down
+1. an expression key fades the face standard's expression weight, `runtime.path("standard/vizij/expression/<name>")`, up while held and back down when released
+2. a viseme key calls the face's `play_viseme` method, which plays one mouth shape through the face's lipsync envelope
 
-You do not need to memorize every line yet. You do need to notice that both behaviors are driven through runtime APIs, not through one-off DOM tricks.
+The hook reads its bindings from the face standard's profile, `vizij-face`, in the profile's order, and assigns them to its 36 keys: the 27 expressions take `1`–`0`, `Q`–`P` and `A`–`J`, and the first nine of the 15 visemes (`sil`, `PP`, `FF`, `TH`, `DD`, `kk`, `CH`, `SS`, `nn`) take `K`, `L` and `Z`–`M`; the other six visemes have no key. You do not need to memorize every line yet. You do need to notice that both behaviors are driven through the face's own API, not through one-off DOM tricks.
 
 Expected result:
 
-1. the gaze hook explains why the eyes follow the mouse
-2. the hotkey hook explains why number keys trigger expression changes
+1. the hook explains why holding a key fades an expression in and out
+2. the hook explains why a viseme key moves the mouth once
 3. the code lines up cleanly with the behavior you already saw in the browser
 
 ### 5. Name the maintained runtime pattern
 
 At this point, you should be able to say:
 
-1. this app loads one existing face bundle
-2. the runtime provider resolves the face and keeps track of readiness
-3. small hooks stage real runtime input writes
-4. the face is rendered by the same runtime stack other Vizij apps build on
+1. this app loads one existing face GLB
+2. the runtime provider loads the face as a device and keeps track of readiness
+3. a small hook writes the face's keys and calls its methods
+4. the face is drawn by the same Bevy view and runtime every other Vizij app builds on
 
 That is the entire reason this app is the first maintained route through the guidebook.
 

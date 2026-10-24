@@ -1,4 +1,5 @@
-<!-- tags: type=guidebook-assets; status=written; topics=guidebook,assets,screenshots,video -->
+<!-- tags: family=guidebook; type=guidebook-assets; editorial_status=completed; publication_status=planned; topics=guidebook,assets,screenshots,video -->
+> **Last updated:** 2026-03-31
 
 # Guidebook Assets
 

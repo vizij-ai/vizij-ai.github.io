@@ -106,6 +106,8 @@ This page is for newcomers who want the shortest path to a working Vizij face, b
 
 The artifact here is the reader-facing docs map. Use it to decide what to learn next, not as a substitute for the internal architecture of the platform.
 
+The guidebook bucket chain is the public route language. App names such as `Hello Face`, `vizij-authoring`, `demo-vizij-player`, and `vizij-standalone` are anchors inside that route, not separate route stages.
+
 ## What You Need
 
 You do not need to understand Vizij architecture before using this page.
@@ -131,6 +133,10 @@ Each bucket supports three depth levels:
    - learn the mental models and practical basics
 3. `Advanced`
    - go deeper into ownership, extension, or more complex implementation patterns
+
+`Introduction` is the public entry bucket before the main build progression. After orientation, the maintained build route moves through `Experience`, `Control`, optional `Customize`, then `Integrate` and `Deploy`.
+
+See the canonical public route mapping in [Guidebook README](/docs/).
 
 ### Route Choice
 
@@ -213,8 +219,8 @@ Jump directly to the bucket that matches the problem you are trying to solve:
 
 | Path | Choose it when | First maintained anchor | What it intentionally skips |
 | --- | --- | --- | --- |
-| Fast deployment path | You need proof, control understanding, a player, and a first deployed endpoint | `tutorial-fullscreen-face`, `demo-vizij-player`, `vizij-standalone` | deep customization and authoring ownership |
-| Customization path | You need to change the face or its behavior before integrating it | `vizij-authoring` and its local docs | the fastest path to a deployed endpoint |
+| Fast bucket route | You need first proof, control understanding, integration, and a first deployed endpoint | [Hello Face Quickstart](/tutorials/hello-face/), [Minimal Web Player](/tutorials/minimal-player/), [Easiest Standalone Deployment](/tutorials/deployment/) | deeper customization and authoring ownership |
+| Customization bucket route | You need to change the face or its behavior before integrating it | [Tweak an Existing Face](/tutorials/authoring/) and `vizij-authoring` | the fastest path to a deployed endpoint |
 | Single-bucket jump-in | You already know the path and only need one concept or recovery page | the bucket that matches the immediate problem | path-level context and sequencing |
 
 ## Quick chooser

@@ -92,7 +92,10 @@ implementationAnchors:
       animations, and programs.
   - label: "@vizij/runtime-react"
     href: https://github.com/vizij-ai/vizij-web/tree/main/packages/@vizij/runtime-react
-    description: Runtime layer that resolves authored controls into visible motion.
+    description: The provider that loads a face as a device and hands the app its runtime.
+  - label: "@vizij/render"
+    href: https://github.com/vizij-ai/vizij-web/tree/main/packages/@vizij/render
+    description: The page's canvas, on which the view draws the face.
   - label: vizij-standalone
     href: https://github.com/vizij-ai/vizij-web/tree/main/apps/vizij-standalone
     description: Operator-facing standalone surface used in the deployment section.
@@ -117,7 +120,7 @@ What looks like one animated face is actually the final result of several layers
 2. low-level rig channels that can write those properties,
 3. higher-level authored controls such as blink, gaze, and smile,
 4. named states, motion clips, and graph-driven behaviors,
-5. a runtime that resolves all of those into one frame,
+5. a device that runs all of those, step by step, and the view that draws the result,
 6. an application shell that decides why the face should do anything at all.
 
 Keep two app surfaces in view while you read:
@@ -141,7 +144,7 @@ flowchart LR
     abstract --&gt; clips[&quot;Animation clips and tracks&quot;]
     abstract --&gt; progs[&quot;Procedural programs&quot;]
     abstract --&gt; direct[&quot;Direct runtime inputs&quot;]
-    poses --&gt; orch[&quot;Runtime orchestration&quot;]
+    poses --&gt; orch[&quot;The face's device: composed graphs and runs&quot;]
     clips --&gt; orch
     progs --&gt; orch
     direct --&gt; orch
@@ -195,7 +198,7 @@ Every PropsRig channel carries the metadata that makes it usable:
 3. a `defaultValue`,
 4. the mapping back to the animatable property it ultimately drives.
 
-In authoring, the canonical namespace is `/propsrig/...`. At runtime, that same authored path is resolved under the active face identity, so the write becomes part of the loaded `rig/{faceId}/...` space.
+In authoring, the canonical namespace is `/propsrig/...`. At runtime, that same authored path lives under the face's own prefix, `rig/{faceId}/...`, in the store of the face's device.
 
 This layer is deliberately low-level. It is where you decide:
 
@@ -225,13 +228,9 @@ This is also where custom controls and shared controls meet.
 
 Custom controls are face-specific. They exist because one face may need a control that another face does not.
 
-Shared controls exist because it is useful for faces to expose common intent with a stable vocabulary. In current maintained language, that shared vocabulary is expressed through:
+Shared controls exist because it is useful for faces to expose common intent with a stable vocabulary. That shared vocabulary is the Vizij face standard: the `vizij-face` profile's keys, `standard/vizij/...` under the face's prefix — eye positions and a gaze target, lids and blink, named expressions, visemes, muscle controls, and the conversation state. Each face carries a standard adaptation, a graph that maps the standard's keys onto its own controls and poses.
 
-1. standard controls,
-2. standard inputs,
-3. standard feature spaces.
-
-Those shared control vocabularies are what let different faces answer to the same kind of intent even when the underlying meshes or PropsRig channels differ.
+That shared vocabulary is what lets different faces answer to the same kind of intent even when the underlying meshes or PropsRig channels differ.
 
 That matters for things like:
 
@@ -370,46 +369,43 @@ This is still authored behavior. The graph is designed in `vizij-authoring`, pre
 
 ## Orchestration: how everything resolves together
 
-Once direct controls, poses, animation clips, and procedural programs all exist, the runtime needs one place that resolves them into a single frame.
+Once direct controls, poses, animation clips, and procedural programs all exist, something has to resolve them into a single frame.
 
-That job belongs to orchestration.
+That job belongs to the face's device. When a page loads a face, `@vizij/runtime` builds an Arora device for it: a store of keys, the face's graphs composed into one — its rig, its pose driver and poses, its standard adaptation — and the modules it links (animation, rest, visemes). Each step, the device runs that composed graph over its store.
 
 At runtime, several sources may want the face at once:
 
-1. a direct control from the host app,
+1. a direct write from the host app to a key of the store,
 2. a pose weight change,
-3. an animation that is currently playing,
-4. a procedural program that is evaluating continuously.
-
-Those requests do not jump straight to the renderer. They are staged, scheduled, merged, and then applied.
+3. an animation that a player of the animation module is playing,
+4. a procedural program running as a run of the device's interpreter.
 
 <pre class="guidebook-mermaid mermaid">
 flowchart LR
-    direct[&quot;Direct app inputs&quot;] --&gt; orch[&quot;Orchestrator schedule and merge&quot;]
-    poses[&quot;Pose weights&quot;] --&gt; orch
-    clips[&quot;Animation clips&quot;] --&gt; orch
-    progs[&quot;Procedural program outputs&quot;] --&gt; orch
-    orch --&gt; merged[&quot;Merged writes for the frame&quot;]
-    merged --&gt; blackboard[&quot;Blackboard state&quot;]
-    blackboard --&gt; render[&quot;Renderer-facing values&quot;]
-    render --&gt; face[&quot;Visible face motion&quot;]
+    direct[&quot;App writes to the store&quot;] --&gt; store[&quot;The face's store&quot;]
+    poses[&quot;Pose weights&quot;] --&gt; store
+    clips[&quot;Animation players&quot;] --&gt; graph[&quot;Composed graph and runs, each step&quot;]
+    progs[&quot;Program runs&quot;] --&gt; graph
+    store --&gt; graph
+    graph --&gt; store
+    store --&gt; view[&quot;The view reads the face's pose&quot;]
+    view --&gt; face[&quot;Visible face motion&quot;]
 </pre>
 
 The key concepts are:
 
-1. staged writes: requested values collected for the current frame,
-2. schedule: the order in which runtime controllers are evaluated,
-3. merged writes: the resolved outputs that survive conflict handling,
-4. blackboard: the shared path-value state that controllers read and write,
-5. renderer output: the resolved values finally applied to the loaded face.
+1. the store: the shared path-value state of the face, which the app, the graphs and the runs read and write,
+2. the composed graph: the face's graphs joined into one, evaluated each step,
+3. runs: programs and skills started on the device's interpreter, each running beside the composed graph until it ends or is halted,
+4. the view: the renderer that reads the face's pose from the store and draws it on the page's canvas.
 
-The blackboard is the shared runtime memory of the current control state. It is what makes composition possible. One system can write a gaze input, another can react to it, another can blend animation over it, and the runtime still has one coherent place where that state lives for the frame.
+The store is what makes composition possible. One part can write a gaze target, the face's program can react to it, an animation can play over it, and the device still has one coherent place where that state lives for the step. A key that a running graph writes every step is that graph's: an app commands the face through the keys the graphs read, not the ones they write.
 
-This is also the layer that explains why `tutorial-agent-face` can stay clean. The agent demo does not bypass the face stack. It feeds requests into the runtime, and the runtime resolves those requests with the same orchestration model used for other authored behavior.
+This is also why `tutorial-agent-face` can stay clean. The agent demo does not bypass the face stack. It writes the conversation state and the gaze target, fades expression weights and plays visemes, and the face's program and adaptation turn those into motion.
 
 If you only remember one rule here, make it this one:
 
-The visible face is the last proof in the chain, not the first. First the runtime stages and merges the frame. Then the renderer shows the result.
+The visible face is the last proof in the chain, not the first. First the device steps the face's graphs over its store. Then the view draws the result.
 
 ## From runtime to application and deployment
 
