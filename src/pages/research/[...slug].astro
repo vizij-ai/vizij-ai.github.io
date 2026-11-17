@@ -2,8 +2,7 @@
 import { type CollectionEntry, getCollection } from "astro:content";
 import SiteShell from "@/layouts/SiteShell.astro";
 import MDXContent from "@/components/mdx/MDXContent.astro";
-import { getFormattedAuthors } from "@/data/people";
-import { getRelatedResearch } from "@/data/research";
+import { getFormattedAuthors, getRelatedResearch } from "@/utils/collections";
 import { isDraftVisible } from "@/utils/drafts";
 import { loadEntry } from "@/utils/content-loader";
 import { buildFeaturedPropagation } from "@/utils/featured-propagation";

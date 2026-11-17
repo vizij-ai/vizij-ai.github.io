@@ -73,7 +73,7 @@ src/
 
 ### Prerequisites
 
-- **Node.js 20** and npm
+- **Node.js 22.23.4 or newer** and npm (Astro refuses older versions)
 - **A GitHub account** with access to the `semio-community` organisation (or a PAT with `read:packages` scope — see below)
 
 ### First-Time Setup: GitHub Packages Authentication

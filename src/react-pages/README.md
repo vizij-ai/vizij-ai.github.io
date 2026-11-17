@@ -16,7 +16,7 @@ Goal:
 ## Usage pattern
 
 1) The `.astro` route:
-   - Imports server-side data helpers (e.g., from `src/data/**`).
+   - Imports server-side collection queries from `@/utils/collections`.
    - Imports a React page component from `src/react-pages`.
    - Wraps the page in `BaseLayout` (React layout) and passes props.
 
@@ -73,10 +73,14 @@ export default function HomePage({ projectCount, featuredEventCount }: HomePageP
 import BaseHead from "@/components/BaseHead.astro";
 import SiteShell from "@/layouts/SiteShell.astro";
 import HomePage from "@/react-pages/home/HomePage";
-import { getAllHardware } from "@/data/hardware";
-import { getAllSoftware } from "@/data/software";
-import { getAllResearch } from "@/data/research";
-import { getCurrentEvents, getFeaturedEvents, getUpcomingEvents } from "@/data/events";
+import {
+  getAllHardware,
+  getAllSoftware,
+  getAllResearch,
+  getCurrentEvents,
+  getFeaturedEvents,
+  getUpcomingEvents,
+} from "@/utils/collections";
 
 const hardware = await getAllHardware();
 const software = await getAllSoftware();
@@ -120,7 +124,7 @@ const featuredEventCount = [
 
 - Data fetching:
   - Do NOT fetch data in the React page component.
-  - Fetch in the `.astro` route using `src/data/**` helpers, then pass as props.
+  - Fetch in the `.astro` route using `@/utils/collections`, then pass as props.
 
 - Hydration policy:
   - React page components are SSR-only by default (no hydration).
@@ -164,7 +168,7 @@ const featuredEventCount = [
 
 - [ ] Create `src/react-pages/<route>/YourPage.tsx` with typed props.
 - [ ] Add a `.astro` route (or update existing) that:
-  - [ ] Loads data via `src/data/**`.
+  - [ ] Loads data via `@/utils/collections`.
   - [ ] Renders `<BaseLayout>` and your page component.
   - [ ] Avoids hydration unless needed for an interactive element.
 - [ ] Confirm Lighthouse and bundle size remain within budgets.
