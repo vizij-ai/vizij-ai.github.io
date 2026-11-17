@@ -28,6 +28,6 @@ Updated: 2025-11-14
    - `client:visible` when interaction can wait until the component is scrolled into view (e.g., modals triggered from below the fold).
    - `client:idle` for enhancements that can wait until the browser is idle.
    - `client:load` only when the UI must be ready at first paint (navigation, mission-critical forms).
-3. **Serialize data in `.astro`**: avoid fetching in hydrated components. Use the Astro route (or `SiteShell`) to load from `src/data/**`, transform the payloads, and pass only the fields the client needs.
+3. **Serialize data in `.astro`**: avoid fetching in hydrated components. Use the Astro route (or `SiteShell`) to load from `@/utils/collections`, transform the payloads, and pass only the fields the client needs.
 4. **Document exceptions**: if a component requires unusual hydration, update this file (or inline comments) so future contributors know why.
 5. **Measure**: when adding a new hydrated component, capture bundle size/Lighthouse numbers for the affected route and add a regression test if possible.

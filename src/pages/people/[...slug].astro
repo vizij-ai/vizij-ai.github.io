@@ -2,10 +2,13 @@
 import { type CollectionEntry, getCollection } from "astro:content";
 import SiteShell from "@/layouts/SiteShell.astro";
 import MDXContent from "@/components/mdx/MDXContent.astro";
-import { getAllHardware } from "@/data/hardware";
-import { getAllResearch } from "@/data/research";
-import { getAllSoftware } from "@/data/software";
-import { getPeopleByExpertise, getPeopleByOrganization } from "@/data/people";
+import {
+  getAllHardware,
+  getAllResearch,
+  getAllSoftware,
+  getPeopleByExpertise,
+  getPeopleByOrganization,
+} from "@/utils/collections";
 import { siteConfig } from "@/site.config";
 import { isDraftVisible } from "@/utils/drafts";
 import { loadEntry } from "@/utils/content-loader";
