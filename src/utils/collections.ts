@@ -1,3 +1,6 @@
+// site.config installs the site context read below. Importing it here
+// guarantees it has run first, whatever order a page imports modules in.
+import "@/site.config";
 import { type CollectionEntry, getCollection } from "astro:content";
 import {
 	createCollectionQueries,
