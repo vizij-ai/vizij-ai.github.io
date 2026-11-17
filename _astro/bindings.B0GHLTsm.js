@@ -1,0 +1,2 @@
+import{l as e}from"./useSectionInView.B1NJn0Si.js";import"./usePoseHotkeys.vGuWbf0o.js";function t(t){return`${e(t.pose)??``} ${t.pose.name??t.pose.id}`.toLowerCase()}function n(e,n=3){let r=e.filter(e=>t(e).includes(`emotion`)),i=e.filter(e=>t(e).includes(`viseme`)),a=e.filter(e=>!r.includes(e)&&!i.includes(e));return[...r,...a,...i].slice(0,n)}export{n as t};
+//# sourceMappingURL=bindings.B0GHLTsm.js.map
